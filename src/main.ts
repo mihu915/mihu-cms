@@ -8,14 +8,25 @@ import { globalRegister } from '@/global/index'
 // import '@/service/axios-demo'
 
 const app = createApp(App)
-MHRequest.request({
-  url: '/get',
-  method: 'get',
-  params: {
-    name: 'mihu',
-    age: 123
-  }
-})
+// MHRequest.request({
+//   url: '/get',
+//   method: 'get',
+//   params: {
+//     name: 'mihu',
+//     age: 123
+//   },
+//   interceptors: {
+//     requestInterceptors: (config) => {
+//       console.log('单个请求的拦截')
+//       config.params.message = 'qweqweqwe'
+//       return config
+//     },
+//     responseInterceptors: (res) => {
+//       console.log('单个响应的拦截')
+//       return res
+//     }
+//   }
+// })
 
 app.use(globalRegister)
 app.use(router)

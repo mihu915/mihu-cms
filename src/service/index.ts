@@ -6,7 +6,7 @@ const mhRequest = new MHRequest({
   timeout: TIME_OUT,
   interceptors: {
     requestInterceptors: (config) => {
-      console.log(config)
+      console.log('拦截请求成功： ', config)
       return config
     },
     requestInterceptorsCatch: (err) => {
@@ -14,8 +14,8 @@ const mhRequest = new MHRequest({
       return err
     },
     responseInterceptors: (res) => {
-      console.log(res)
-      return res
+      console.log('拦截响应成功： ', res.data)
+      return res.data
     },
     responseInterceptorsCatch: (err) => {
       console.log(err)
