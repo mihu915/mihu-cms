@@ -1,13 +1,26 @@
 import axios from 'axios'
+
 import type { AxiosInstance } from 'axios'
 import type { MHRequestConfig, MHRequestInterceptors } from './type'
 
+import { ElLoading } from 'element-plus'
+import type { ILoadingInstance } from 'element-plus/lib/el-loading/src/loading.type'
+
+// showLoading的默认值为false
+const DEFAULT_LOADING = false
+
 class MHRequest {
+  // 初始化值
   instance: AxiosInstance
   interceptors?: MHRequestInterceptors
+  loading?: ILoadingInstance
+  showLoading?: boolean
+
   constructor(config: MHRequestConfig) {
     this.instance = axios.create(config)
     this.interceptors = config.interceptors
+    this.showLoading = config.showLoading ?? DEFAULT_LOADING
+
     // 对应实例拦截器
     this.instance.interceptors.request.use(
       this.interceptors?.requestInterceptors,
@@ -21,37 +34,69 @@ class MHRequest {
     // 所有实例的拦截器
     this.instance.interceptors.request.use(
       (config) => {
-        console.log('请求拦截成功')
+        // 拦截时判断showLoading是否为true,如果为true,则开启loading动画
+        if (this.showLoading) {
+          this.loading = ElLoading.service({
+            lock: true,
+            text: 'loading...',
+            background: 'rgba(0,0,0,0.7)'
+          })
+        }
+
         return config
       },
       (err) => {
-        console.log('请求拦截失败')
         return err
       }
     )
     this.instance.interceptors.response.use(
       (res) => {
-        console.log('响应拦截成功')
+        // 如果showLoading为true则拦截到响应后要关闭loading动画
+        if (this.showLoading) this.loading?.close()
         return res
       },
       (err) => {
-        console.log('响应拦截失败')
+        if (this.showLoading) this.loading?.close()
         return err
       }
     )
   }
 
-  request(config: MHRequestConfig): void {
-    if (config.interceptors?.requestInterceptors) {
-      config = config.interceptors.requestInterceptors(config)
-    }
-    console.log(config)
-    this.instance.request(config).then((res) => {
-      if (config.interceptors?.responseInterceptors) {
-        res = config.interceptors.responseInterceptors(res)
+  request<T>(config: MHRequestConfig): Promise<T> {
+    return new Promise((resolve, reject) => {
+      // 单个请求的拦截器
+      this.showLoading = config.showLoading
+
+      // 保存config处理后的数据
+      if (config.interceptors?.requestInterceptors) {
+        config = config.interceptors.requestInterceptors(config)
       }
-      console.log(res)
+
+      // 执行发送网络请求
+      this.instance
+        .request<any, T>(config)
+        .then((res) => {
+          if (config.interceptors?.responseInterceptors) {
+            res = config.interceptors.responseInterceptors(res)
+          }
+          console.log(res)
+          // 将showLoading初始化值
+          this.showLoading = DEFAULT_LOADING
+          resolve(res)
+        })
+        .catch((err) => {
+          this.showLoading = DEFAULT_LOADING
+          reject(err)
+        })
     })
+  }
+
+  get<T>(config: MHRequestConfig): Promise<T> {
+    return this.request({ ...config, method: 'get' })
+  }
+
+  post<T>(config: MHRequestConfig): Promise<T> {
+    return this.request({ ...config, method: 'post' })
   }
 }
 

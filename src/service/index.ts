@@ -4,9 +4,10 @@ import { BASE_URL, TIME_OUT } from './request/config'
 const mhRequest = new MHRequest({
   baseURL: BASE_URL,
   timeout: TIME_OUT,
+
   interceptors: {
     requestInterceptors: (config) => {
-      console.log('拦截请求成功： ', config)
+      console.log('单个实例拦截请求成功')
       return config
     },
     requestInterceptorsCatch: (err) => {
@@ -14,8 +15,8 @@ const mhRequest = new MHRequest({
       return err
     },
     responseInterceptors: (res) => {
-      console.log('拦截响应成功： ', res.data)
-      return res.data
+      console.log('单个实例拦截响应成功')
+      return res
     },
     responseInterceptorsCatch: (err) => {
       console.log(err)
