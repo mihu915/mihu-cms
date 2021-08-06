@@ -7,6 +7,11 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   setup() {
+    const a = 'aaaa'
+    console.log(a)
+
+
+    
     return {}
   }
 })
