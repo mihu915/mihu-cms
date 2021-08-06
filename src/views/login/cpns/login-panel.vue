@@ -38,5 +38,6 @@ export default defineComponent({
 <style scoped lang="less">
 .login-panel {
   width: 30%;
+  margin-bottom: 200px;
 }
 </style>

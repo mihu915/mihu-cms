@@ -1,23 +1,41 @@
 <template>
-  <div class="login-account">loginAccount</div>
+  <div class="login-account">
+    <el-form :rules="rules" :model="account">
+      <el-form-item label="账号" prop="username">
+        <el-input
+          type="username"
+          autocomplete="off"
+          v-model="account.username"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input
+          type="password"
+          autocomplete="off"
+          v-model="account.password"
+        ></el-input>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, reactive } from 'vue'
+import { rules } from '../config/account-config'
 
 export default defineComponent({
   setup() {
-    const a = 'aaaa'
-    console.log(a)
+    const account = reactive({
+      username: '',
+      password: ''
+    })
 
-
-    
-    return {}
+    return {
+      account,
+      rules
+    }
   }
 })
 </script>
 
-<style scoped>
-.login-account {
-}
-</style>
+<style scoped></style>
