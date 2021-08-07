@@ -23,9 +23,6 @@
 import { defineComponent, reactive } from 'vue'
 import { rules } from '../config/account-config'
 
-
-
-
 export default defineComponent({
   setup() {
     const account = reactive({
