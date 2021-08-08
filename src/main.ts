@@ -10,7 +10,7 @@ import './assets/css/index.less'
 // import '@/service/axios-demo'
 
 const app = createApp(App)
-
+// 注册element-plus
 app.use(globalRegister)
 app.use(router)
 app.use(store)

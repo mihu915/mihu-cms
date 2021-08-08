@@ -24,4 +24,4 @@ const mhRequest = new MHRequest({
     }
   }
 })
-export default mhRequest
+export { mhRequest }
