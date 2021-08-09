@@ -22,10 +22,10 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue'
+import { useStore } from 'vuex'
 import { ElForm } from 'element-plus'
 import { rules, PRIVATEKEY } from '../config/account-config'
 import { localCache } from '@/utils'
-
 import { encrypt } from '@/utils'
 
 export default defineComponent({
@@ -35,6 +35,7 @@ export default defineComponent({
 
     let password: string
 
+    const store = useStore()
     // 判断密文有没有值，若有值则解密，没有则初始化
     if (cipher) {
       password = encrypt.decryptHandler(cipher, PRIVATEKEY)
@@ -54,6 +55,10 @@ export default defineComponent({
       // 如果输入内容验证通过则执行登录操作
       formRef.value?.validate((valid) => {
         if (valid) {
+          // 用户派发登录异步事件
+          store.dispatch('loginModule/userLoginAction', account)
+
+          // 判断是否为记住密码
           if (isKeepPassword) {
             localCache.setCache('username', account.username)
 
@@ -65,8 +70,6 @@ export default defineComponent({
             localCache.deleteCache('username')
             localCache.deleteCache('password')
           }
-          console.log('登录成功')
-          console.log(valid)
         }
       })
     }

@@ -18,8 +18,8 @@ const rules = {
       trigger: 'blur'
     },
     {
-      pattern: /^[\w+]{8,16}$/,
-      message: '密码为8-16个字符',
+      pattern: /^[\w+]{6,16}$/,
+      message: '密码为6-16个字符',
       trigger: 'blur'
     }
   ],

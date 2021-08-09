@@ -3,7 +3,7 @@ import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 import type { MHRequestConfig, MHRequestInterceptors } from './type'
 
-import { ElLoading } from 'element-plus'
+import { ElLoading, ElMessage } from 'element-plus'
 import type { ILoadingInstance } from 'element-plus/lib/el-loading/src/loading.type'
 
 // showLoading的默认值为false
@@ -42,29 +42,54 @@ class MHRequest {
             background: 'rgba(0,0,0,0.7)'
           })
         }
-
         return config
       },
       (err) => {
         return err
       }
     )
+
     this.instance.interceptors.response.use(
       (res) => {
+        // 展示提示信息
+        let messageType:
+          | ''
+          | 'success'
+          | 'warning'
+          | 'info'
+          | 'error'
+          | undefined
+
+        if (res.data.code === 200) {
+          messageType = 'success'
+        } else if (res.data.code % 400 <= 1) {
+          messageType = 'error'
+        }
+        ElMessage({
+          message: res.data.message,
+          type: messageType
+        })
+
         // 如果showLoading为true则拦截到响应后要关闭loading动画
         if (this.showLoading) this.loading?.close()
-        return res
+        return res.data
       },
       (err) => {
+        console.log(err)
+        // 展示提示信息
+        ElMessage({
+          message: err.response.statusText,
+          type: 'error'
+        })
+        // 关闭loading动画
         if (this.showLoading) this.loading?.close()
-        return err
+        return null
       }
     )
   }
 
   request<T>(config: MHRequestConfig): Promise<T> {
     return new Promise((resolve, reject) => {
-      // 单个请求的拦截器
       this.showLoading = config.showLoading
 
       // 保存config处理后的数据
@@ -76,18 +101,18 @@ class MHRequest {
       this.instance
         .request<any, T>(config)
         .then((res) => {
+          // 单个请求的拦截器
           if (config.interceptors?.responseInterceptors) {
             res = config.interceptors.responseInterceptors(res)
           }
-          console.log(res)
-          // 将showLoading初始化值
-          this.showLoading = DEFAULT_LOADING
           resolve(res)
         })
         .catch((err) => {
-          this.showLoading = DEFAULT_LOADING
           reject(err)
         })
+
+      // 将showLoading初始化值
+      this.showLoading = DEFAULT_LOADING
     })
   }
 
