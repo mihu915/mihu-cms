@@ -5,7 +5,7 @@ interface IAccount {
 interface IDataType<T = any> {
   code: number
   message?: string
-  data: T
+  data?: T
 }
 
 export { IAccount, IDataType }
