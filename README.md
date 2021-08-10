@@ -1,4 +1,4 @@
-# vue3-ts-cms
+# Mihu-Cms
 
 ## Project setup
 
