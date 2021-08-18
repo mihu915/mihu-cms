@@ -2,19 +2,11 @@
   <div class="login-account">
     <el-form :rules="rules" :model="account" ref="formRef">
       <el-form-item label="账号:" prop="username">
-        <el-input
-          type="username"
-          autocomplete="off"
-          v-model="account.username"
-        ></el-input>
+        <el-input type="username" autocomplete="off" v-model="account.username"></el-input>
         <div class="login-btn"></div>
       </el-form-item>
       <el-form-item label="密码:" prop="password">
-        <el-input
-          type="password"
-          autocomplete="off"
-          v-model="account.password"
-        ></el-input>
+        <el-input type="password" autocomplete="off" v-model="account.password"></el-input>
       </el-form-item>
     </el-form>
   </div>
