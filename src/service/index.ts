@@ -1,6 +1,7 @@
 import MHRequest from './request'
 
 import { BASE_URL, TIME_OUT } from './request/config'
+import { localCache } from '@/utils'
 
 const mhRequest = new MHRequest({
   baseURL: BASE_URL,
@@ -10,6 +11,8 @@ const mhRequest = new MHRequest({
   interceptors: {
     // 请求成功拦截
     requestInterceptors: (config) => {
+      const token = localCache.getCache('token')
+      config.headers.Authorization = `Bearer ${token}`
       return config
     },
     // 请求失败

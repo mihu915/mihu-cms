@@ -10,4 +10,5 @@ export interface MHRequestInterceptors {
 export interface MHRequestConfig extends AxiosRequestConfig {
   interceptors?: MHRequestInterceptors
   showLoading?: boolean
+  showMessage?: boolean
 }

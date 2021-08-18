@@ -1,16 +1,24 @@
 import { mhRequest } from '../index'
-import type { IAccount, IDataType } from './types'
+import type { IAccount, IDataType, ILoginDataType } from './types'
 import qs from 'qs'
 
-function accountLoginRequest(account: IAccount): Promise<IDataType> {
-  // const data = {
-  //   name: account.username,
-  //   password: account.password
-  // }
+enum LoginAPI {
+  AccountLogin = '/login',
+  LoginUserInfo = '/users'
+}
+
+function accountLoginRequest(account: IAccount): Promise<IDataType<ILoginDataType>> {
   return mhRequest.post<IDataType>({
-    url: '/login',
-    data: qs.stringify(account)
+    url: LoginAPI.AccountLogin,
+    data: qs.stringify(account),
+    showMessage: true
   })
 }
 
-export { accountLoginRequest }
+function getUserInfoRequest(): Promise<IDataType> {
+  return mhRequest.get({
+    url: LoginAPI.LoginUserInfo
+  })
+}
+
+export { accountLoginRequest, getUserInfoRequest }
