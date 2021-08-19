@@ -9,6 +9,7 @@ import type { ILoadingInstance } from 'element-plus/lib/el-loading/src/loading.t
 // showLoading的默认值为false
 const DEFAULT_LOADING = false
 const DEFAULT_MESSAGE = false
+const DEFAULT_ERROR_MESSAGE = true
 
 class MHRequest {
   // 初始化值
@@ -17,13 +18,14 @@ class MHRequest {
   loading?: ILoadingInstance
   showLoading?: boolean
   showMessage?: boolean
+  showErrorMessage?: boolean
 
   constructor(config: MHRequestConfig) {
     this.instance = axios.create(config)
     this.interceptors = config.interceptors
     this.showLoading = config.showLoading ?? DEFAULT_LOADING
     this.showMessage = config.showMessage ?? DEFAULT_MESSAGE
-
+    this.showErrorMessage = config.showErrorMessage ?? DEFAULT_ERROR_MESSAGE
     // 对应实例拦截器
     this.instance.interceptors.request.use(
       this.interceptors?.requestInterceptors,
@@ -58,34 +60,35 @@ class MHRequest {
         if (this.showLoading) this.loading?.close()
 
         // 展示提示信息
-        let messageType: '' | 'success' | 'warning' | 'info' | 'error' | undefined
         if (res.data.code === 200) {
-          messageType = 'success'
-
           // 如果开启展示message则弹出提示
+
           if (this.showMessage) {
             ElMessage({
               message: res.data.message,
-              type: messageType
+              type: 'success'
             })
           }
         } else if (res.data.code % 400 <= 1) {
-          messageType = 'error'
-          ElMessage({
-            message: res.data.message,
-            type: messageType
-          })
+          console.log(this.showErrorMessage)
+          if (this.showErrorMessage) {
+            ElMessage({
+              message: res.data.message,
+              type: 'error'
+            })
+          }
         }
-
         return res.data
       },
       (err) => {
         console.log(err)
-        // 展示提示信息
-        ElMessage({
-          message: err.response.statusText,
-          type: 'error'
-        })
+        if (this.showErrorMessage) {
+          // 展示提示信息
+          ElMessage({
+            message: err.response.statusText,
+            type: 'error'
+          })
+        }
 
         // 关闭loading动画
         if (this.showLoading) this.loading?.close()
@@ -96,8 +99,9 @@ class MHRequest {
 
   request<T>(config: MHRequestConfig): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.showLoading = config.showLoading
-      this.showMessage = config.showMessage
+      this.showLoading = config.showLoading ?? DEFAULT_LOADING
+      this.showMessage = config.showMessage ?? DEFAULT_MESSAGE
+      this.showErrorMessage = config.showErrorMessage ?? DEFAULT_ERROR_MESSAGE
 
       // 保存config处理后的数据
       if (config.interceptors?.requestInterceptors) {
@@ -117,9 +121,6 @@ class MHRequest {
         .catch((err) => {
           reject(err)
         })
-
-      // 将showLoading初始化值
-      this.showLoading = DEFAULT_LOADING
     })
   }
 

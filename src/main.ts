@@ -4,6 +4,7 @@ import { createApp } from 'vue'
 import { router } from '@/router'
 import { store } from '@/store'
 import { globalRegister } from '@/global/index'
+import { setupStore } from '@/store'
 
 import 'normalize.css'
 import './assets/css/index.less'
@@ -14,4 +15,5 @@ const app = createApp(App)
 app.use(globalRegister)
 app.use(router)
 app.use(store)
+setupStore()
 app.mount('#app')

@@ -48,7 +48,7 @@ export default defineComponent({
       formRef.value?.validate((valid) => {
         if (valid) {
           // 用户派发登录异步事件
-          store.dispatch('loginModule/userLoginAction', account)
+          store.dispatch('login/userLoginAction', account)
 
           // 判断是否为记住密码
           if (isKeepPassword) {

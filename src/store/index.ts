@@ -1,6 +1,6 @@
-import { createStore } from 'vuex'
-import { IRootStore } from './types'
-import { loginModule } from './login/login'
+import { createStore, Store, useStore as useVuexStore } from 'vuex'
+import { IRootStore, IStoreType } from './types'
+import { login } from './login/login'
 
 const store = createStore<IRootStore>({
   state() {
@@ -13,8 +13,18 @@ const store = createStore<IRootStore>({
   mutations: {},
   actions: {},
   modules: {
-    loginModule
+    login
   }
 })
 
-export { store }
+// 定义派发action方法
+function setupStore() {
+  store.dispatch('login/storageUserData')
+}
+
+// 自己封装的useStore,兼容ts
+export function useStore(): Store<IStoreType> {
+  return useVuexStore()
+}
+
+export { store, setupStore }

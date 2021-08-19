@@ -1,23 +1,21 @@
 <template>
-  <div class="app">
-    <router-view></router-view>
+  <div class="nav-header">
+    <h1 class="title">Mh_Cms</h1>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+
 export default defineComponent({
-  name: 'App',
-  components: {},
   setup() {
     return {}
   }
 })
 </script>
 
-<style lang="less">
-.app {
-  width: 100%;
-  height: 100%;
+<style scoped>
+.title {
+  font-size: 20px;
 }
 </style>
