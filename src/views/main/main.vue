@@ -41,6 +41,8 @@ export default defineComponent({
 }
 .el-header {
   background-color: #fff;
-  height: 30px;
+  height: 60px;
+  padding: 0;
+  margin: 0;
 }
 </style>

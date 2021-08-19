@@ -1,6 +1,6 @@
 <template>
   <div class="nav-header">
-    <h1 class="title">Mh_Cms</h1>
+    <h1 class="header-title">Mh_Cms</h1>
   </div>
 </template>
 
@@ -15,7 +15,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.title {
+.nav-header {
+  height: 100%;
+  padding: 0 20px;
+}
+.header-title {
+  margin: 0;
   font-size: 20px;
+  line-height: 60px;
+  height: 100%;
 }
 </style>
