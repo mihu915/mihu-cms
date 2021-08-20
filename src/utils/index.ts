@@ -1,3 +1,4 @@
 import localCache from './cache'
 import encrypt from './encrypt'
-export { localCache, encrypt }
+import { mapMenus } from './map-menus'
+export { localCache, encrypt, mapMenus }

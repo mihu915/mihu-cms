@@ -1,7 +1,7 @@
 interface ILoginStore {
   token: string
   userInfo: any
-  userMenu: any
+  userMenus: any
 }
 
 export { ILoginStore }

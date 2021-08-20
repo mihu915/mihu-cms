@@ -6,6 +6,8 @@ import type { MHRequestConfig, MHRequestInterceptors } from './type'
 import { ElLoading, ElMessage } from 'element-plus'
 import type { ILoadingInstance } from 'element-plus/lib/el-loading/src/loading.type'
 
+import { router } from '@/router'
+import { localCache } from '@/utils'
 // showLoading的默认值为false
 const DEFAULT_LOADING = false
 const DEFAULT_MESSAGE = false
@@ -69,13 +71,21 @@ class MHRequest {
               type: 'success'
             })
           }
-        } else if (res.data.code % 400 <= 1) {
+        } else {
           console.log(this.showErrorMessage)
           if (this.showErrorMessage) {
             ElMessage({
               message: res.data.message,
               type: 'error'
             })
+          }
+
+          // 如果拦截到权限错误，则直接跳转至login并删除缓存
+          if (res.data.code === 401) {
+            router.replace('/login')
+            localCache.deleteCache('token')
+            localCache.deleteCache('userInfo')
+            localCache.deleteCache('userMenu')
           }
         }
         return res.data

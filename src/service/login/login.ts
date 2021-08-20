@@ -5,7 +5,7 @@ import qs from 'qs'
 enum LoginAPI {
   AccountLogin = '/login',
   LoginUserInfo = '/users',
-  UserMenu = '/menu'
+  UserMenus = '/menu'
 }
 
 function accountLoginRequest(account: IAccount): Promise<IDataType<ILoginDataType>> {
@@ -24,7 +24,7 @@ function getUserInfoRequest(): Promise<IDataType> {
 
 function getUserMenu(): Promise<IDataType> {
   return mhRequest.get({
-    url: LoginAPI.UserMenu
+    url: LoginAPI.UserMenus
   })
 }
 
