@@ -1,5 +1,9 @@
 <template>
-  <div>is system menu</div>
+  <div class="system-menu">
+    <h2 class="menu-title">菜单列表：</h2>
+
+    <div class="menu-content"></div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -12,4 +16,12 @@ export default defineComponent({
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.system-menu {
+  padding: 20px;
+}
+
+.menu-title {
+  margin: 0;
+}
+</style>

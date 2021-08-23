@@ -31,8 +31,17 @@ const login: Module<ILoginStore, IRootStore> = {
     },
 
     // 存储菜单
-    storageUserMenu(state, userMenu) {
-      state.userMenus = userMenu
+    storageUserMenu(state, userMenus) {
+      // 将菜单数据保存
+      state.userMenus = userMenus
+
+      // 获取匹配到的路由
+      const menuRoutes = mapMenus(userMenus)
+
+      // 注册路由
+      menuRoutes.forEach((route) => {
+        router.addRoute('main', route)
+      })
     }
   },
   actions: {
@@ -44,15 +53,14 @@ const login: Module<ILoginStore, IRootStore> = {
       commit('storageToken', token)
       localCache.setCache('token', token)
 
-      // 进行初始化
-      dispatch('userDataInit')
+      await dispatch('updateUserInfo')
 
       // 跳转至首页
       router.replace('/main')
     },
 
-    // 初始化动作
-    async userDataInit({ commit }) {
+    // 更新用户信息
+    async updateUserInfo({ commit }) {
       // 请求用户信息接口
       const userInfoResult = await getUserInfoRequest()
       if (userInfoResult.code !== 200) return
@@ -66,19 +74,21 @@ const login: Module<ILoginStore, IRootStore> = {
       const userMenus = userMenuResult.data
       localCache.setCache('userMenus', userMenus)
       commit('storageUserMenu', userMenus)
-
-      // 动态加载路由
-      mapMenus(userMenus)
     },
 
-    // 刷新缓存存入vuex
-    storageUserData({ commit, dispatch }) {
+    // 刷新后先将缓存中的数据存入到store,然后再更新一次数据
+    async storageUserData({ commit, dispatch }) {
       const token = localCache.getCache('token')
+      if (token) commit('storageToken', token)
 
-      if (token) {
-        commit('storageToken', token)
-        dispatch('userDataInit')
-      }
+      const userInfo = localCache.getCache('userInfo')
+      if (userInfo) commit('storageUserInfo', userInfo)
+
+      const userMenus = localCache.getCache('userMenus')
+      if (userMenus) commit('storageUserMenu', userMenus)
+
+      // 更新数据
+      await dispatch('updateUserInfo')
     }
   },
   modules: {}

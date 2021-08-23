@@ -72,20 +72,23 @@ class MHRequest {
             })
           }
         } else {
-          console.log(this.showErrorMessage)
-          if (this.showErrorMessage) {
-            ElMessage({
-              message: res.data.message,
-              type: 'error'
-            })
-          }
+          let message: any
 
           // 如果拦截到权限错误，则直接跳转至login并删除缓存
           if (res.data.code === 401) {
+            message = '登录已过期'
             router.replace('/login')
             localCache.deleteCache('token')
             localCache.deleteCache('userInfo')
             localCache.deleteCache('userMenu')
+          } else {
+            message = res.data.message
+          }
+          if (this.showErrorMessage) {
+            ElMessage({
+              message,
+              type: 'error'
+            })
           }
         }
         return res.data

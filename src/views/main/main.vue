@@ -9,7 +9,9 @@
           <nav-header @foldChange="foldChange"></nav-header>
         </el-header>
         <el-main>
-          <router-view></router-view>
+          <div class="main-item">
+            <router-view></router-view>
+          </div>
         </el-main>
       </el-container>
     </el-container>
@@ -30,10 +32,7 @@ export default defineComponent({
     const isCollapse = ref(true)
 
     const foldChange = function (isFold: boolean) {
-      console.log(isFold)
       isCollapse.value = isFold
-
-      // asideWidth.value = isExpand ? '200px' : '64px'
     }
 
     return { foldChange, isCollapse }
@@ -59,5 +58,9 @@ export default defineComponent({
   padding: 0;
   margin: 0;
   box-shadow: 0 -1px 5px #000;
+}
+.main-item {
+  background-color: #fff;
+  border-radius: 5px;
 }
 </style>

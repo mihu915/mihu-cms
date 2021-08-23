@@ -6,6 +6,7 @@
       active-text-color="#fff"
       class="el-menu-vertical"
       :collapse="!isCollapse"
+      :default-active="currentMenuId()"
     >
       <div class="cms-menu-title">
         <img class="logo" src="~@/assets/img/logo.svg" alt="logo" />
@@ -41,8 +42,8 @@ import { defineComponent } from 'vue'
 
 import { useStore } from '@/store'
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
-
+import { useRouter, useRoute } from 'vue-router'
+import { getCurrentMenu } from '@/utils'
 export default defineComponent({
   props: {
     isCollapse: {
@@ -51,16 +52,26 @@ export default defineComponent({
     }
   },
   setup() {
-    const router = useRouter()
     const store = useStore()
+    const router = useRouter()
+    const route = useRoute()
+
     const gotoRouter = (url: any) => {
-      console.log(url)
       router.push(url)
     }
+
+    // 获取当前菜单id
+    const currentMenuId = () => {
+      const currentMenu = getCurrentMenu(store.state.login.userMenus, route.path)
+      return currentMenu.id + ''
+    }
+
     const userMenus = computed(() => store.state.login.userMenus)
+
     return {
       userMenus,
-      gotoRouter
+      gotoRouter,
+      currentMenuId
     }
   }
 })

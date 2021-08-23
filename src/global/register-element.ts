@@ -17,9 +17,17 @@ import {
   ElMenu,
   ElSubmenu,
   ElMenuItem,
-  ElMenuItemGroup
+  ElMenuItemGroup,
+  ElBreadcrumb,
+  ElBreadcrumbItem,
+  ElAvatar,
+  ElDropdown,
+  ElDropdownItem,
+  ElDropdownMenu
 } from 'element-plus'
+
 import 'element-plus/lib/theme-chalk/index.css'
+
 const components = [
   ElButton,
   ElTabs,
@@ -38,7 +46,13 @@ const components = [
   ElMenu,
   ElSubmenu,
   ElMenuItem,
-  ElMenuItemGroup
+  ElMenuItemGroup,
+  ElBreadcrumb,
+  ElBreadcrumbItem,
+  ElAvatar,
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem
 ]
 
 export function registerElement(app: App): void {
