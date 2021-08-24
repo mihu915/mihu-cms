@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from 'vue-router'
-import { IBreadcrumb } from '@/base-ui/breadcrumb'
+import { IBreadcrumb } from '@/base-ui/mh-breadcrumb'
 
 let firstMenuPath: any = null
 function mapMenus(userMenus: any[]): RouteRecordRaw[] {

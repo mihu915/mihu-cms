@@ -22,8 +22,7 @@ export default defineComponent({
       default: () => []
     }
   },
-  setup(props) {
-    console.log(props.breadcrumbs)
+  setup() {
     return {}
   }
 })

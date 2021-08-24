@@ -20,7 +20,7 @@ import { useRoute } from 'vue-router'
 import { pathMapBreadcrumb } from '@/utils'
 
 import UserInfo from './user-info.vue'
-import MhBreadcrumb from '@/base-ui/breadcrumb'
+import MhBreadcrumb from '@/base-ui/mh-breadcrumb'
 export default defineComponent({
   components: {
     MhBreadcrumb,

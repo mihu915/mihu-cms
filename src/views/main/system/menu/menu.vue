@@ -1,27 +1,70 @@
 <template>
   <div class="system-menu">
-    <h2 class="menu-title">菜单列表：</h2>
+    <div class="system-menu-header">
+      <h2 class="table-title">菜单列表：</h2>
+      <el-button type="primary" @click="handleCreateMenu">添加菜单</el-button>
+    </div>
 
-    <div class="menu-content"></div>
+    <div class="menu-content">
+      <mh-table :tableConfig="tableConfig" @deleteMenu="deleteMenu" @editMenu="editMenu"></mh-table>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import MhTable from '@/base-ui/mh-table'
+
+import { tableConfig } from './config/menu.config'
 
 export default defineComponent({
+  components: {
+    MhTable
+  },
   setup() {
-    return {}
+    const handleCreateMenu = () => {
+      console.log('添加菜单')
+    }
+
+    const editMenu = (row: any) => {
+      console.log('编辑菜单', row.id)
+    }
+
+    const deleteMenu = (row: any) => {
+      console.log('删除菜单', row.id)
+    }
+    return {
+      tableConfig,
+      handleCreateMenu,
+      deleteMenu,
+      editMenu
+    }
   }
 })
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .system-menu {
   padding: 20px;
 }
 
 .menu-title {
   margin: 0;
+}
+.menu-content {
+  margin: 0 auto;
+}
+
+.system-menu-header {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  justify-content: space-between;
+  .table-title {
+    margin: 0;
+  }
+  .el-button {
+    height: 40px;
+  }
 }
 </style>

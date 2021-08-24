@@ -88,7 +88,9 @@ const login: Module<ILoginStore, IRootStore> = {
       if (userMenus) commit('storageUserMenu', userMenus)
 
       // 更新数据
-      await dispatch('updateUserInfo')
+      if (token) {
+        await dispatch('updateUserInfo')
+      }
     }
   },
   modules: {}
