@@ -10,12 +10,12 @@
 
         <template v-if="item.itemType === 'select'">
           <el-form-item :label="item.label">
-            <el-select v-model="region">
+            <el-select model-value="123">
               <el-option
                 v-for="option of item.selectOptionItem"
                 :key="option.label"
-                label="123"
-                value="test123"
+                :label="option.label"
+                :value="option.value"
               ></el-option>
             </el-select>
           </el-form-item>
