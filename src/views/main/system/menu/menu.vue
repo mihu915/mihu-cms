@@ -8,6 +8,7 @@
     <div class="menu-content">
       <mh-table :tableConfig="tableConfig" @deleteMenu="deleteMenu" @editMenu="editMenu"></mh-table>
     </div>
+    <edit-menu></edit-menu>
   </div>
 </template>
 
@@ -16,10 +17,12 @@ import { defineComponent } from 'vue'
 import MhTable from '@/base-ui/mh-table'
 
 import { tableConfig } from './config/menu.config'
+import EditMenu from './cpns/edit-menu.vue'
 
 export default defineComponent({
   components: {
-    MhTable
+    MhTable,
+    EditMenu
   },
   setup() {
     const handleCreateMenu = () => {
