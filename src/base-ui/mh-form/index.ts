@@ -1,3 +1,3 @@
 import MhForm from './src/mh-form.vue'
 export default MhForm
-export { IFormConfig } from './types/index'
+export type { IFormConfig } from './types/index'

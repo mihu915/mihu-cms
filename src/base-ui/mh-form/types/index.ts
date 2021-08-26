@@ -1,16 +1,35 @@
 interface IFormItemConfig {
   label: string
-  itemType: 'input' | 'select'
+  field: string
+  type: 'input' | 'select' | 'password' | 'datePicker'
   placeholder?: string
 
-  selectOptionItem?: {
-    value: string
+  option?: {
     label: string
+    value: string
   }[]
+
+  otherOptions?: {
+    startPlaceholder?: string
+    endPlaceholder?: string
+    type?: 'daterange'
+  }
+
+  colLayout?: {
+    span?: number
+    xl?: number //≥1920px
+    lg?: number //≥1200px
+    md?: number //≥992px
+    sm?: number //≥768px
+    xs?: number //<768px
+  }
 }
 
 interface IFormConfig {
-  itemAttributes: IFormItemConfig[]
+  gutter?: number // 间距
+  labelWidth?: number
+  formItemConfig: IFormItemConfig[]
+  itemLayout?: any
 }
 
-export { IFormConfig }
+export { IFormConfig, IFormItemConfig }

@@ -27,7 +27,8 @@ import {
   ElTable,
   ElTableColumn,
   ElSelect,
-  ElOption
+  ElOption,
+  ElDatePicker
 } from 'element-plus'
 
 import 'element-plus/lib/theme-chalk/index.css'
@@ -60,7 +61,8 @@ const components = [
   ElTable,
   ElTableColumn,
   ElSelect,
-  ElOption
+  ElOption,
+  ElDatePicker
 ]
 
 export function registerElement(app: App): void {

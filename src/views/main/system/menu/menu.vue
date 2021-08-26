@@ -16,7 +16,7 @@
 import { defineComponent } from 'vue'
 import MhTable from '@/base-ui/mh-table'
 
-import { tableConfig } from './config/menu.config'
+import { tableConfig } from './config/table.config'
 import EditMenu from './cpns/edit-menu.vue'
 
 export default defineComponent({

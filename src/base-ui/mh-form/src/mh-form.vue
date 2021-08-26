@@ -1,47 +1,93 @@
 <template>
   <div class="mh-form">
-    <el-form>
-      <template v-for="item of formConfig.itemAttributes" :key="item.label">
-        <template v-if="item.itemType === 'input'">
-          <el-form-item :label="item.label">
-            <el-input></el-input>
-          </el-form-item>
-        </template>
+    <el-form :label-width="formConfig.labelWidth">
+      <el-row :gutter="formConfig.gutter">
+        <template v-for="(item, index) of formConfig.formItemConfig" :key="index">
+          <el-col
+            :span="item.colLayout?.span"
+            :xs="item.colLayout?.xs || 24"
+            :sm="item.colLayout?.sm || 24"
+            :md="item.colLayout?.md || 12"
+            :lg="item.colLayout?.lg || 8"
+            :xl="item.colLayout?.xl || 6"
+          >
+            <el-form-item class="form-item" :label="item.label" :style="formConfig.itemLayout">
+              <template v-if="item.type === 'input' || item.type === 'password'">
+                <el-input
+                  :type="item.type === 'input' ? 'text' : 'password'"
+                  :placeholder="item.placeholder"
+                  v-model="formData[`${item.field}`]"
+                ></el-input>
+              </template>
 
-        <template v-if="item.itemType === 'select'">
-          <el-form-item :label="item.label">
-            <el-select model-value="123">
-              <el-option
-                v-for="option of item.selectOptionItem"
-                :key="option.label"
-                :label="option.label"
-                :value="option.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
+              <template v-else-if="item.type === 'select'">
+                <el-select
+                  style="width: 100%"
+                  :placeholder="item.placeholder"
+                  v-model="formData[`${item.field}`]"
+                >
+                  <template v-for="(option, index) of item.option" :key="index">
+                    <el-option :label="option.label" :value="option.value"></el-option>
+                  </template>
+                </el-select>
+              </template>
+
+              <template v-else-if="item.type === 'datePicker'">
+                <el-date-picker
+                  style="width: 100%"
+                  v-bind="item.otherOptions"
+                  :v-model="formData[`${item.field}`]"
+                ></el-date-picker>
+              </template>
+            </el-form-item>
+          </el-col>
         </template>
-      </template>
+      </el-row>
     </el-form>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue'
+import { defineComponent, PropType, ref, watch } from 'vue'
 import { IFormConfig } from '@/base-ui/mh-form'
 export default defineComponent({
+  emits: ['update:modelValue'],
   props: {
+    modelValue: {
+      type: Object,
+      required: true
+    },
+
     formConfig: {
       type: Object as PropType<IFormConfig>,
-      default: () => ({})
+      default: () => ({
+        gutter: 0
+      })
     }
   },
-  setup() {
-    const region = ref('')
+
+  setup(props, { emit }) {
+    const formData = ref({ ...props.modelValue })
+    watch(
+      formData,
+      (newValue) => {
+        console.log(newValue)
+        emit('update:modelValue', newValue)
+      },
+      {
+        deep: true
+      }
+    )
     return {
-      region
+      formData
     }
   }
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.form-item {
+  padding: 0;
+  margin: 0;
+}
+</style>

@@ -1,4 +1,4 @@
-export interface IPropList {
+interface IPropList {
   prop?: string
   label: string
   minWidth?: number
@@ -14,7 +14,8 @@ interface IOperation {
   icon?: string
   emitEventName: string
 }
-export interface ITableAttributes {
+
+interface ITableAttributes {
   border?: boolean
   data: []
   rowKey: string
@@ -25,10 +26,10 @@ export interface ITableAttributes {
 }
 
 export interface ITableConfig {
-  propList: IPropList[]
-  tableAttributes: ITableAttributes
   showOtherTableContent: {
     showSelectColumn: boolean
     showIndexColumn: boolean
   }
+  propList: IPropList[]
+  tableAttributes: ITableAttributes
 }

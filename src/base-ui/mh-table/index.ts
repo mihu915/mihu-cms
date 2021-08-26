@@ -1,4 +1,4 @@
 import MhTable from './src/mh-table.vue'
-export { IPropList, ITableConfig } from './types'
-
+import type { ITableConfig } from './types'
+export { ITableConfig }
 export default MhTable
