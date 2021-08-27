@@ -1,18 +1,23 @@
 interface IFormItemConfig {
   label: string
   field: string
-  type: 'input' | 'select' | 'password' | 'datePicker'
+  isShow?: boolean
+  rules?: any
+  type: 'input' | 'select' | 'password' | 'datePicker' | 'radioGroup'
   placeholder?: string
 
-  option?: {
+  options?: {
     label: string
-    value: string
+    value?: any
   }[]
 
-  otherOptions?: {
+  otherOption?: {
     startPlaceholder?: string
     endPlaceholder?: string
     type?: 'daterange'
+    border?: boolean
+    size?: 'medium' | 'small' | 'mini'
+    radioStyle?: any
   }
 
   colLayout?: {

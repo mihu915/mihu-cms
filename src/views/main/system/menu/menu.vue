@@ -8,25 +8,28 @@
     <div class="menu-content">
       <mh-table :tableConfig="tableConfig" @deleteMenu="deleteMenu" @editMenu="editMenu"></mh-table>
     </div>
-    <edit-menu></edit-menu>
+
+    <menu-form :formShow="formShow" @closeForm="closeForm"></menu-form>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import MhTable from '@/base-ui/mh-table'
 
 import { tableConfig } from './config/table.config'
-import EditMenu from './cpns/edit-menu.vue'
+import MenuForm from './cpns/menu-form.vue'
 
 export default defineComponent({
   components: {
     MhTable,
-    EditMenu
+    MenuForm
   },
   setup() {
+    const formShow = ref(false)
+    // 添加菜单
     const handleCreateMenu = () => {
-      console.log('添加菜单')
+      formShow.value = true
     }
 
     const editMenu = (row: any) => {
@@ -36,11 +39,16 @@ export default defineComponent({
     const deleteMenu = (row: any) => {
       console.log('删除菜单', row.id)
     }
+    const closeForm = () => {
+      formShow.value = false
+    }
     return {
       tableConfig,
+      formShow,
       handleCreateMenu,
       deleteMenu,
-      editMenu
+      editMenu,
+      closeForm
     }
   }
 })

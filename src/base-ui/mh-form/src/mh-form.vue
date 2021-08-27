@@ -1,17 +1,24 @@
 <template>
   <div class="mh-form">
-    <el-form :label-width="formConfig.labelWidth">
+    <el-form :label-width="formConfig.labelWidth" :model="formData" ref="formRef">
       <el-row :gutter="formConfig.gutter">
         <template v-for="(item, index) of formConfig.formItemConfig" :key="index">
           <el-col
-            :span="item.colLayout?.span"
-            :xs="item.colLayout?.xs || 24"
-            :sm="item.colLayout?.sm || 24"
-            :md="item.colLayout?.md || 12"
-            :lg="item.colLayout?.lg || 8"
-            :xl="item.colLayout?.xl || 6"
+            :span="item.colLayout?.span || 24"
+            :xs="item.colLayout?.xs"
+            :sm="item.colLayout?.sm"
+            :md="item.colLayout?.md"
+            :lg="item.colLayout?.lg"
+            :xl="item.colLayout?.xl"
           >
-            <el-form-item class="form-item" :label="item.label" :style="formConfig.itemLayout">
+            <el-form-item
+              class="form-item"
+              :label="item.label"
+              :style="formConfig.itemLayout"
+              :rules="item.rules"
+              :prop="item.field"
+              v-if="item.isShow === undefined || item.isShow === true"
+            >
               <template v-if="item.type === 'input' || item.type === 'password'">
                 <el-input
                   :type="item.type === 'input' ? 'text' : 'password'"
@@ -26,7 +33,7 @@
                   :placeholder="item.placeholder"
                   v-model="formData[`${item.field}`]"
                 >
-                  <template v-for="(option, index) of item.option" :key="index">
+                  <template v-for="(option, index) of item.options" :key="index">
                     <el-option :label="option.label" :value="option.value"></el-option>
                   </template>
                 </el-select>
@@ -35,9 +42,22 @@
               <template v-else-if="item.type === 'datePicker'">
                 <el-date-picker
                   style="width: 100%"
-                  v-bind="item.otherOptions"
+                  v-bind="item.otherOption"
                   :v-model="formData[`${item.field}`]"
                 ></el-date-picker>
+              </template>
+
+              <template v-else-if="item.type === 'radioGroup'">
+                <el-radio-group v-model="formData[`${item.field}`]">
+                  <el-radio
+                    :style="item.otherOption?.radioStyle"
+                    v-bind="item.otherOption"
+                    v-for="(option, index) of item.options"
+                    :key="index"
+                    :label="option?.label"
+                    >{{ option?.value }}
+                  </el-radio>
+                </el-radio-group>
               </template>
             </el-form-item>
           </el-col>
@@ -50,8 +70,10 @@
 <script lang="ts">
 import { defineComponent, PropType, ref, watch } from 'vue'
 import { IFormConfig } from '@/base-ui/mh-form'
+import { ElForm } from 'element-plus'
 export default defineComponent({
   emits: ['update:modelValue'],
+
   props: {
     modelValue: {
       type: Object,
@@ -67,11 +89,16 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
+    const formRef = ref<InstanceType<typeof ElForm>>()
     const formData = ref({ ...props.modelValue })
+    const mhFormValid = () => {
+      formRef.value?.validate((valid) => {
+        return valid
+      })
+    }
     watch(
       formData,
       (newValue) => {
-        console.log(newValue)
         emit('update:modelValue', newValue)
       },
       {
@@ -79,7 +106,9 @@ export default defineComponent({
       }
     )
     return {
-      formData
+      formData,
+      formRef,
+      mhFormValid
     }
   }
 })

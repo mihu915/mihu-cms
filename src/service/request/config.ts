@@ -11,7 +11,7 @@ switch (process.env.NODE_ENV) {
     break
   case 'production':
     // 生产环境
-    BASE_URL = 'http://152.136.185.210:5000'
+    BASE_URL = 'http://47.111.81.205:1118'
     break
   default:
     break

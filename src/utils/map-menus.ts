@@ -55,4 +55,14 @@ function pathMapBreadcrumb(userMenus: any[], currentPath: string) {
   getCurrentMenu(userMenus, currentPath, menuBreadcrumb)
   return menuBreadcrumb
 }
-export { mapMenus, firstMenuPath, getCurrentMenu, pathMapBreadcrumb }
+
+// 获取所有父级菜单
+function getParentMenu(userMenus: any[]) {
+  const parentMenuTitle: any[] = []
+  userMenus.forEach((item) => {
+    parentMenuTitle.push(item)
+  })
+
+  return parentMenuTitle
+}
+export { mapMenus, firstMenuPath, getCurrentMenu, pathMapBreadcrumb, getParentMenu }

@@ -18,7 +18,7 @@ const tableConfig: ITableConfig = {
   },
 
   propList: [
-    { prop: 'title', label: '标题' },
+    { prop: 'title', label: '菜单名' },
     { prop: 'icon', label: '图标' },
     { prop: 'sort', label: '排序' },
     { prop: 'type', label: '类型' },

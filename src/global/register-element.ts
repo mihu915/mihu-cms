@@ -28,7 +28,11 @@ import {
   ElTableColumn,
   ElSelect,
   ElOption,
-  ElDatePicker
+  ElDatePicker,
+  ElDialog,
+  ElRadio,
+  ElRadioGroup,
+  ElRadioButton
 } from 'element-plus'
 
 import 'element-plus/lib/theme-chalk/index.css'
@@ -62,7 +66,11 @@ const components = [
   ElTableColumn,
   ElSelect,
   ElOption,
-  ElDatePicker
+  ElDatePicker,
+  ElDialog,
+  ElRadio,
+  ElRadioGroup,
+  ElRadioButton
 ]
 
 export function registerElement(app: App): void {

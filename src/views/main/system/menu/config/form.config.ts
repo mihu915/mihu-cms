@@ -1,32 +1,81 @@
 import { IFormConfig } from '@/base-ui/mh-form'
+import { store } from '@/store'
+import { getParentMenu } from '@/utils'
+const userMenus = (store.state as any).login.userMenus
+
+const groupLabels: any[] = []
+
+getParentMenu(userMenus).forEach((item) => {
+  groupLabels.push({ label: item.id, value: item.title })
+})
+
 const editMenuConfig: IFormConfig = {
-  gutter: 100, //间距
   labelWidth: 100,
   itemLayout: {
-    marginTop: '20px'
+    marginBottom: '25px'
   },
   formItemConfig: [
-    { type: 'input', label: '用户名', field: 'username', placeholder: '请输入用户名' },
-    { type: 'password', label: '密码', field: 'password', placeholder: '请输入密码' },
     {
-      type: 'select',
-      label: '选择',
-      field: 'selectResult',
-      placeholder: '请选择',
-      option: [
-        { label: 'aaa', value: 'a' },
-        { label: 'bbb', value: 'b' }
+      type: 'input',
+      label: '菜单名：',
+      field: 'menuName',
+      placeholder: '请输入菜单名',
+      rules: [
+        {
+          required: true,
+          message: '菜单名不可为空',
+          trigger: 'blur'
+        }
       ]
     },
     {
-      type: 'datePicker',
-      label: '选择时间',
-      field: 'time',
-      otherOptions: {
-        startPlaceholder: '开始时间',
-        endPlaceholder: '结束时间',
-        type: 'daterange'
-      }
+      type: 'input',
+      label: '图标：',
+      field: 'icon',
+      placeholder: '请输入图标'
+    },
+    {
+      type: 'input',
+      label: '排序：',
+      field: 'sort',
+      placeholder: '请输入序号'
+    },
+    {
+      type: 'select',
+      label: '类型：',
+      field: 'type',
+      placeholder: '请选择类型',
+      options: [
+        { label: '折叠选项', value: 1 },
+        { label: '菜单', value: 2 }
+      ]
+    },
+    {
+      type: 'radioGroup',
+      label: '父级菜单：',
+      field: 'parentMenu',
+      isShow: false,
+      options: groupLabels,
+      otherOption: {
+        border: true,
+        size: 'mini',
+        radioStyle: {
+          margin: '0 5px 0 0'
+        }
+      },
+      rules: [
+        {
+          required: true,
+          message: '必须选择一个父级菜单',
+          trigger: 'blur'
+        }
+      ]
+    },
+    {
+      type: 'input',
+      label: 'url：',
+      field: 'url',
+      placeholder: '请输入url'
     }
   ]
 }
