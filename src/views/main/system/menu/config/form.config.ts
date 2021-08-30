@@ -46,8 +46,8 @@ const editMenuConfig: IFormConfig = {
       field: 'type',
       placeholder: '请选择类型',
       options: [
-        { label: '折叠选项', value: 1 },
-        { label: '菜单', value: 2 }
+        { label: '父级菜单', value: 1 },
+        { label: '子菜单', value: 2 }
       ],
       rules: [
         {

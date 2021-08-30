@@ -17,4 +17,12 @@ const deleteMenu = (id: number): Promise<IDataType> => {
   })
 }
 
-export { createMenu, deleteMenu }
+const alterMenu = (menuData: any): Promise<IDataType> => {
+  return mhRequest.post({
+    url: `menu/${menuData.id}/alter`,
+    data: qs.stringify(menuData),
+    showMessage: true
+  })
+}
+
+export { createMenu, deleteMenu, alterMenu }

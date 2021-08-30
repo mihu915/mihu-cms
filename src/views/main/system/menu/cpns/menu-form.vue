@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import mhForm from '@/base-ui/mh-form/src/mh-form.vue'
-import { defineComponent, ref, watch, PropType } from 'vue'
+import { defineComponent, ref, watch, PropType, computed } from 'vue'
 import { editMenuConfig } from '../config/form.config'
 
 import { useStore } from '@/store'
@@ -42,6 +42,7 @@ export default defineComponent({
       default: () => ({})
     }
   },
+
   emits: ['closeForm'],
   setup(props, { emit }) {
     const store = useStore()
@@ -49,18 +50,21 @@ export default defineComponent({
     const formData: any = ref({})
     const btnMessage = ref('')
     const mhFormRef = ref<InstanceType<typeof mhForm>>()
-    const userMenus = store.state.login.userMenus
+    const userMenus = computed(() => store.state.login.userMenus)
+
     const parentIdIndex = getFormItemConfigIndex('parent_id')
 
     watch(
       () => props.formShow,
       (newValue) => {
         if (props.openFormType === 'new' && newValue) {
-          formConfig.value.formItemConfig[parentIdIndex].options = getParentMenuInfo(userMenus)
+          formConfig.value.formItemConfig[parentIdIndex].options = getParentMenuInfo(
+            userMenus.value
+          )
           btnMessage.value = '新建'
         } else if (props.openFormType === 'edit' && newValue) {
           formConfig.value.formItemConfig[parentIdIndex].options = getParentMenuInfo(
-            userMenus,
+            userMenus.value,
             props.currentMenuData.id
           )
 
@@ -108,7 +112,8 @@ export default defineComponent({
         if (props.openFormType === 'new') {
           store.dispatch('system/createMenu', formData.value)
         } else if (props.openFormType === 'edit') {
-          console.log(formData.value)
+          if (formData.value.type === 1) formData.value.parent_id = null
+          store.dispatch('system/alterMenu', formData.value)
         }
 
         handleClose()

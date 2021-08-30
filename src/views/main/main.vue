@@ -9,7 +9,7 @@
           <nav-header @foldChange="foldChange"></nav-header>
         </el-header>
         <el-main>
-          <div class="main-item">
+          <div class="main-content">
             <router-view></router-view>
           </div>
         </el-main>
@@ -60,8 +60,9 @@ export default defineComponent({
   box-shadow: 0 -1px 5px #000;
   z-index: 999;
 }
-.main-item {
+.main-content {
   background-color: #fff;
   border-radius: 5px;
+  padding: 20px;
 }
 </style>
