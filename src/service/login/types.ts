@@ -1,3 +1,5 @@
+import { IDataType } from '../types'
+
 interface IAccount {
   username: string
   password: string
@@ -5,12 +7,6 @@ interface IAccount {
 
 interface IUserInfoParams {
   username: string
-}
-
-interface IDataType<T = any> {
-  code: number
-  message?: string
-  data?: T
 }
 
 interface ILoginDataType {

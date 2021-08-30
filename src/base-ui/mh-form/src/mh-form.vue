@@ -91,11 +91,15 @@ export default defineComponent({
   setup(props, { emit }) {
     const formRef = ref<InstanceType<typeof ElForm>>()
     const formData = ref({ ...props.modelValue })
+
     const mhFormValid = () => {
+      let flag: any = false
       formRef.value?.validate((valid) => {
-        return valid
+        flag = valid
       })
+      return flag
     }
+
     watch(
       formData,
       (newValue) => {

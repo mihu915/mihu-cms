@@ -35,6 +35,7 @@ function mapMenus(userMenus: any[]): RouteRecordRaw[] {
   return routes
 }
 
+// 获取当前菜单
 function getCurrentMenu(userMenus: any[], currentPath: string, breadcrumbs?: IBreadcrumb[]): any {
   for (const menu of userMenus) {
     if (menu.type === 1) {
@@ -50,19 +51,24 @@ function getCurrentMenu(userMenus: any[], currentPath: string, breadcrumbs?: IBr
   }
 }
 
+// 获取当前对应的面包屑
 function pathMapBreadcrumb(userMenus: any[], currentPath: string) {
   const menuBreadcrumb: IBreadcrumb[] = []
   getCurrentMenu(userMenus, currentPath, menuBreadcrumb)
   return menuBreadcrumb
 }
 
-// 获取所有父级菜单
-function getParentMenu(userMenus: any[]) {
+// 获取父级菜单id和title
+function getParentMenuInfo(userMenus: any[], excludeId?: number) {
   const parentMenuTitle: any[] = []
   userMenus.forEach((item) => {
-    parentMenuTitle.push(item)
+    if (item.id === excludeId && excludeId) {
+      return
+    } else {
+      parentMenuTitle.push({ value: item.title, label: item.id })
+    }
   })
 
   return parentMenuTitle
 }
-export { mapMenus, firstMenuPath, getCurrentMenu, pathMapBreadcrumb, getParentMenu }
+export { mapMenus, firstMenuPath, getCurrentMenu, pathMapBreadcrumb, getParentMenuInfo }

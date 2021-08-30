@@ -54,6 +54,7 @@ const login: Module<ILoginStore, IRootStore> = {
       localCache.setCache('token', token)
 
       await dispatch('updateUserInfo')
+      await dispatch('getUserMenus')
 
       // 跳转至首页
       router.replace('/main')
@@ -61,14 +62,15 @@ const login: Module<ILoginStore, IRootStore> = {
 
     // 更新用户信息
     async updateUserInfo({ commit }) {
-      // 请求用户信息接口
       const userInfoResult = await getUserInfoRequest()
       if (userInfoResult.code !== 200) return
       const userInfo = userInfoResult.data
       localCache.setCache('userInfo', userInfo)
       commit('storageUserInfo', userInfo)
+    },
 
-      //请求菜单接口
+    //请求菜单接口
+    async getUserMenus({ commit }) {
       const userMenuResult = await getUserMenu()
       if (userMenuResult.code !== 200) return
       const userMenus = userMenuResult.data
@@ -90,6 +92,7 @@ const login: Module<ILoginStore, IRootStore> = {
       // 更新数据
       if (token) {
         await dispatch('updateUserInfo')
+        await dispatch('getUserMenus')
       }
     }
   },

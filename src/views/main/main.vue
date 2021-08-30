@@ -58,6 +58,7 @@ export default defineComponent({
   padding: 0;
   margin: 0;
   box-shadow: 0 -1px 5px #000;
+  z-index: 999;
 }
 .main-item {
   background-color: #fff;

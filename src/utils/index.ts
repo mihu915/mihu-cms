@@ -5,7 +5,7 @@ import {
   firstMenuPath,
   getCurrentMenu,
   pathMapBreadcrumb,
-  getParentMenu
+  getParentMenuInfo
 } from './map-menus'
 
 export {
@@ -15,5 +15,5 @@ export {
   firstMenuPath,
   getCurrentMenu,
   pathMapBreadcrumb,
-  getParentMenu
+  getParentMenuInfo
 }

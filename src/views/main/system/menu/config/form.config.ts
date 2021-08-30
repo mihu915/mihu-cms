@@ -1,11 +1,11 @@
 import { IFormConfig } from '@/base-ui/mh-form'
 import { store } from '@/store'
-import { getParentMenu } from '@/utils'
+import { getParentMenuInfo } from '@/utils'
 const userMenus = (store.state as any).login.userMenus
 
 const groupLabels: any[] = []
 
-getParentMenu(userMenus).forEach((item) => {
+getParentMenuInfo(userMenus).forEach((item) => {
   groupLabels.push({ label: item.id, value: item.title })
 })
 
@@ -18,7 +18,7 @@ const editMenuConfig: IFormConfig = {
     {
       type: 'input',
       label: '菜单名：',
-      field: 'menuName',
+      field: 'title',
       placeholder: '请输入菜单名',
       rules: [
         {
@@ -48,12 +48,19 @@ const editMenuConfig: IFormConfig = {
       options: [
         { label: '折叠选项', value: 1 },
         { label: '菜单', value: 2 }
+      ],
+      rules: [
+        {
+          required: true,
+          message: '类型为必选的',
+          trigger: 'blur'
+        }
       ]
     },
     {
       type: 'radioGroup',
       label: '父级菜单：',
-      field: 'parentMenu',
+      field: 'parent_id',
       isShow: false,
       options: groupLabels,
       otherOption: {

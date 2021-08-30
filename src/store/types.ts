@@ -5,6 +5,7 @@ export interface IRootStore {
 }
 
 export interface IRootWithModule {
+  system: any
   login: ILoginStore
 }
 

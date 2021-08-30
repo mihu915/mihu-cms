@@ -144,6 +144,10 @@ class MHRequest {
   post<T>(config: MHRequestConfig): Promise<T> {
     return this.request({ ...config, method: 'post' })
   }
+
+  delete<T>(config: MHRequestConfig): Promise<T> {
+    return this.request({ ...config, method: 'delete' })
+  }
 }
 
 export default MHRequest
