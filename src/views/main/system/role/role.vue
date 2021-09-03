@@ -2,6 +2,7 @@
   <div class="role">
     <content-page :contentConfig="contentConfig" pageName="role"></content-page>
   </div>
+  <div class="user-rule">role</div>
 </template>
 
 <script lang="ts">

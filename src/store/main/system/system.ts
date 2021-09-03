@@ -2,7 +2,7 @@ import { Module } from 'vuex'
 
 import { IRootStore } from '@/store/types'
 import { ISystemStore } from './types'
-import { createMenu, deleteMenu, getListData } from '@/service/system/system'
+import { createMenu, deleteMenu, getListData, alterMenu } from '@/service/system/system'
 
 const system: Module<ISystemStore, IRootStore> = {
   namespaced: true,
@@ -44,6 +44,12 @@ const system: Module<ISystemStore, IRootStore> = {
 
     async deleteMenu({ dispatch }, menuId) {
       const result = await deleteMenu(menuId)
+      if (result.code !== 200) return
+      await dispatch('login/getUserMenus', null, { root: true })
+    },
+
+    async alterMenu({ dispatch }, menuData) {
+      const result = await alterMenu(menuData)
       if (result.code !== 200) return
       await dispatch('login/getUserMenus', null, { root: true })
     }

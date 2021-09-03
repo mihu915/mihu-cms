@@ -54,7 +54,7 @@ export default defineComponent({
     const userMenus = computed(() => store.state.login.userMenus)
 
     const openBox = (menuName: string) => {
-      return ElMessageBox.confirm(`此操作将删除菜单:《${menuName}》,是否继续？`, '提示', {
+      return ElMessageBox.confirm(`此操作将删除菜单:《${menuName}》，是否继续？`, '提示', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
         type: 'warning'
@@ -105,10 +105,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="less">
-.system-menu {
-  padding: 20px;
-}
-
 .menu-title {
   margin: 0;
 }
