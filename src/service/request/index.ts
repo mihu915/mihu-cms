@@ -130,8 +130,14 @@ class MHRequest {
             res = config.interceptors.responseInterceptors(res)
           }
           resolve(res)
+          this.showErrorMessage = DEFAULT_ERROR_MESSAGE
+          this.showMessage = DEFAULT_MESSAGE
+          this.showLoading = DEFAULT_LOADING
         })
         .catch((err) => {
+          this.showErrorMessage = DEFAULT_ERROR_MESSAGE
+          this.showMessage = DEFAULT_MESSAGE
+          this.showLoading = DEFAULT_LOADING
           reject(err)
         })
     })
@@ -147,6 +153,10 @@ class MHRequest {
 
   delete<T>(config: MHRequestConfig): Promise<T> {
     return this.request({ ...config, method: 'delete' })
+  }
+
+  patch<T>(config: MHRequestConfig): Promise<T> {
+    return this.request({ ...config, method: 'patch' })
   }
 }
 

@@ -11,6 +11,7 @@ interface IPropList {
 export interface ITableConfig {
   border?: boolean
   rowKey: string
+  size?: 'medium' | 'small' | 'mini'
   treeProps?: {
     children?: string
     rowKey: string

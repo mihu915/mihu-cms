@@ -33,15 +33,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
-import { ElMessageBox } from 'element-plus'
-
-import { tableConfig } from './config/table.config'
-
-import { useStore } from '@/store'
-
 import MhTable from '@/base-ui/mh-table'
 import MenuForm from './cpns/menu-form.vue'
+
+import { computed, defineComponent, ref } from 'vue'
+import { ElMessageBox } from 'element-plus'
+import { tableConfig } from './config/table.config'
+import { useStore } from '@/store'
 
 export default defineComponent({
   components: {
