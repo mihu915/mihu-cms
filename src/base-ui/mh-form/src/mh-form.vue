@@ -4,12 +4,12 @@
       <el-row :gutter="formConfig.gutter">
         <template v-for="(item, index) of formConfig.formItemConfig" :key="index">
           <el-col
-            :span="item.colLayout?.span || 24"
-            :xs="item.colLayout?.xs"
-            :sm="item.colLayout?.sm"
-            :md="item.colLayout?.md"
-            :lg="item.colLayout?.lg"
-            :xl="item.colLayout?.xl"
+            :span="formConfig.colLayout?.span || 24"
+            :xs="formConfig.colLayout?.xs"
+            :sm="formConfig.colLayout?.sm"
+            :md="formConfig.colLayout?.md"
+            :lg="formConfig.colLayout?.lg"
+            :xl="formConfig.colLayout?.xl"
           >
             <el-form-item
               class="form-item"
@@ -71,6 +71,7 @@
 import { defineComponent, PropType, ref, watch } from 'vue'
 import { IFormConfig } from '@/base-ui/mh-form'
 import { ElForm } from 'element-plus'
+
 export default defineComponent({
   emits: ['update:modelValue'],
 
@@ -118,7 +119,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .form-item {
   padding: 0;
   margin: 0;

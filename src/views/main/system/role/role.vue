@@ -1,21 +1,28 @@
 <template>
   <div class="role">
-    <content-page :contentConfig="contentConfig" pageName="role"></content-page>
+    <search-page :searchConfig="roleSearchConfig" title="查询用户："></search-page>
+    <content-page :contentConfig="roleContentConfig" pageName="role" title="角色列表：">
+    </content-page>
   </div>
-  <div class="user-rule">role</div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { roleContentConfig } from './config/content.config'
+import { roleSearchConfig } from './config/search.config'
+
 import ContentPage from '@/components/content-page'
-import { contentConfig } from './config/content.config'
+import SearchPage from '@/components/search-page'
+
 export default defineComponent({
   components: {
-    ContentPage
+    ContentPage,
+    SearchPage
   },
   setup() {
     return {
-      contentConfig
+      roleContentConfig,
+      roleSearchConfig
     }
   }
 })

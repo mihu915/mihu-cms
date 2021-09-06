@@ -9,17 +9,17 @@ const getListData = (url: string, queryInfo: any): Promise<IDataType> => {
   })
 }
 
-const createMenu = (data: any): Promise<IDataType> => {
-  return mhRequest.post({
-    url: 'menu',
-    data: qs.stringify(data),
+const deleteListData = (url: string): Promise<IDataType> => {
+  return mhRequest.delete({
+    url,
     showMessage: true
   })
 }
 
-const deleteMenu = (id: number): Promise<IDataType> => {
-  return mhRequest.delete({
-    url: `menu/${id}`,
+const createMenu = (data: any): Promise<IDataType> => {
+  return mhRequest.post({
+    url: 'menu',
+    data: qs.stringify(data),
     showMessage: true
   })
 }
@@ -32,4 +32,4 @@ const alterMenu = (menuData: any): Promise<IDataType> => {
   })
 }
 
-export { createMenu, deleteMenu, alterMenu, getListData }
+export { createMenu, deleteListData, alterMenu, getListData }

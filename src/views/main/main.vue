@@ -61,8 +61,6 @@ export default defineComponent({
   z-index: 999;
 }
 .main-content {
-  background-color: #fff;
   border-radius: 5px;
-  padding: 20px;
 }
 </style>

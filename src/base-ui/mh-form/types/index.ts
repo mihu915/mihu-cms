@@ -19,6 +19,13 @@ interface IFormItemConfig {
     size?: 'medium' | 'small' | 'mini'
     radioStyle?: any
   }
+}
+
+interface IFormConfig {
+  gutter?: number // 间距
+  labelWidth?: number
+  formItemConfig: IFormItemConfig[]
+  itemLayout?: any
 
   colLayout?: {
     span?: number
@@ -28,13 +35,6 @@ interface IFormItemConfig {
     sm?: number //≥768px
     xs?: number //<768px
   }
-}
-
-interface IFormConfig {
-  gutter?: number // 间距
-  labelWidth?: number
-  formItemConfig: IFormItemConfig[]
-  itemLayout?: any
 }
 
 export { IFormConfig, IFormItemConfig }

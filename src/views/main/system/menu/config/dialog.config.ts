@@ -1,15 +1,8 @@
 import { IFormConfig } from '@/base-ui/mh-form'
-import { store } from '@/store'
-import { getParentMenuInfo } from '@/utils'
-const userMenus = (store.state as any).login.userMenus
 
 const groupLabels: any[] = []
 
-getParentMenuInfo(userMenus).forEach((item) => {
-  groupLabels.push({ label: item.id, value: item.title })
-})
-
-const editMenuConfig: IFormConfig = {
+const dialogConfig: IFormConfig = {
   labelWidth: 100,
   itemLayout: {
     marginBottom: '25px'
@@ -87,4 +80,4 @@ const editMenuConfig: IFormConfig = {
   ]
 }
 
-export { editMenuConfig }
+export { dialogConfig }

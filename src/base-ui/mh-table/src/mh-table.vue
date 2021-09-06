@@ -23,7 +23,7 @@
         >
           <template #default="scope">
             <slot :name="item.slotName" :row="scope.row">
-              {{ scope.row[item.prop] }}
+              {{ handleNullData(scope.row[item.prop]) }}
             </slot>
           </template>
         </el-table-column>
@@ -37,6 +37,10 @@ import { defineComponent, PropType } from 'vue'
 import { ITableConfig } from '../index'
 export default defineComponent({
   props: {
+    title: {
+      type: String,
+      default: ''
+    },
     tableData: {
       type: Array,
       default: () => []
@@ -47,7 +51,16 @@ export default defineComponent({
     }
   },
   setup() {
-    return {}
+    const handleNullData = (data: any) => {
+      if (typeof data === undefined || data === null) {
+        return '—'
+      } else {
+        return data
+      }
+    }
+    return {
+      handleNullData
+    }
   }
 })
 </script>

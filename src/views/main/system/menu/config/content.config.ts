@@ -1,6 +1,6 @@
 import { ITableConfig } from '@/base-ui/mh-table'
 
-const tableConfig: ITableConfig = {
+const menuContentConfig: ITableConfig = {
   rowKey: 'id',
   border: true,
   treeProps: {
@@ -21,4 +21,4 @@ const tableConfig: ITableConfig = {
   ]
 }
 
-export { tableConfig }
+export { menuContentConfig }
