@@ -1,5 +1,6 @@
 import localCache from './cache'
 import encrypt from './encrypt'
+import { getArrayIndex } from './getArrayIndex'
 import {
   mapMenus,
   firstMenuPath,
@@ -15,5 +16,6 @@ export {
   firstMenuPath,
   getCurrentMenu,
   pathMapBreadcrumb,
-  getParentMenuInfo
+  getParentMenuInfo,
+  getArrayIndex
 }

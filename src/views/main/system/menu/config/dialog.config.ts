@@ -1,7 +1,5 @@
 import { IFormConfig } from '@/base-ui/mh-form'
 
-const groupLabels: any[] = []
-
 const dialogConfig: IFormConfig = {
   labelWidth: 100,
   itemLayout: {
@@ -54,8 +52,8 @@ const dialogConfig: IFormConfig = {
       type: 'radioGroup',
       label: '父级菜单：',
       field: 'parent_id',
+
       isShow: false,
-      options: groupLabels,
       otherOption: {
         border: true,
         size: 'mini',

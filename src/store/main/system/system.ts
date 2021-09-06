@@ -2,7 +2,7 @@ import { Module } from 'vuex'
 
 import { IRootStore } from '@/store/types'
 import { ISystemStore } from './types'
-import { createMenu, deleteListData, getListData, alterMenu } from '@/service/system/system'
+import { createData, deleteListData, getListData, alterListData } from '@/service/system/system'
 
 const system: Module<ISystemStore, IRootStore> = {
   namespaced: true,
@@ -16,7 +16,6 @@ const system: Module<ISystemStore, IRootStore> = {
   getters: {
     getPageListData(state) {
       return (pageName: any) => {
-        console.log((state as any)[`${pageName}ListData`])
         return (state as any)[`${pageName}ListData`]
       }
     }
@@ -62,20 +61,34 @@ const system: Module<ISystemStore, IRootStore> = {
           await dispatch('pageListDataAction', { pageName: pageName })
           break
       }
+    },
+
+    async createData({ dispatch }, payload) {
+      const { pageName, data } = payload
+      const result = await createData(`/${pageName}`, data)
+      if (result.code !== 200) return
+
+      switch (pageName) {
+        case 'menu':
+          // 更新用户菜单数据
+          await dispatch('login/getUserMenus', null, { root: true })
+          await dispatch('pageListDataAction', { pageName: pageName })
+          break
+      }
+    },
+
+    async alterListData({ dispatch }, payload) {
+      const { pageName, data } = payload
+      const result = await alterListData(`/${pageName}/${data.id}`, data)
+      if (result.code !== 200) return
+
+      switch (pageName) {
+        case 'menu':
+          await dispatch('login/getUserMenus', null, { root: true })
+          await dispatch('pageListDataAction', { pageName: pageName })
+          break
+      }
     }
-
-    // async createMenu({ dispatch }, menuData) {
-    //   const result = await createMenu(menuData)
-    //   if (result.code !== 200) return
-    //   // 更新用户菜单数据
-    //   await dispatch('login/getUserMenus', null, { root: true })
-    // },
-
-    // async alterMenu({ dispatch }, menuData) {
-    //   const result = await alterMenu(menuData)
-    //   if (result.code !== 200) return
-    //   await dispatch('login/getUserMenus', null, { root: true })
-    // }
   }
 }
 

@@ -2,6 +2,7 @@ import { RouteRecordRaw } from 'vue-router'
 import { IBreadcrumb } from '@/base-ui/mh-breadcrumb'
 
 let firstMenuPath: any = null
+
 function mapMenus(userMenus: any[]): RouteRecordRaw[] {
   const context = require.context('../router/main', true, /\.ts/)
   const routes: RouteRecordRaw[] = []
@@ -59,9 +60,9 @@ function pathMapBreadcrumb(userMenus: any[], currentPath: string) {
 }
 
 // 获取父级菜单id和title
-function getParentMenuInfo(userMenus: any[], excludeId?: number) {
+function getParentMenuInfo(menuList: any[], excludeId?: number) {
   const parentMenuTitle: any[] = []
-  userMenus.forEach((item) => {
+  menuList.forEach((item) => {
     if (item.id === excludeId && excludeId) {
       return
     } else {

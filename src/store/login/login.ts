@@ -72,7 +72,7 @@ const login: Module<ILoginStore, IRootStore> = {
     //请求菜单接口
     async getUserMenus({ commit }) {
       const userMenuResult = await getUserMenu()
-      if (userMenuResult.code !== 200) return
+      if (userMenuResult.code !== 200) return userMenuResult.code
       const userMenus = userMenuResult.data
       localCache.setCache('userMenus', userMenus)
       commit('storageUserMenu', userMenus)
@@ -91,7 +91,8 @@ const login: Module<ILoginStore, IRootStore> = {
 
       // 更新数据
       if (token) {
-        await dispatch('updateUserInfo')
+        const code = await dispatch('updateUserInfo')
+        if (code) return
         await dispatch('getUserMenus')
       }
     }

@@ -1,12 +1,12 @@
 import type { ILoginStore } from './login/types'
-import { IRoleStore } from './main/system/types'
+import { ISystemStore } from './main/system/types'
 
 export interface IRootStore {
   name: string
 }
 
 export interface IRootWithModule {
-  role: IRoleStore
+  system: ISystemStore
   menu: any
   login: ILoginStore
 }

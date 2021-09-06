@@ -4,10 +4,18 @@
       :contentConfig="menuContentConfig"
       title="菜单管理："
       pageName="menu"
+      @handleEdit="handleEdit"
       @handleCreate="handleCreate"
     ></content-page>
 
-    <form-dialog v-model="showDialog" :dialogConfig="dialogConfig" title="新建菜单："></form-dialog>
+    <form-dialog
+      :type="type"
+      v-model="showDialog"
+      pageName="menu"
+      :dialogConfig="dialogConfig"
+      :title="dialogTitle"
+      :editData="editData"
+    ></form-dialog>
   </div>
 </template>
 
@@ -24,18 +32,38 @@ export default defineComponent({
     ContentPage,
     FormDialog
   },
+
   setup() {
     const showDialog = ref(false)
+    const type = ref('')
+    const dialogTitle = ref('')
+    const editData = ref({})
 
+    // 处理创建按钮
     const handleCreate = () => {
       showDialog.value = true
+      type.value = 'new'
+      dialogTitle.value = '新建菜单'
+    }
+
+    // 处理编辑按钮
+    const handleEdit = (row: any) => {
+      showDialog.value = true
+      type.value = 'edit'
+      dialogTitle.value = '编辑菜单'
+      console.log(row)
+      editData.value = row
     }
 
     return {
       menuContentConfig,
       showDialog,
       dialogConfig,
-      handleCreate
+      dialogTitle,
+      type,
+      editData,
+      handleCreate,
+      handleEdit
     }
   }
 })

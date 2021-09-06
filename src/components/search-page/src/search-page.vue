@@ -4,8 +4,8 @@
     <mh-form :formConfig="searchConfig"></mh-form>
     <div class="search-footer">
       <div class="search-btn">
-        <el-button size="mini">重置</el-button>
-        <el-button size="mini" type="primary">查询</el-button>
+        <el-button>重置</el-button>
+        <el-button type="primary">查询</el-button>
       </div>
     </div>
   </div>
@@ -44,9 +44,10 @@ export default defineComponent({
 .search-header {
   margin-bottom: 10px;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 24px;
 }
 .search-footer {
+  margin-top: 20px;
   display: flex;
   width: 100%;
 }

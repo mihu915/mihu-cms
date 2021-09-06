@@ -2,6 +2,7 @@ import { mhRequest } from '../index'
 import { IDataType } from '../types'
 import qs from 'qs'
 
+// 获取列表数据
 const getListData = (url: string, queryInfo: any): Promise<IDataType> => {
   return mhRequest.get({
     url,
@@ -9,6 +10,7 @@ const getListData = (url: string, queryInfo: any): Promise<IDataType> => {
   })
 }
 
+// 根据id删除一条数据
 const deleteListData = (url: string): Promise<IDataType> => {
   return mhRequest.delete({
     url,
@@ -16,20 +18,20 @@ const deleteListData = (url: string): Promise<IDataType> => {
   })
 }
 
-const createMenu = (data: any): Promise<IDataType> => {
+const createData = (url: string, data: any): Promise<IDataType> => {
   return mhRequest.post({
-    url: 'menu',
+    url,
     data: qs.stringify(data),
     showMessage: true
   })
 }
 
-const alterMenu = (menuData: any): Promise<IDataType> => {
-  return mhRequest.post({
-    url: `menu/${menuData.id}/alter`,
-    data: qs.stringify(menuData),
+const alterListData = (url: string, data: any): Promise<IDataType> => {
+  return mhRequest.patch({
+    url,
+    data: qs.stringify(data),
     showMessage: true
   })
 }
 
-export { createMenu, deleteListData, alterMenu, getListData }
+export { createData, deleteListData, alterListData, getListData }

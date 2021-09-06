@@ -3,13 +3,15 @@
     <div class="content-header">
       <div class="title">{{ title }}</div>
       <div class="header-btn">
-        <el-button size="mini" @click="handleCreate" type="primary">新建</el-button>
+        <el-button @click="handleCreate" type="primary">新建</el-button>
       </div>
     </div>
 
     <mh-table :tableConfig="contentConfig" :tableData="tableData">
       <template #actionBtn="scope">
-        <el-button @click="handleEdit" type="text"><i class="el-icon-edit"></i> 编辑</el-button>
+        <el-button @click="handleEdit(scope.row)" type="text"
+          ><i class="el-icon-edit"></i> 编辑</el-button
+        >
         <el-button @click="handleDelete(scope.row)" type="text"
           ><i class="el-icon-delete"></i> 删除</el-button
         >
@@ -78,8 +80,8 @@ export default defineComponent({
     const tableData = computed(() => store.getters['system/getPageListData'](props.pageName))
 
     // 编辑按钮
-    const handleEdit = () => {
-      emit('handleEdit')
+    const handleEdit = (row: any) => {
+      emit('handleEdit', row)
     }
 
     // 点击删除按钮
@@ -123,7 +125,7 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 24px;
   align-items: center;
   line-height: 40px;
   margin-bottom: 10px;
