@@ -1,13 +1,11 @@
 <template>
   <div class="content-page">
-    <div class="content-header">
-      <div class="title">{{ title }}</div>
-      <div class="header-btn">
-        <el-button @click="handleCreate" type="primary">新建</el-button>
-      </div>
-    </div>
-
-    <mh-table :tableConfig="contentConfig" :tableData="tableData">
+    <mh-table
+      :title="title"
+      :tableConfig="contentConfig"
+      :tableData="tableData"
+      @handleCreate="handleCreate"
+    >
       <template #actionBtn="scope">
         <el-button @click="handleEdit(scope.row)" type="text"
           ><i class="el-icon-edit"></i> 编辑</el-button
@@ -26,39 +24,77 @@
           >{{ scope.row.enable ? '开启' : '禁用' }}</el-button
         >
       </template>
+
+      <template #typeTag="scope">
+        <span v-if="scope.row.type === 1">父菜单</span>
+        <span v-else-if="scope.row.type === 2">子菜单</span>
+      </template>
+
+      <template #[otherSlotName]="scope">
+        <slot :row="scope.row"></slot>
+      </template>
     </mh-table>
 
-    <div class="content-footer"></div>
+    <div class="dialog" v-if="dialogConfig">
+      <form-dialog
+        v-model="showDialog"
+        :type="dialogType"
+        :pageName="pageName"
+        :dialogConfig="dialogConfig"
+        :title="dialogTitle"
+        :editData="editData"
+      ></form-dialog>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import MhTable from '@/base-ui/mh-table'
+import FormDialog from '@/components/form-dialog'
 
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { useStore } from '@/store/index'
 import { ElMessageBox } from 'element-plus'
 export default defineComponent({
   props: {
+    otherSlotName: {
+      type: String
+    },
     title: {
       type: String,
       default: ''
     },
+
+    dialogConfig: {
+      type: Object
+    },
+
     contentConfig: {
       type: Object
     },
+
     pageName: {
       type: String
     }
   },
   components: {
+    FormDialog,
     MhTable
   },
   emits: ['handleEdit', 'handleDelete', 'handleCreate'],
-  setup(props, { emit }) {
+  setup(props) {
+    console.log(props.dialogConfig)
     const store = useStore()
+    const showDialog = ref(false)
+    const dialogTitle = ref('')
+    const dialogType = ref<'new' | 'edit'>('new')
+    const editData = ref({})
 
-    // 打开确认对话框
+    // 拿到响应式数据
+    const tableData = computed(() => store.getters['system/getPageListData'](props.pageName))
+    console.log('[ tableData ]-77', tableData)
+
+    // 打开确认对话框方法
     const openBox = () => {
       return ElMessageBox.confirm('将删除该条数据，是否确认？', '提示', {
         confirmButtonText: '确认',
@@ -72,16 +108,27 @@ export default defineComponent({
       pageName: props.pageName
     })
 
-    // 创建数据
+    // 打开对话框，新建数据
     const handleCreate = () => {
-      emit('handleCreate')
+      showDialog.value = true
+      dialogType.value = 'new'
+      switch (props.pageName) {
+        case 'menu':
+          dialogTitle.value = '新建菜单'
+          break
+      }
     }
-    // 拿到响应式数据
-    const tableData = computed(() => store.getters['system/getPageListData'](props.pageName))
 
     // 编辑按钮
     const handleEdit = (row: any) => {
-      emit('handleEdit', row)
+      showDialog.value = true
+      dialogType.value = 'edit'
+      editData.value = row
+      switch (props.pageName) {
+        case 'menu':
+          dialogTitle.value = '编辑菜单'
+          break
+      }
     }
 
     // 点击删除按钮
@@ -104,7 +151,11 @@ export default defineComponent({
     }
 
     return {
+      dialogType,
       tableData,
+      showDialog,
+      dialogTitle,
+      editData,
       handleEdit,
       handleDelete,
       handleStatus,
@@ -120,14 +171,5 @@ export default defineComponent({
   background-color: #fff;
   border-radius: 5px;
   overflow: hidden;
-}
-.content-header {
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
-  font-size: 24px;
-  align-items: center;
-  line-height: 40px;
-  margin-bottom: 10px;
 }
 </style>

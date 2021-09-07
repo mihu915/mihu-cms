@@ -1,19 +1,20 @@
 <template>
   <div class="search-page">
-    <div class="search-header">{{ title }}</div>
-    <mh-form :formConfig="searchConfig"></mh-form>
-    <div class="search-footer">
-      <div class="search-btn">
-        <el-button>重置</el-button>
-        <el-button type="primary">查询</el-button>
-      </div>
-    </div>
+    <mh-form
+      :title="title"
+      :formConfig="searchConfig"
+      v-model="formData"
+      leftBtnText="重置"
+      rightBtnText="查询"
+      @handleLeftBtn="handleResetBtn"
+      @handleRightBtn="handleSearchBtn"
+    ></mh-form>
   </div>
 </template>
 
 <script lang="ts">
 import mhForm from '@/base-ui/mh-form/src/mh-form.vue'
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   components: { mhForm },
@@ -27,7 +28,21 @@ export default defineComponent({
     }
   },
   setup() {
-    return {}
+    const formData = ref({})
+
+    const handleResetBtn = () => {
+      formData.value = {}
+    }
+
+    const handleSearchBtn = () => {
+      console.log(formData.value)
+    }
+
+    return {
+      formData,
+      handleResetBtn,
+      handleSearchBtn
+    }
   }
 })
 </script>
@@ -41,16 +56,7 @@ export default defineComponent({
   border-radius: 5px;
   overflow: hidden;
 }
-.search-header {
-  margin-bottom: 10px;
-  font-weight: bold;
-  font-size: 24px;
-}
-.search-footer {
-  margin-top: 20px;
-  display: flex;
-  width: 100%;
-}
+
 .search-btn {
   width: 100%;
   text-align: right;

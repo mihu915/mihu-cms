@@ -1,5 +1,5 @@
 <template>
-  <div>department</div>
+  <div class="skill">skill</div>
 </template>
 
 <script lang="ts">

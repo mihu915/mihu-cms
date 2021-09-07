@@ -1,5 +1,12 @@
 <template>
   <div class="mh-table">
+    <div class="table-header">
+      <div class="title">{{ title }}</div>
+      <div class="header-btn">
+        <el-button @click="handleCreate" type="primary">新建</el-button>
+      </div>
+    </div>
+
     <el-table border v-bind="tableConfig" :data="tableData">
       <el-table-column
         type="selection"
@@ -29,6 +36,8 @@
         </el-table-column>
       </template>
     </el-table>
+
+    <div class="content-footer"></div>
   </div>
 </template>
 
@@ -50,7 +59,8 @@ export default defineComponent({
       default: () => ({})
     }
   },
-  setup() {
+  emits: ['handleCreate'],
+  setup(props, { emit }) {
     const handleNullData = (data: any) => {
       if (typeof data === undefined || data === null) {
         return '—'
@@ -58,11 +68,26 @@ export default defineComponent({
         return data
       }
     }
+
+    const handleCreate = () => {
+      emit('handleCreate')
+    }
     return {
-      handleNullData
+      handleNullData,
+      handleCreate
     }
   }
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 24px;
+  align-items: center;
+  line-height: 40px;
+  margin-bottom: 10px;
+}
+</style>

@@ -37,13 +37,13 @@ const roleSearchConfig: IFormConfig = {
     },
     {
       type: 'datePicker',
+      field: 'created',
       otherOption: {
         type: 'daterange',
         startPlaceholder: '开始时间',
         endPlaceholder: '结束时间'
       },
-      label: '创建时间：',
-      field: 'sort'
+      label: '创建时间：'
     }
   ]
 }

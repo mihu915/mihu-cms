@@ -1,6 +1,8 @@
 <template>
   <div class="mh-form">
-    <el-form :label-width="formConfig.labelWidth" :model="formData" ref="formRef">
+    <div class="form-header" v-if="title">{{ title }}</div>
+
+    <el-form :label-width="formConfig.labelWidth" :model="modelValue" ref="formRef">
       <el-row :gutter="formConfig.gutter">
         <template v-for="(item, index) of formConfig.formItemConfig" :key="index">
           <el-col
@@ -23,7 +25,8 @@
                 <el-input
                   :type="item.type === 'input' ? 'text' : 'password'"
                   :placeholder="item.placeholder"
-                  v-model="formData[`${item.field}`]"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="changeUpdate($event, item.field)"
                 ></el-input>
               </template>
 
@@ -31,7 +34,8 @@
                 <el-select
                   style="width: 100%"
                   :placeholder="item.placeholder"
-                  v-model="formData[`${item.field}`]"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="changeUpdate($event, item.field)"
                 >
                   <template v-for="(option, index) of item.options" :key="index">
                     <el-option :label="option.label" :value="option.value"></el-option>
@@ -43,12 +47,16 @@
                 <el-date-picker
                   style="width: 100%"
                   v-bind="item.otherOption"
-                  :v-model="formData[`${item.field}`]"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="changeUpdate($event, item.field)"
                 ></el-date-picker>
               </template>
 
               <template v-else-if="item.type === 'radioGroup'">
-                <el-radio-group v-model="formData[`${item.field}`]">
+                <el-radio-group
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="changeUpdate($event, item.field)"
+                >
                   <el-radio
                     :style="item.otherOption?.radioStyle"
                     v-bind="item.otherOption"
@@ -64,18 +72,33 @@
         </template>
       </el-row>
     </el-form>
+
+    <div class="form-footer">
+      <div class="form-footer-btn">
+        <el-button @click="handleLeftBtn">{{ leftBtnText }}</el-button>
+        <el-button @click="handleRightBtn" type="primary">{{ rightBtnText }}</el-button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, watch } from 'vue'
+import { defineComponent, PropType, ref } from 'vue'
 import { IFormConfig } from '@/base-ui/mh-form'
 import { ElForm } from 'element-plus'
 
 export default defineComponent({
-  emits: ['update:modelValue'],
-
   props: {
+    leftBtnText: {
+      type: String
+    },
+    rightBtnText: {
+      type: String
+    },
+    title: {
+      type: String
+    },
+
     modelValue: {
       type: Object,
       required: true
@@ -88,11 +111,13 @@ export default defineComponent({
       })
     }
   },
+  emits: ['update:modelValue', 'handleLeftBtn', 'handleRightBtn'],
 
   setup(props, { emit }) {
     const formRef = ref<InstanceType<typeof ElForm>>()
-    const formData = ref({ ...props.modelValue })
-
+    const changeUpdate = (value: any, field: string) => {
+      emit('update:modelValue', { ...props.modelValue, [field]: value })
+    }
     const mhFormValid = () => {
       let flag: any = false
       formRef.value?.validate((valid) => {
@@ -101,19 +126,19 @@ export default defineComponent({
       return flag
     }
 
-    watch(
-      formData,
-      (newValue) => {
-        emit('update:modelValue', newValue)
-      },
-      {
-        deep: true
-      }
-    )
+    const handleLeftBtn = () => {
+      emit('handleLeftBtn')
+    }
+    const handleRightBtn = () => {
+      emit('handleRightBtn')
+    }
+
     return {
-      formData,
       formRef,
-      mhFormValid
+      changeUpdate,
+      mhFormValid,
+      handleLeftBtn,
+      handleRightBtn
     }
   }
 })
@@ -123,5 +148,18 @@ export default defineComponent({
 .form-item {
   padding: 0;
   margin: 0;
+}
+.form-header {
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 24px;
+}
+.form-footer {
+  display: flex;
+  width: 100%;
+  .form-footer-btn {
+    text-align: right;
+    width: 100%;
+  }
 }
 </style>

@@ -2,13 +2,15 @@
   <div class="form-dialog">
     <el-dialog :title="title" v-model="isOpenBox" @close="closeBox" destroy-on-close>
       <div class="dialog-content">
-        <mh-form :formConfig="formConfig" v-model="formData" ref="mhDialogRef"></mh-form>
-        <div class="dialog-footer">
-          <el-button @click="closeBox">取消</el-button>
-          <el-button type="primary" @click="handleDataBtn">{{
-            type === 'new' ? '创建' : '保存'
-          }}</el-button>
-        </div>
+        <mh-form
+          :formConfig="formConfig"
+          v-model="formData"
+          ref="mhDialogRef"
+          @handleLeftBtn="closeBox"
+          @handleRightBtn="handleDataBtn"
+          leftBtnText="取消"
+          :rightBtnText="rightBtnText"
+        ></mh-form>
       </div>
     </el-dialog>
   </div>
@@ -21,7 +23,6 @@ import { getParentMenuInfo } from '@/utils'
 import { getArrayIndex } from '@/utils'
 
 import MhForm from '@/base-ui/mh-form'
-import { system } from '@/store/main/system/system'
 export default defineComponent({
   components: {
     MhForm
@@ -51,11 +52,16 @@ export default defineComponent({
   emits: ['update:modelValue'],
 
   setup(props, { emit }) {
+    // 判断如果没有传dialogConfig则不执行以下操作
+    if (!props.dialogConfig) return
+
     const store = useStore()
     const isOpenBox = ref(false)
     const formData = ref({})
     const mhDialogRef = ref<InstanceType<typeof MhForm>>()
     const formConfig: any = ref(props.dialogConfig)
+    const rightBtnText = ref('')
+
     const menuList = computed(() => store.state.system.menuListData)
     const menuIndex = getArrayIndex(formConfig.value.formItemConfig, 'field', 'parent_id')
 
@@ -64,16 +70,13 @@ export default defineComponent({
       () => props.modelValue,
       (newValue) => {
         isOpenBox.value = newValue
-      }
-    )
-
-    // 监听编辑数据是否传入
-    watch(
-      () => props.editData,
-      (newValue: any) => {
-        delete newValue.created
-        delete newValue.updated
-        formData.value = newValue
+        if (props.type === 'edit') {
+          rightBtnText.value = '保存'
+          formData.value = { ...props.editData }
+        } else {
+          rightBtnText.value = '创建'
+          formData.value = {}
+        }
       }
     )
 
@@ -81,12 +84,10 @@ export default defineComponent({
     watch(
       formData,
       (newValue: any) => {
-        console.log(newValue)
         switch (props.pageName) {
           case 'menu':
             if (newValue.type === 2) {
               const parentMenus = getParentMenuInfo(menuList.value)
-              console.log(parentMenus)
               formConfig.value.formItemConfig[menuIndex!].options = parentMenus
               formConfig.value.formItemConfig[menuIndex!].isShow = true
               if (props.type === 'edit' && props.editData?.type === 1) {
@@ -114,7 +115,7 @@ export default defineComponent({
       emit('update:modelValue', isOpenBox.value)
     }
 
-    // 点击新建按钮事件
+    // 点击右边按钮事件
     const handleDataBtn = () => {
       const valid = mhDialogRef.value?.mhFormValid()
       if (valid) {
@@ -140,7 +141,8 @@ export default defineComponent({
       mhDialogRef,
       formConfig,
       closeBox,
-      handleDataBtn
+      handleDataBtn,
+      rightBtnText
     }
   }
 })

@@ -1,6 +1,6 @@
 import { IFormConfig } from '@/base-ui/mh-form'
 
-const dialogConfig: IFormConfig = {
+const menuDialogConfig: IFormConfig = {
   labelWidth: 100,
   itemLayout: {
     marginBottom: '25px'
@@ -78,4 +78,4 @@ const dialogConfig: IFormConfig = {
   ]
 }
 
-export { dialogConfig }
+export { menuDialogConfig }
