@@ -1,7 +1,13 @@
 <template>
   <div class="user">
     <search-page :searchConfig="roleSearchConfig" title="查询用户："></search-page>
-    <content-page :contentConfig="roleContentConfig" pageName="role" title="用户列表：">
+    <content-page
+      :contentConfig="roleContentConfig"
+      :dialogConfig="userDialogConfig"
+      :dialogWidth="500"
+      pageName="role"
+      title="用户列表："
+    >
     </content-page>
   </div>
 </template>
@@ -10,6 +16,7 @@
 import { defineComponent } from 'vue'
 import { roleContentConfig } from './config/content.config'
 import { roleSearchConfig } from './config/search.config'
+import { userDialogConfig } from './config/dialog.config'
 
 import ContentPage from '@/components/content-page'
 import SearchPage from '@/components/search-page'
@@ -22,7 +29,8 @@ export default defineComponent({
   setup() {
     return {
       roleContentConfig,
-      roleSearchConfig
+      roleSearchConfig,
+      userDialogConfig
     }
   }
 })

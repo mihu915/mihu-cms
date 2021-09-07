@@ -1,6 +1,12 @@
 <template>
   <div class="form-dialog">
-    <el-dialog :title="title" v-model="isOpenBox" @close="closeBox" destroy-on-close>
+    <el-dialog
+      :title="title"
+      v-model="isOpenBox"
+      @close="closeBox"
+      :width="dialogWidth"
+      destroy-on-close
+    >
       <div class="dialog-content">
         <mh-form
           :formConfig="formConfig"
@@ -28,6 +34,9 @@ export default defineComponent({
     MhForm
   },
   props: {
+    dialogWidth: {
+      type: Number
+    },
     type: {
       type: String as PropType<'new' | 'edit'>,
       required: true
@@ -57,7 +66,7 @@ export default defineComponent({
 
     const store = useStore()
     const isOpenBox = ref(false)
-    const formData = ref({})
+    const formData: any = ref({})
     const mhDialogRef = ref<InstanceType<typeof MhForm>>()
     const formConfig: any = ref(props.dialogConfig)
     const rightBtnText = ref('')
@@ -88,8 +97,10 @@ export default defineComponent({
           case 'menu':
             if (newValue.type === 2) {
               const parentMenus = getParentMenuInfo(menuList.value)
+
               formConfig.value.formItemConfig[menuIndex!].options = parentMenus
               formConfig.value.formItemConfig[menuIndex!].isShow = true
+
               if (props.type === 'edit' && props.editData?.type === 1) {
                 for (let i = 0; i < parentMenus.length; i++) {
                   if (parentMenus[i].label === props.editData?.id) {
@@ -108,7 +119,28 @@ export default defineComponent({
       }
     )
 
-    // 同步box状态
+    // 根据不同的pageName处理其他逻辑
+    switch (props.pageName) {
+      case 'menu':
+        // 监听parentId的变化，自动输入url输入框
+        watch(
+          () => formData.value.parent_id,
+          (newValue) => {
+            menuList.value.forEach((parentMenu) => {
+              if (parentMenu.id === newValue) {
+                formData.value.url = parentMenu.url
+              }
+
+              if (props.type === 'edit' && newValue === props.editData?.parent_id) {
+                formData.value.url = props.editData?.url
+              }
+            })
+          }
+        )
+        break
+    }
+
+    // 关闭box，同步box状态，初始化formData
     const closeBox = () => {
       isOpenBox.value = false
       formData.value = {}

@@ -26,8 +26,8 @@
       </template>
 
       <template #typeTag="scope">
-        <span v-if="scope.row.type === 1">父菜单</span>
-        <span v-else-if="scope.row.type === 2">子菜单</span>
+        <span v-if="scope.row.type === 1">折叠项</span>
+        <span v-else-if="scope.row.type === 2">菜单项</span>
       </template>
 
       <template #[otherSlotName]="scope">
@@ -37,6 +37,7 @@
 
     <div class="dialog" v-if="dialogConfig">
       <form-dialog
+        :dialogWidth="dialogWidth"
         v-model="showDialog"
         :type="dialogType"
         :pageName="pageName"
@@ -57,6 +58,9 @@ import { useStore } from '@/store/index'
 import { ElMessageBox } from 'element-plus'
 export default defineComponent({
   props: {
+    dialogWidth: {
+      type: Number
+    },
     otherSlotName: {
       type: String
     },
