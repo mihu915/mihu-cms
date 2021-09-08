@@ -1,6 +1,6 @@
 import { IFormConfig } from '@/base-ui/mh-form'
 
-const userSearchConfig: IFormConfig = {
+const roleSearchConfig: IFormConfig = {
   labelWidth: 100,
   gutter: 80,
   itemLayout: {
@@ -16,25 +16,13 @@ const userSearchConfig: IFormConfig = {
   formItemConfig: [
     {
       type: 'input',
-      label: '用户名：',
-      field: 'username',
-      placeholder: '请输入用户名'
-    },
-    {
-      type: 'select',
-      label: '类型：',
-      field: 'enable',
-      placeholder: '状态',
-      options: [
-        { label: '开启', value: 1 },
-        { label: '禁用', value: 0 }
-      ]
+      label: '角色名：',
+      field: 'role_name'
     },
     {
       type: 'input',
-      label: '真实姓名：',
-      field: 'realname',
-      placeholder: '请输入真实姓名'
+      label: '权限描述：',
+      field: 'role_intro'
     },
     {
       type: 'datePicker',
@@ -49,4 +37,4 @@ const userSearchConfig: IFormConfig = {
   ]
 }
 
-export { userSearchConfig }
+export { roleSearchConfig }

@@ -3,7 +3,7 @@ import { IDataType } from '../types'
 import qs from 'qs'
 
 // 获取列表数据
-const getListData = (url: string, queryInfo: any): Promise<IDataType> => {
+const getListData = (url: string, queryInfo?: any): Promise<IDataType> => {
   return mhRequest.get({
     url,
     params: queryInfo
@@ -34,4 +34,15 @@ const alterListData = (url: string, data: any): Promise<IDataType> => {
   })
 }
 
-export { createData, deleteListData, alterListData, getListData }
+// 切换用户状态
+const userEnable = (id: number, enable: number, role_id: number): Promise<IDataType> => {
+  return mhRequest.get({
+    url: `/user/enable/${id}`,
+    params: {
+      enable,
+      role_id
+    },
+    showMessage: true
+  })
+}
+export { createData, deleteListData, alterListData, getListData, userEnable }

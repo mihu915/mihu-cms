@@ -35,7 +35,29 @@ const userDialogConfig: IFormConfig = {
     {
       type: 'select',
       label: '权限',
-      field: 'role'
+      field: 'role_id',
+      rules: [
+        {
+          required: true,
+          message: '权限为必选项',
+          trigger: 'blur'
+        }
+      ]
+    },
+    {
+      type: 'input',
+      label: '真实姓名',
+      field: 'realname'
+    },
+    {
+      type: 'input',
+      label: 'QQ',
+      field: 'qq'
+    },
+    {
+      type: 'input',
+      label: '电话号码',
+      field: 'mobile'
     }
   ]
 }

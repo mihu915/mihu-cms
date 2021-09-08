@@ -3,6 +3,7 @@ import { ISystemStore } from './main/system/types'
 
 export interface IRootStore {
   name: string
+  allRoleList: any[]
 }
 
 export interface IRootWithModule {

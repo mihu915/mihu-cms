@@ -2,8 +2,9 @@
   <div class="form-dialog">
     <el-dialog
       :title="title"
-      v-model="isOpenBox"
+      :model-value="modelValue"
       @close="closeBox"
+      @open="openBox"
       :width="dialogWidth"
       destroy-on-close
     >
@@ -25,8 +26,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch, PropType } from 'vue'
 import { useStore } from '@/store'
-import { getParentMenuInfo } from '@/utils'
-import { getArrayIndex } from '@/utils'
+import { getParentMenuInfo, getConfigItemIndex, handleRoleOptions } from '@/utils'
 
 import MhForm from '@/base-ui/mh-form'
 export default defineComponent({
@@ -65,31 +65,93 @@ export default defineComponent({
     if (!props.dialogConfig) return
 
     const store = useStore()
-    const isOpenBox = ref(false)
     const formData: any = ref({})
     const mhDialogRef = ref<InstanceType<typeof MhForm>>()
     const formConfig: any = ref(props.dialogConfig)
     const rightBtnText = ref('')
 
-    const menuList = computed(() => store.state.system.menuListData)
-    const menuIndex = getArrayIndex(formConfig.value.formItemConfig, 'field', 'parent_id')
+    const menuList = computed(() => [...store.state.system.menuListData])
+    const allRoleList = computed(() => [...store.state.system.roleListData])
 
-    // 监听box的状态
-    watch(
-      () => props.modelValue,
-      (newValue) => {
-        isOpenBox.value = newValue
-        if (props.type === 'edit') {
+    let formItemConfigIndex: any
+
+    //  打开box的回调
+    const openBox = () => {
+      switch (props.type) {
+        case 'edit':
           rightBtnText.value = '保存'
           formData.value = { ...props.editData }
-        } else {
+          break
+        case 'new':
           rightBtnText.value = '创建'
           formData.value = {}
-        }
+          break
       }
-    )
 
-    // 监听formData的改变
+      switch (props.pageName) {
+        case 'menu':
+          formItemConfigIndex = getConfigItemIndex(
+            formConfig.value.formItemConfig,
+            'field',
+            'parent_id'
+          )
+
+          // 监听parentId的变化，自动输入url输入框
+          watch(
+            () => formData.value.parent_id,
+            (newValue) => {
+              menuList.value.forEach((parentMenu) => {
+                if (parentMenu.id === newValue) {
+                  formData.value.url = parentMenu.url
+                }
+
+                if (props.type === 'edit' && newValue === props.editData?.parent_id) {
+                  formData.value.url = props.editData?.url
+                }
+              })
+            }
+          )
+          break
+        case 'user':
+          store.dispatch('system/pageListDataAction', { pageName: 'role' }).then((res) => {
+            if (res === 200) {
+              const roleOptions = handleRoleOptions(allRoleList.value)
+
+              formItemConfigIndex = getConfigItemIndex(
+                formConfig.value.formItemConfig,
+                'field',
+                'role_id'
+              )
+
+              formConfig.value.formItemConfig[formItemConfigIndex].options = roleOptions
+            }
+          })
+
+          formItemConfigIndex = getConfigItemIndex(
+            formConfig.value.formItemConfig,
+            'field',
+            'password'
+          )
+
+          if (props.type === 'edit') {
+            formConfig.value.formItemConfig[formItemConfigIndex].isShow = false
+          } else {
+            formConfig.value.formItemConfig[formItemConfigIndex].isShow = true
+          }
+
+          break
+        case 'role':
+          break
+      }
+    }
+
+    // 关闭box，同步box状态，初始化formData
+    const closeBox = () => {
+      emit('update:modelValue', false)
+      formData.value = {}
+    }
+
+    // 监听formData数据变化
     watch(
       formData,
       (newValue: any) => {
@@ -98,8 +160,8 @@ export default defineComponent({
             if (newValue.type === 2) {
               const parentMenus = getParentMenuInfo(menuList.value)
 
-              formConfig.value.formItemConfig[menuIndex!].options = parentMenus
-              formConfig.value.formItemConfig[menuIndex!].isShow = true
+              formConfig.value.formItemConfig[formItemConfigIndex].options = parentMenus
+              formConfig.value.formItemConfig[formItemConfigIndex].isShow = true
 
               if (props.type === 'edit' && props.editData?.type === 1) {
                 for (let i = 0; i < parentMenus.length; i++) {
@@ -109,8 +171,10 @@ export default defineComponent({
                 }
               }
             } else {
-              formConfig.value.formItemConfig[menuIndex!].isShow = false
+              formConfig.value.formItemConfig[formItemConfigIndex].isShow = false
             }
+            break
+          case 'user':
             break
         }
       },
@@ -119,62 +183,43 @@ export default defineComponent({
       }
     )
 
-    // 根据不同的pageName处理其他逻辑
-    switch (props.pageName) {
-      case 'menu':
-        // 监听parentId的变化，自动输入url输入框
-        watch(
-          () => formData.value.parent_id,
-          (newValue) => {
-            menuList.value.forEach((parentMenu) => {
-              if (parentMenu.id === newValue) {
-                formData.value.url = parentMenu.url
-              }
-
-              if (props.type === 'edit' && newValue === props.editData?.parent_id) {
-                formData.value.url = props.editData?.url
-              }
-            })
-          }
-        )
-        break
-    }
-
-    // 关闭box，同步box状态，初始化formData
-    const closeBox = () => {
-      isOpenBox.value = false
-      formData.value = {}
-      emit('update:modelValue', isOpenBox.value)
-    }
-
     // 点击右边按钮事件
     const handleDataBtn = () => {
       const valid = mhDialogRef.value?.mhFormValid()
       if (valid) {
         switch (props.type) {
           case 'new':
-            store.dispatch('system/createData', { pageName: props.pageName, data: formData.value })
+            store
+              .dispatch('system/createData', {
+                pageName: props.pageName,
+                data: formData.value
+              })
+              .then((res) => {
+                if (res === 200) closeBox()
+              })
             break
           case 'edit':
-            store.dispatch('system/alterListData', {
-              pageName: props.pageName,
-              data: formData.value
-            })
+            store
+              .dispatch('system/alterListData', {
+                pageName: props.pageName,
+                data: formData.value
+              })
+              .then((res) => {
+                if (res === 200) closeBox()
+              })
             break
         }
       }
-
-      closeBox()
     }
 
     return {
-      isOpenBox,
+      openBox,
+      closeBox,
       formData,
       mhDialogRef,
       formConfig,
-      closeBox,
-      handleDataBtn,
-      rightBtnText
+      rightBtnText,
+      handleDataBtn
     }
   }
 })

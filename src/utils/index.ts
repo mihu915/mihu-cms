@@ -1,6 +1,7 @@
 import localCache from './cache'
 import encrypt from './encrypt'
-import { getArrayIndex } from './getArrayIndex'
+import { getConfigItemIndex } from './handleConfig'
+import { handleRoleOptions } from './map-role'
 import {
   mapMenus,
   firstMenuPath,
@@ -12,10 +13,11 @@ import {
 export {
   localCache,
   encrypt,
-  mapMenus,
   firstMenuPath,
+  mapMenus,
   getCurrentMenu,
   pathMapBreadcrumb,
   getParentMenuInfo,
-  getArrayIndex
+  getConfigItemIndex,
+  handleRoleOptions
 }

@@ -17,7 +17,7 @@
 
       <template #statusBtn="scope">
         <el-button
-          @click="handleStatus"
+          @click="handleEnable(scope.row)"
           :type="scope.row.enable ? 'success' : 'danger'"
           plain
           size="mini"
@@ -26,8 +26,8 @@
       </template>
 
       <template #typeTag="scope">
-        <span v-if="scope.row.type === 1">折叠项</span>
-        <span v-else-if="scope.row.type === 2">菜单项</span>
+        <span v-if="scope.row.type === 1">父级菜单</span>
+        <span v-else-if="scope.row.type === 2">子菜单</span>
       </template>
 
       <template #[otherSlotName]="scope">
@@ -78,7 +78,8 @@ export default defineComponent({
     },
 
     pageName: {
-      type: String
+      type: String,
+      required: true
     }
   },
   components: {
@@ -87,7 +88,6 @@ export default defineComponent({
   },
   emits: ['handleEdit', 'handleDelete', 'handleCreate'],
   setup(props) {
-    console.log(props.dialogConfig)
     const store = useStore()
     const showDialog = ref(false)
     const dialogTitle = ref('')
@@ -96,7 +96,6 @@ export default defineComponent({
 
     // 拿到响应式数据
     const tableData = computed(() => store.getters['system/getPageListData'](props.pageName))
-    console.log('[ tableData ]-77', tableData)
 
     // 打开确认对话框方法
     const openBox = () => {
@@ -150,8 +149,10 @@ export default defineComponent({
     }
 
     // 切换用户状态
-    const handleStatus = () => {
-      console.log('切换状态')
+    const handleEnable = (row: any) => {
+      store.dispatch('system/switchUserEnable', row).then((res) => {
+        row.enable = res
+      })
     }
 
     return {
@@ -162,7 +163,7 @@ export default defineComponent({
       editData,
       handleEdit,
       handleDelete,
-      handleStatus,
+      handleEnable,
       handleCreate
     }
   }

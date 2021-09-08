@@ -15,6 +15,7 @@ const app = createApp(App)
 app.use(globalRegister)
 
 app.use(store)
+
 setupStore()
 
 app.use(router)

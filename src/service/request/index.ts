@@ -78,9 +78,7 @@ class MHRequest {
           if (res.data.code === 401) {
             message = '登录已过期'
             router.replace('/login')
-            localCache.deleteCache('token')
-            localCache.deleteCache('userInfo')
-            localCache.deleteCache('userMenu')
+            localCache.clearCache()
           } else {
             message = res.data.message
           }

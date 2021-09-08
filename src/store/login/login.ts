@@ -63,10 +63,15 @@ const login: Module<ILoginStore, IRootStore> = {
     // 更新用户信息
     async updateUserInfo({ commit }) {
       const userInfoResult = await getUserInfoRequest()
-      if (userInfoResult.code !== 200) return
-      const userInfo = userInfoResult.data
-      localCache.setCache('userInfo', userInfo)
-      commit('storageUserInfo', userInfo)
+
+      return new Promise((resolve) => {
+        if (userInfoResult.code !== 200) return
+        const userInfo = userInfoResult.data
+        localCache.setCache('userInfo', userInfo)
+        commit('storageUserInfo', userInfo)
+
+        resolve(userInfoResult.code)
+      })
     },
 
     //请求菜单接口
@@ -92,8 +97,9 @@ const login: Module<ILoginStore, IRootStore> = {
       // 更新数据
       if (token) {
         const code = await dispatch('updateUserInfo')
-        if (code) return
-        await dispatch('getUserMenus')
+        if (code === 200) {
+          await dispatch('getUserMenus')
+        }
       }
     }
   },

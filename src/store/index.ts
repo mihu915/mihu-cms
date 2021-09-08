@@ -6,7 +6,7 @@ const store = createStore<IRootStore>({
   state() {
     return {
       name: 'nonke',
-      age: '123'
+      allRoleList: []
     }
   },
   getters: {},

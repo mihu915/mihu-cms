@@ -1,6 +1,6 @@
 import { ITableConfig } from '@/base-ui/mh-table'
 
-const roleContentConfig: ITableConfig = {
+const userContentConfig: ITableConfig = {
   rowKey: 'id',
   border: true,
   size: 'mini',
@@ -14,10 +14,9 @@ const roleContentConfig: ITableConfig = {
   },
   propList: [
     { prop: 'username', label: '用户名' },
-    { prop: 'realname', label: '真实姓名' },
     { prop: 'enable', label: '状态', slotName: 'statusBtn' },
     { prop: 'role_name', label: '权限' },
-    { prop: 'role_intro', label: '权限描述' },
+    { prop: 'realname', label: '真实姓名' },
     { prop: 'last_login_ip', label: '最近登录ip' },
     { prop: 'last_login_time', label: '最近登录时间' },
     { prop: 'operator_ip', label: '最近操作ip' },
@@ -34,4 +33,4 @@ const roleContentConfig: ITableConfig = {
   ]
 }
 
-export { roleContentConfig }
+export { userContentConfig }

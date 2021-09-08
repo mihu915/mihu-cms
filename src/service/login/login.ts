@@ -4,7 +4,7 @@ import qs from 'qs'
 
 enum LoginAPI {
   AccountLogin = '/login',
-  LoginUserInfo = '/users',
+  LoginUserInfo = '/user',
   UserMenus = '/menu'
 }
 
