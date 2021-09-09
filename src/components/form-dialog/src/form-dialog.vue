@@ -116,13 +116,11 @@ export default defineComponent({
           store.dispatch('system/pageListDataAction', { pageName: 'role' }).then((res) => {
             if (res === 200) {
               const roleOptions = handleRoleOptions(allRoleList.value)
-
               formItemConfigIndex = getConfigItemIndex(
                 formConfig.value.formItemConfig,
                 'field',
                 'role_id'
               )
-
               formConfig.value.formItemConfig[formItemConfigIndex].options = roleOptions
             }
           })

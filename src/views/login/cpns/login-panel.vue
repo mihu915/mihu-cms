@@ -30,15 +30,19 @@
 import { defineComponent, ref } from 'vue'
 import LoginPhone from './login-phone.vue'
 import LoginAccount from './login-account.vue'
-
+import { localCache } from '@/utils'
 export default defineComponent({
   components: {
     LoginAccount,
     LoginPhone
   },
   setup() {
-    const isKeepPassword = ref(true)
+    const isKeepPassword = ref(false)
     const loginAccountRef = ref<InstanceType<typeof LoginAccount>>()
+
+    if (localCache.getCache('password')) {
+      isKeepPassword.value = true
+    }
 
     const changeLoginClick = () => {
       loginAccountRef.value?.userLogin(isKeepPassword.value)

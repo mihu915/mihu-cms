@@ -46,8 +46,8 @@ const userDialogConfig: IFormConfig = {
     },
     {
       type: 'input',
-      label: '真实姓名',
-      field: 'realname'
+      label: '昵称',
+      field: 'nickname'
     },
     {
       type: 'input',

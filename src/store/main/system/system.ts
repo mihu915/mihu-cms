@@ -129,9 +129,8 @@ const system: Module<ISystemStore, IRootStore> = {
 
       const result = await userEnable(id, enable, role_id)
 
-      if (result.code !== 200) return
-
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
+        if (result.code !== 200) reject(result)
         resolve(enable)
       })
     }

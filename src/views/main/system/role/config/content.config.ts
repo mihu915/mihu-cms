@@ -12,8 +12,8 @@ const roleContentConfig: ITableConfig = {
   propList: [
     { prop: 'role_name', label: '角色名' },
     { prop: 'role_intro', label: '权限描述' },
-    { prop: 'created', label: '创建时间' },
-    { prop: 'updated', label: '更新时间' },
+    { prop: 'created', label: '创建时间', slotName: 'created' },
+    { prop: 'updated', label: '更新时间', slotName: 'updated' },
 
     {
       width: 150,

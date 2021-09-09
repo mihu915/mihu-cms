@@ -63,7 +63,11 @@ export default defineComponent({
     // 获取当前菜单id
     const currentMenuId = () => {
       const currentMenu = getCurrentMenu(store.state.login.userMenus, route.path)
-      return currentMenu.id + ''
+      if (currentMenu) {
+        return currentMenu.id + ''
+      } else {
+        return 0
+      }
     }
 
     const userMenus = computed(() => store.state.login.userMenus)

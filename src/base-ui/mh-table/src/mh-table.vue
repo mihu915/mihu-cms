@@ -11,14 +11,15 @@
       <el-table-column
         type="selection"
         align="center"
-        width="60"
+        width="50"
         v-if="tableConfig?.showOtherTableContent?.showSelectColumn"
       ></el-table-column>
+
       <el-table-column
         type="index"
         label="id"
         align="center"
-        width="80"
+        width="70"
         v-if="tableConfig?.showOtherTableContent?.showIndexColumn"
       ></el-table-column>
 

@@ -2,6 +2,7 @@ import localCache from './cache'
 import encrypt from './encrypt'
 import { getConfigItemIndex } from './handleConfig'
 import { handleRoleOptions } from './map-role'
+import { handleUnixFormat } from './handle-time-format'
 import {
   mapMenus,
   firstMenuPath,
@@ -19,5 +20,6 @@ export {
   pathMapBreadcrumb,
   getParentMenuInfo,
   getConfigItemIndex,
-  handleRoleOptions
+  handleRoleOptions,
+  handleUnixFormat
 }

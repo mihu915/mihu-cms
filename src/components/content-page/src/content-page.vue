@@ -21,8 +21,9 @@
           :type="scope.row.enable ? 'success' : 'danger'"
           plain
           size="mini"
-          >{{ scope.row.enable ? '开启' : '禁用' }}</el-button
         >
+          {{ scope.row.enable ? '开启' : '禁用' }}
+        </el-button>
       </template>
 
       <template #typeTag="scope">
@@ -30,8 +31,43 @@
         <span v-else-if="scope.row.type === 2">子菜单</span>
       </template>
 
-      <template #[otherSlotName]="scope">
-        <slot :row="scope.row"></slot>
+      <!-- 创建时间 -->
+      <template #created="scope">
+        <span v-if="scope.row.created">
+          {{ $filters.formatTime(scope.row.created) }}
+        </span>
+        <span v-else>—</span>
+      </template>
+
+      <!-- 更新时间 -->
+      <template #updated="scope">
+        <span v-if="scope.row.updated">
+          {{ $filters.formatTime(scope.row.updated) }}
+        </span>
+        <span v-else>—</span>
+      </template>
+
+      <!-- 最后登录时间 -->
+      <template #lastLoginTime="scope">
+        <span v-if="scope.row.last_login_time">
+          {{ $filters.formatTime(scope.row.last_login_time) }}
+        </span>
+        <span v-else>—</span>
+      </template>
+
+      <!-- 最近操作时间 -->
+      <template #operatorTime="scope">
+        <span v-if="scope.row.operator_time">
+          {{ $filters.formatTime(scope.row.operator_time) }}
+        </span>
+        <span v-else>—</span>
+      </template>
+
+      <!-- 动态插入其他自定义插槽 -->
+      <template v-for="item of otherSlotName" :key="item.prop" #[item.slotName]="scope">
+        <template v-if="item.slotName">
+          <slot :row="scope.row" :name="item.slotName"></slot>
+        </template>
       </template>
     </mh-table>
 
@@ -60,9 +96,6 @@ export default defineComponent({
   props: {
     dialogWidth: {
       type: Number
-    },
-    otherSlotName: {
-      type: String
     },
     title: {
       type: String,
@@ -96,6 +129,22 @@ export default defineComponent({
 
     // 拿到响应式数据
     const tableData = computed(() => store.getters['system/getPageListData'](props.pageName))
+
+    // 加载排除在外的其他slot（插槽）
+    const otherSlotName = props.contentConfig?.propList.filter((item: any) => {
+      const excludeSlot = [
+        'statusBtn',
+        'actionBtn',
+        'typeTag',
+        'created',
+        'updated',
+        'lastLoginTime',
+        'operatorTime'
+      ]
+      if (excludeSlot.includes(item.slotName)) return false
+
+      return true
+    })
 
     // 打开确认对话框方法
     const openBox = () => {
@@ -150,9 +199,14 @@ export default defineComponent({
 
     // 切换用户状态
     const handleEnable = (row: any) => {
-      store.dispatch('system/switchUserEnable', row).then((res) => {
-        row.enable = res
-      })
+      store
+        .dispatch('system/switchUserEnable', row)
+        .then((res) => {
+          row.enable = res
+        })
+        .catch((err) => {
+          return err
+        })
     }
 
     return {
@@ -161,6 +215,7 @@ export default defineComponent({
       showDialog,
       dialogTitle,
       editData,
+      otherSlotName,
       handleEdit,
       handleDelete,
       handleEnable,

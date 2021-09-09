@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { defineComponent, reactive, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { ElForm } from 'element-plus'
 import { rules, PRIVATEKEY } from '../config/account-config'
@@ -28,6 +28,7 @@ export default defineComponent({
     let password: string
 
     const store = useStore()
+
     // 判断密文有没有值，若有值则解密，没有则初始化
     if (cipher) {
       password = encrypt.decryptHandler(cipher, PRIVATEKEY)
@@ -40,6 +41,12 @@ export default defineComponent({
       password
     })
 
+    watch(
+      () => account.username,
+      () => {
+        localCache.clearCache()
+      }
+    )
     const formRef = ref<InstanceType<typeof ElForm>>()
 
     // 用户登录
@@ -47,7 +54,7 @@ export default defineComponent({
       // 如果输入内容验证通过则执行登录操作
       formRef.value?.validate((valid) => {
         if (valid) {
-          // 用户派发登录异步事件
+          // 用户派发登录事件
           store.dispatch('login/userLoginAction', account)
 
           // 判断是否为记住密码
@@ -58,8 +65,10 @@ export default defineComponent({
             cipher = encrypt.encryptHandler(account.password, PRIVATEKEY)
             localCache.setCache('password', cipher)
           } else {
-            // 清除缓存中的账号密码
-            localCache.deleteCache('username')
+            // 存账号
+            localCache.setCache('username', account.username)
+
+            // 清除缓存中的密码
             localCache.deleteCache('password')
           }
         }
