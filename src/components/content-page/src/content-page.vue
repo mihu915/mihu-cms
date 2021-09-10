@@ -256,6 +256,7 @@ export default defineComponent({
       currentPage.value = data
       getPageListData()
     }
+
     return {
       currentPage,
       pageSize,

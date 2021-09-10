@@ -17,7 +17,39 @@ const login: Module<ILoginStore, IRootStore> = {
     }
   },
 
-  getters: {},
+  getters: {
+    getAssignMenuName(state) {
+      return function (menusId: string) {
+        const menusTile: any = []
+        const menusIdArray: any[] = menusId.split(',')
+
+        menusIdArray.map((item, index, array) => {
+          array[index] = parseInt(item)
+        })
+
+        const allMenuList = [...state.userInfo.all_menu_list]
+
+        allMenuList.map((parent) => {
+          if (menusIdArray.includes(parent.id)) {
+            menusTile.push(parent.title)
+
+            parent.children.map((child: any) => {
+              if (menusIdArray.includes(child.id)) {
+                menusTile.push(child.title)
+              }
+            })
+          }
+        })
+        const menus = menusTile.join(',')
+        return menus
+      }
+    }
+    // getMenuTreeData(state) {
+    //   const menuTreeData = {}
+
+    //   return menuTreeData
+    // }
+  },
 
   mutations: {
     // 存储token

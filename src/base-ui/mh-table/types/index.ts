@@ -6,6 +6,7 @@ interface IPropList {
   align?: 'left' | 'center' | 'right'
   resizable?: boolean
   slotName?: string
+  showOverflowTooltip?: boolean
 }
 
 export interface ITableConfig {

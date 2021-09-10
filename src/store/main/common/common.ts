@@ -1,5 +1,4 @@
 import { Module } from 'vuex'
-
 import { IRootStore } from '@/store/types'
 import { ICommonStore } from './types'
 import {

@@ -67,6 +67,11 @@
                   </el-radio>
                 </el-radio-group>
               </template>
+
+              <template v-else-if="item.type === 'tree'">
+                <el-tree v-bind="item.treeOption" @checkChange="checkChange" @nodeClick="nodeClick">
+                </el-tree>
+              </template>
             </el-form-item>
           </el-col>
         </template>
@@ -118,6 +123,9 @@ export default defineComponent({
     const changeUpdate = (value: any, field: string) => {
       emit('update:modelValue', { ...props.modelValue, [field]: value })
     }
+
+    const checkMenuId: any[] = []
+
     const mhFormValid = () => {
       let flag: any = false
       formRef.value?.validate((valid) => {
@@ -132,11 +140,24 @@ export default defineComponent({
     const handleRightBtn = () => {
       emit('handleRightBtn')
     }
-
+    const nodeClick = () => {
+      console.log('123')
+    }
+    const checkChange = (data: any, self: any) => {
+      console.log(data)
+      console.log(self)
+      // console.log(child)
+      if (self) {
+        checkMenuId.push(data.id)
+      }
+      console.log(checkMenuId)
+    }
     return {
       formRef,
+      nodeClick,
       changeUpdate,
       mhFormValid,
+      checkChange,
       handleLeftBtn,
       handleRightBtn
     }

@@ -3,13 +3,25 @@ interface IFormItemConfig {
   field: string
   isShow?: boolean
   rules?: any
-  type: 'input' | 'select' | 'password' | 'datePicker' | 'radioGroup'
+  type: 'input' | 'select' | 'password' | 'datePicker' | 'radioGroup' | 'tree'
   placeholder?: string
 
   options?: {
     label: string
     value?: any
   }[]
+
+  treeOption?: {
+    nodeKey: string
+    showCheckbox?: boolean
+    data?: any[]
+    defaultExpandedKeys?: number[]
+    defaultCheckedKeys?: number[]
+    props: {
+      children: string
+      label: string
+    }
+  }
 
   otherOption?: {
     startPlaceholder?: string
