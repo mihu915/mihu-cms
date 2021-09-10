@@ -1,6 +1,6 @@
 <template>
   <div class="role">
-    <search-page :searchConfig="roleSearchConfig" title="查询角色："></search-page>
+    <search-page :searchConfig="roleSearchConfig" title="查询角色：" pageName="role"></search-page>
     <content-page
       :contentConfig="roleContentConfig"
       pageName="role"

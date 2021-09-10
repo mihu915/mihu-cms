@@ -1,6 +1,6 @@
 <template>
   <div class="user">
-    <search-page :searchConfig="userSearchConfig" title="查询用户："></search-page>
+    <search-page :searchConfig="userSearchConfig" title="查询用户：" pageName="user"> </search-page>
     <content-page
       :contentConfig="userContentConfig"
       :dialogConfig="userDialogConfig"

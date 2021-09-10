@@ -13,7 +13,10 @@
 </template>
 
 <script lang="ts">
+import { emitter } from '@/utils'
+
 import mhForm from '@/base-ui/mh-form/src/mh-form.vue'
+
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
@@ -23,6 +26,10 @@ export default defineComponent({
       type: String,
       default: ''
     },
+    pageName: {
+      type: String,
+      required: true
+    },
     searchConfig: {
       type: Object
     }
@@ -30,12 +37,20 @@ export default defineComponent({
   setup() {
     const formData = ref({})
 
+    // 每次加载组件先清除之前所有的总线事件
+    emitter.all.clear()
+
+    // 点击重置按钮
     const handleResetBtn = () => {
       formData.value = {}
+      emitter.emit('updateBus')
     }
 
+    // 处理搜索按钮
     const handleSearchBtn = () => {
-      console.log(formData.value)
+      emitter.emit('updateBus', {
+        ...formData.value
+      })
     }
 
     return {

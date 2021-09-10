@@ -38,7 +38,18 @@
       </template>
     </el-table>
 
-    <div class="content-footer"></div>
+    <div class="table-footer">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalCount"
+      >
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -58,10 +69,23 @@ export default defineComponent({
     tableConfig: {
       type: Object as PropType<ITableConfig>,
       default: () => ({})
+    },
+    currentPage: {
+      type: Number,
+      required: true
+    },
+    pageSize: {
+      type: Number,
+      required: true
+    },
+    totalCount: {
+      type: Number
     }
   },
-  emits: ['handleCreate'],
+  emits: ['handleCreate', 'handleCurrentChange', 'handleSizeChange'],
+
   setup(props, { emit }) {
+    // 将空数据转换为-符号展示
     const handleNullData = (data: any) => {
       if (typeof data === undefined || data === null) {
         return '—'
@@ -70,11 +94,23 @@ export default defineComponent({
       }
     }
 
+    // 提交create事件
     const handleCreate = () => {
       emit('handleCreate')
     }
+
+    const handleCurrentChange = (currentPage: any) => {
+      emit('handleCurrentChange', currentPage)
+    }
+
+    const handleSizeChange = (pageSize: any) => {
+      emit('handleSizeChange', pageSize)
+    }
+
     return {
+      handleCurrentChange,
       handleNullData,
+      handleSizeChange,
       handleCreate
     }
   }
@@ -90,5 +126,10 @@ export default defineComponent({
   align-items: center;
   line-height: 40px;
   margin-bottom: 10px;
+}
+.table-footer {
+  margin-top: 20px;
+  width: 100%;
+  text-align: right;
 }
 </style>

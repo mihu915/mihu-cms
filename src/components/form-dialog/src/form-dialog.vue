@@ -58,7 +58,7 @@ export default defineComponent({
     }
   },
 
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'listDataUpdate'],
 
   setup(props, { emit }) {
     // 判断如果没有传dialogConfig则不执行以下操作
@@ -70,8 +70,8 @@ export default defineComponent({
     const formConfig: any = ref(props.dialogConfig)
     const rightBtnText = ref('')
 
-    const menuList = computed(() => [...store.state.system.menuListData])
-    const allRoleList = computed(() => [...store.state.system.roleListData])
+    const menuList = computed(() => [...store.state.common.menuListData.list])
+    const allRoleList = computed(() => [...store.state.common.roleListData.list])
 
     let formItemConfigIndex: any
 
@@ -113,7 +113,7 @@ export default defineComponent({
           )
           break
         case 'user':
-          store.dispatch('system/pageListDataAction', { pageName: 'role' }).then((res) => {
+          store.dispatch('common/pageListDataAction', { pageName: 'role' }).then((res) => {
             if (res === 200) {
               const roleOptions = handleRoleOptions(allRoleList.value)
               formItemConfigIndex = getConfigItemIndex(
@@ -188,22 +188,30 @@ export default defineComponent({
         switch (props.type) {
           case 'new':
             store
-              .dispatch('system/createData', {
+              .dispatch('common/createData', {
                 pageName: props.pageName,
                 data: formData.value
               })
               .then((res) => {
+                emit('listDataUpdate')
                 if (res === 200) closeBox()
+              })
+              .catch((err) => {
+                return err
               })
             break
           case 'edit':
             store
-              .dispatch('system/alterListData', {
+              .dispatch('common/alterListData', {
                 pageName: props.pageName,
                 data: formData.value
               })
               .then((res) => {
+                emit('listDataUpdate')
                 if (res === 200) closeBox()
+              })
+              .catch((err) => {
+                return err
               })
             break
         }

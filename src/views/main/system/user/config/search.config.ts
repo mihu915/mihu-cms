@@ -22,9 +22,8 @@ const userSearchConfig: IFormConfig = {
     },
     {
       type: 'select',
-      label: '类型：',
+      label: '状态：',
       field: 'enable',
-      placeholder: '状态',
       options: [
         { label: '开启', value: 1 },
         { label: '禁用', value: 0 }
@@ -32,9 +31,8 @@ const userSearchConfig: IFormConfig = {
     },
     {
       type: 'input',
-      label: '真实姓名：',
-      field: 'realname',
-      placeholder: '请输入真实姓名'
+      label: '昵称：',
+      field: 'realname'
     },
     {
       type: 'datePicker',

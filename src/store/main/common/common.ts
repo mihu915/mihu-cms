@@ -1,7 +1,7 @@
 import { Module } from 'vuex'
 
 import { IRootStore } from '@/store/types'
-import { ISystemStore } from './types'
+import { ICommonStore } from './types'
 import {
   createData,
   deleteListData,
@@ -10,13 +10,22 @@ import {
   userEnable
 } from '@/service/system/system'
 
-const system: Module<ISystemStore, IRootStore> = {
+const common: Module<ICommonStore, IRootStore> = {
   namespaced: true,
   state() {
     return {
-      roleListData: [],
-      menuListData: [],
-      userListData: [],
+      roleListData: {
+        list: [],
+        total_count: 0
+      },
+      menuListData: {
+        list: [],
+        total_count: 0
+      },
+      userListData: {
+        list: [],
+        total_count: 0
+      },
       username: 'mihu'
     }
   },
@@ -46,21 +55,13 @@ const system: Module<ISystemStore, IRootStore> = {
       const { pageName, queryInfo } = payload
       const result = await getListData(`/${pageName}/list`, queryInfo)
 
-      if (result.code !== 200) return
+      return new Promise((resolve, reject) => {
+        if (result.code !== 200) reject(result)
 
-      switch (pageName) {
-        case 'role':
-          commit('storeRoleListData', result.data)
-          break
-        case 'menu':
-          commit('storeMenuListData', result.data)
-          break
-        case 'user':
-          commit('storeUserListData', result.data)
-          break
-      }
+        // 将pageName转成首字母大写
+        const newPageName = pageName[0].toUpperCase() + pageName.slice(1)
 
-      return new Promise((resolve) => {
+        commit(`store${newPageName}ListData`, result.data)
         resolve(result.code)
       })
     },
@@ -70,34 +71,30 @@ const system: Module<ISystemStore, IRootStore> = {
       const { id, pageName } = payload
 
       const result = await deleteListData(`/${pageName}/${id}`)
+      return new Promise((resolve, reject) => {
+        if (result.code !== 200) reject(result)
 
-      if (result.code !== 200) return
-
-      await dispatch('pageListDataAction', { pageName: pageName })
-
-      switch (pageName) {
-        case 'menu':
-          await dispatch('login/getUserMenus', null, { root: true })
-          break
-      }
+        switch (pageName) {
+          case 'menu':
+            dispatch('login/getUserMenus', null, { root: true })
+            break
+        }
+        resolve(result.code)
+      })
     },
 
     // 新建数据
     async createData({ dispatch }, payload) {
       const { pageName, data } = payload
       const result = await createData(`/${pageName}`, data)
-      if (result.code !== 200) return
-
-      await dispatch('pageListDataAction', { pageName: pageName })
-
-      switch (pageName) {
-        case 'menu':
-          // 更新用户菜单数据
-          await dispatch('login/getUserMenus', null, { root: true })
-          break
-      }
-
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
+        if (result.code !== 200) reject(result)
+        switch (pageName) {
+          case 'menu':
+            // 更新用户菜单数据
+            dispatch('login/getUserMenus', null, { root: true })
+            break
+        }
         resolve(result.code)
       })
     },
@@ -106,17 +103,15 @@ const system: Module<ISystemStore, IRootStore> = {
     async alterListData({ dispatch }, payload) {
       const { pageName, data } = payload
       const result = await alterListData(`/${pageName}/${data.id}`, data)
-      if (result.code !== 200) return
 
-      await dispatch('pageListDataAction', { pageName: pageName })
+      return new Promise((resolve, reject) => {
+        if (result.code !== 200) reject(result)
 
-      switch (pageName) {
-        case 'menu':
-          await dispatch('login/getUserMenus', null, { root: true })
-          break
-      }
-
-      return new Promise((resolve) => {
+        switch (pageName) {
+          case 'menu':
+            dispatch('login/getUserMenus', null, { root: true })
+            break
+        }
         resolve(result.code)
       })
     },
@@ -137,4 +132,4 @@ const system: Module<ISystemStore, IRootStore> = {
   }
 }
 
-export { system }
+export { common }

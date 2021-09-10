@@ -9,6 +9,7 @@ module.exports = {
         },
         changeOrigin: true
       }
-    }
+    },
+    disableHostCheck: true
   }
 }

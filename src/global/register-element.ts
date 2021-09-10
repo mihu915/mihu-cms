@@ -32,7 +32,8 @@ import {
   ElDialog,
   ElRadio,
   ElRadioGroup,
-  ElRadioButton
+  ElRadioButton,
+  ElPagination
 } from 'element-plus'
 
 import 'element-plus/lib/theme-chalk/index.css'
@@ -70,7 +71,8 @@ const components = [
   ElDialog,
   ElRadio,
   ElRadioGroup,
-  ElRadioButton
+  ElRadioButton,
+  ElPagination
 ]
 
 export function registerElement(app: App): void {

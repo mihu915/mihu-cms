@@ -2,9 +2,14 @@
   <div class="content-page">
     <mh-table
       :title="title"
+      :pageSize="pageSize"
+      :currentPage="currentPage"
       :tableConfig="contentConfig"
-      :tableData="tableData"
+      :tableData="tableData.list"
+      :totalCount="tableData.total_count"
       @handleCreate="handleCreate"
+      @handleCurrentChange="handleCurrentChange"
+      @handleSizeChange="handleSizeChange"
     >
       <template #actionBtn="scope">
         <el-button @click="handleEdit(scope.row)" type="text"
@@ -80,12 +85,15 @@
         :dialogConfig="dialogConfig"
         :title="dialogTitle"
         :editData="editData"
+        @listDataUpdate="listDataUpdate"
       ></form-dialog>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { emitter } from '@/utils'
+
 import MhTable from '@/base-ui/mh-table'
 import FormDialog from '@/components/form-dialog'
 
@@ -119,16 +127,39 @@ export default defineComponent({
     FormDialog,
     MhTable
   },
+
   emits: ['handleEdit', 'handleDelete', 'handleCreate'],
   setup(props) {
     const store = useStore()
     const showDialog = ref(false)
     const dialogTitle = ref('')
-    const dialogType = ref<'new' | 'edit'>('new')
     const editData = ref({})
+    const currentPage = ref(1)
+    const pageSize = ref(10)
+    const dialogType = ref<'new' | 'edit'>('new')
+
+    // 请求数据
+    getPageListData()
+
+    // 监听总线事件
+    emitter.on('updateBus', (data: any) => {
+      getPageListData(data)
+    })
+
+    // 定义请求contentPage数据方法
+    function getPageListData(params?: any) {
+      store.dispatch('common/pageListDataAction', {
+        pageName: props.pageName,
+        queryInfo: {
+          offset: (currentPage.value - 1) * pageSize.value,
+          limit: pageSize.value * currentPage.value,
+          ...params
+        }
+      })
+    }
 
     // 拿到响应式数据
-    const tableData = computed(() => store.getters['system/getPageListData'](props.pageName))
+    const tableData = computed(() => store.getters['common/getPageListData'](props.pageName))
 
     // 加载排除在外的其他slot（插槽）
     const otherSlotName = props.contentConfig?.propList.filter((item: any) => {
@@ -154,11 +185,6 @@ export default defineComponent({
         type: 'warning'
       })
     }
-
-    // 请求contentPage数据
-    store.dispatch('system/pageListDataAction', {
-      pageName: props.pageName
-    })
 
     // 打开对话框，新建数据
     const handleCreate = () => {
@@ -187,10 +213,17 @@ export default defineComponent({
     const handleDelete = (row: any) => {
       openBox()
         .then(() => {
-          store.dispatch('system/deleteListData', {
-            id: row.id,
-            pageName: props.pageName
-          })
+          store
+            .dispatch('common/deleteListData', {
+              id: row.id,
+              pageName: props.pageName
+            })
+            .then(() => {
+              getPageListData()
+            })
+            .catch((err) => {
+              return err
+            })
         })
         .catch(() => {
           return
@@ -200,7 +233,7 @@ export default defineComponent({
     // 切换用户状态
     const handleEnable = (row: any) => {
       store
-        .dispatch('system/switchUserEnable', row)
+        .dispatch('common/switchUserEnable', row)
         .then((res) => {
           row.enable = res
         })
@@ -209,17 +242,36 @@ export default defineComponent({
         })
     }
 
+    // listData数据发生变化发送请求更新数据
+    const listDataUpdate = () => {
+      getPageListData()
+    }
+
+    const handleSizeChange = (data: any) => {
+      pageSize.value = data
+      getPageListData()
+    }
+
+    const handleCurrentChange = (data: any) => {
+      currentPage.value = data
+      getPageListData()
+    }
     return {
+      currentPage,
+      pageSize,
       dialogType,
       tableData,
       showDialog,
       dialogTitle,
       editData,
       otherSlotName,
+      listDataUpdate,
       handleEdit,
       handleDelete,
       handleEnable,
-      handleCreate
+      handleCreate,
+      handleSizeChange,
+      handleCurrentChange
     }
   }
 })

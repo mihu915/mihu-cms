@@ -16,7 +16,7 @@ const roleContentConfig: ITableConfig = {
     { prop: 'updated', label: '更新时间', slotName: 'updated' },
 
     {
-      width: 150,
+      minWidth: 150,
       label: '操作',
       slotName: 'actionBtn'
     }

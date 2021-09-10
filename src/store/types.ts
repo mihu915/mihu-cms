@@ -1,5 +1,5 @@
 import type { ILoginStore } from './login/types'
-import { ISystemStore } from './main/system/types'
+import { ICommonStore } from './main/common/types'
 
 export interface IRootStore {
   name: string
@@ -7,7 +7,7 @@ export interface IRootStore {
 }
 
 export interface IRootWithModule {
-  system: ISystemStore
+  common: ICommonStore
   menu: any
   login: ILoginStore
 }
