@@ -6,11 +6,10 @@
       pageName="role"
       title="角色信息："
       :dialogConfig="roleDialogConfig"
+      :dialogWidth="500"
     >
       <template #roleMenu="scope">
-        <span>
-          {{ getMenuTile(scope.row.role_menu) }}
-        </span>
+        {{ getMenuTile(scope.row.role_menu) || '—' }}
       </template>
     </content-page>
   </div>
@@ -33,19 +32,11 @@ export default defineComponent({
   setup() {
     const store = useStore()
     // 获取所有菜单数据
-    const allMenuData = computed(() => store.state.login.userInfo.all_menu_list)
+    const allMenuData = computed(() => [...store.state.login.userInfo.all_menu_list])
 
     // 将数据传入到el-tree的data中
     const treeIndex = getConfigItemIndex(roleDialogConfig.formItemConfig, 'field', 'role_menu')
     roleDialogConfig.formItemConfig[treeIndex!].treeOption!.data = allMenuData.value
-
-    // const parentMenuId: number[] = []
-    // allMenuData.value.map((parentMenu: any) => {
-    //   parentMenuId.push(parentMenu.id)
-    // })
-
-    // console.log(parentMenuId)
-    // roleDialogConfig.formItemConfig[treeIndex!].treeOption!.defaultExpandedKeys = parentMenuId
 
     // 获取角色对应匹配到的菜单标题并展示
     const getMenuTile = (menusId: string) => {

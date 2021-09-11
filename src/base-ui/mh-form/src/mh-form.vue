@@ -32,6 +32,7 @@
 
               <template v-else-if="item.type === 'select'">
                 <el-select
+                  clearable
                   style="width: 100%"
                   :placeholder="item.placeholder"
                   :model-value="modelValue[`${item.field}`]"
@@ -47,6 +48,7 @@
                 <el-date-picker
                   style="width: 100%"
                   v-bind="item.otherOption"
+                  value-format="x"
                   :model-value="modelValue[`${item.field}`]"
                   @update:modelValue="changeUpdate($event, item.field)"
                 ></el-date-picker>
@@ -69,7 +71,7 @@
               </template>
 
               <template v-else-if="item.type === 'tree'">
-                <el-tree v-bind="item.treeOption" @checkChange="checkChange" @nodeClick="nodeClick">
+                <el-tree v-bind="item.treeOption" @checkChange="checkChange" ref="treeRef">
                 </el-tree>
               </template>
             </el-form-item>
@@ -90,7 +92,7 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue'
 import { IFormConfig } from '@/base-ui/mh-form'
-import { ElForm } from 'element-plus'
+import { ElForm, ElTree } from 'element-plus'
 
 export default defineComponent({
   props: {
@@ -116,15 +118,16 @@ export default defineComponent({
       })
     }
   },
-  emits: ['update:modelValue', 'handleLeftBtn', 'handleRightBtn'],
+  emits: ['update:modelValue', 'handleLeftBtn', 'handleRightBtn', 'checkChange'],
 
   setup(props, { emit }) {
     const formRef = ref<InstanceType<typeof ElForm>>()
+
     const changeUpdate = (value: any, field: string) => {
       emit('update:modelValue', { ...props.modelValue, [field]: value })
     }
 
-    const checkMenuId: any[] = []
+    const treeRef = ref<InstanceType<typeof ElTree>>()
 
     const mhFormValid = () => {
       let flag: any = false
@@ -140,21 +143,20 @@ export default defineComponent({
     const handleRightBtn = () => {
       emit('handleRightBtn')
     }
-    const nodeClick = () => {
-      console.log('123')
+
+    let checkId: any = []
+
+    // 复选框发生改变则提交事件
+    const checkChange = () => {
+      const chooseCheck = treeRef.value?.getCheckedKeys(false)
+      const leaf: any = treeRef.value?.getHalfCheckedKeys()
+      checkId = chooseCheck?.concat(leaf)
+      emit('checkChange', checkId)
     }
-    const checkChange = (data: any, self: any) => {
-      console.log(data)
-      console.log(self)
-      // console.log(child)
-      if (self) {
-        checkMenuId.push(data.id)
-      }
-      console.log(checkMenuId)
-    }
+
     return {
       formRef,
-      nodeClick,
+      treeRef,
       changeUpdate,
       mhFormValid,
       checkChange,

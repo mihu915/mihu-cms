@@ -22,3 +22,5 @@ setupStore()
 app.use(router)
 
 app.mount('#app')
+
+console.log('肝不动了~~~')

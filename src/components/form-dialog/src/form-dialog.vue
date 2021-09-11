@@ -17,6 +17,7 @@
           @handleRightBtn="handleDataBtn"
           leftBtnText="取消"
           :rightBtnText="rightBtnText"
+          @checkChange="checkChange"
         ></mh-form>
       </div>
     </el-dialog>
@@ -26,9 +27,15 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch, PropType } from 'vue'
 import { useStore } from '@/store'
-import { getParentMenuInfo, getConfigItemIndex, handleRoleOptions } from '@/utils'
+import {
+  getParentMenuInfo,
+  getConfigItemIndex,
+  handleRoleOptions,
+  stringToNumberArray,
+  arrayToString
+} from '@/utils'
 
-import MhForm from '@/base-ui/mh-form'
+import MhForm, { IFormConfig } from '@/base-ui/mh-form'
 export default defineComponent({
   components: {
     MhForm
@@ -51,7 +58,7 @@ export default defineComponent({
       type: Boolean
     },
     dialogConfig: {
-      type: Object
+      type: Object as PropType<IFormConfig>
     },
     pageName: {
       type: String
@@ -67,8 +74,9 @@ export default defineComponent({
     const store = useStore()
     const formData: any = ref({})
     const mhDialogRef = ref<InstanceType<typeof MhForm>>()
-    const formConfig: any = ref(props.dialogConfig)
+    const formConfig = ref<IFormConfig>(props.dialogConfig)
     const rightBtnText = ref('')
+    const menusId = ref<any>([])
 
     const menuList = computed(() => [...store.state.common.menuListData.list])
     const allRoleList = computed(() => [...store.state.common.roleListData.list])
@@ -113,17 +121,19 @@ export default defineComponent({
           )
           break
         case 'user':
-          store.dispatch('common/pageListDataAction', { pageName: 'role' }).then((res) => {
-            if (res === 200) {
-              const roleOptions = handleRoleOptions(allRoleList.value)
-              formItemConfigIndex = getConfigItemIndex(
-                formConfig.value.formItemConfig,
-                'field',
-                'role_id'
-              )
-              formConfig.value.formItemConfig[formItemConfigIndex].options = roleOptions
-            }
-          })
+          store
+            .dispatch('common/pageListDataAction', { pageName: 'role', isShowLoading: false })
+            .then((res) => {
+              if (res === 200) {
+                const roleOptions = handleRoleOptions(allRoleList.value)
+                formItemConfigIndex = getConfigItemIndex(
+                  formConfig.value.formItemConfig,
+                  'field',
+                  'role_id'
+                )
+                formConfig.value.formItemConfig[formItemConfigIndex].options = roleOptions
+              }
+            })
 
           formItemConfigIndex = getConfigItemIndex(
             formConfig.value.formItemConfig,
@@ -139,8 +149,30 @@ export default defineComponent({
 
           break
         case 'role':
+          formItemConfigIndex = getConfigItemIndex(
+            formConfig.value.formItemConfig,
+            'field',
+            'role_menu'
+          )
+          if (props.type === 'edit') {
+            menusId.value = stringToNumberArray(props.editData?.role_menu)
+          } else if (props.type === 'new') {
+            menusId.value = []
+          }
+          menusId.value = store.getters['login/getFilterParentMenuIdList'](menusId.value)
+
+          formConfig.value.formItemConfig[formItemConfigIndex].treeOption!.defaultCheckedKeys =
+            menusId.value
+          formConfig.value.formItemConfig[formItemConfigIndex].treeOption!.defaultExpandedKeys =
+            menusId.value
           break
       }
+    }
+
+    // 监听选框变化
+    const checkChange = (data: any) => {
+      console.log(data)
+      formData.value.role_menu = arrayToString(data)
     }
 
     // 关闭box，同步box状态，初始化formData
@@ -157,10 +189,8 @@ export default defineComponent({
           case 'menu':
             if (newValue.type === 2) {
               const parentMenus = getParentMenuInfo(menuList.value)
-
               formConfig.value.formItemConfig[formItemConfigIndex].options = parentMenus
               formConfig.value.formItemConfig[formItemConfigIndex].isShow = true
-
               if (props.type === 'edit' && props.editData?.type === 1) {
                 for (let i = 0; i < parentMenus.length; i++) {
                   if (parentMenus[i].label === props.editData?.id) {
@@ -225,7 +255,8 @@ export default defineComponent({
       mhDialogRef,
       formConfig,
       rightBtnText,
-      handleDataBtn
+      handleDataBtn,
+      checkChange
     }
   }
 })

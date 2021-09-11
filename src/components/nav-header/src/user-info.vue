@@ -40,7 +40,7 @@ export default defineComponent({
     }
 
     const state = reactive({
-      size: 'small',
+      size: 'medium',
       shape: 'circle'
     })
     return {
@@ -64,7 +64,7 @@ export default defineComponent({
   align-items: center;
 
   .user-icon {
-    margin-right: 5px;
+    margin-right: 8px;
   }
   .username {
     font-size: 14px;

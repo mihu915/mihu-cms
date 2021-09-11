@@ -3,13 +3,14 @@
     <mh-table
       :title="title"
       :pageSize="pageSize"
+      v-model:currentPage="currentPage"
+      v-model:pageSize="pageSize"
       :currentPage="currentPage"
       :tableConfig="contentConfig"
       :tableData="tableData.list"
       :totalCount="tableData.total_count"
+      :showFooter="contentConfig.showFooter"
       @handleCreate="handleCreate"
-      @handleCurrentChange="handleCurrentChange"
-      @handleSizeChange="handleSizeChange"
     >
       <template #actionBtn="scope">
         <el-button @click="handleEdit(scope.row)" type="text"
@@ -97,7 +98,7 @@ import { emitter } from '@/utils'
 import MhTable from '@/base-ui/mh-table'
 import FormDialog from '@/components/form-dialog'
 
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
 import { useStore } from '@/store/index'
 import { ElMessageBox } from 'element-plus'
 export default defineComponent({
@@ -141,18 +142,41 @@ export default defineComponent({
     // 请求数据
     getPageListData()
 
+    // 监听pageSize改变则发送请求
+    watch(pageSize, () => {
+      getPageListData()
+    })
+
+    // 监听currentPage改变则发送请求
+    watch(currentPage, () => {
+      getPageListData()
+    })
+
     // 监听总线事件
     emitter.on('updateBus', (data: any) => {
+      if (['user', 'role', 'menu'].includes(props.pageName) && data) {
+        data.startTime = parseInt(data.created[0]) / 1000
+        data.endTime = parseInt(data.created[1]) / 1000
+        if (data.created) delete data.created
+      }
       getPageListData(data)
     })
 
     // 定义请求contentPage数据方法
     function getPageListData(params?: any) {
+      // 如果没开table-footer则不传分页相关信息
+      let range = {}
+      if (props.contentConfig?.showFooter === undefined || props.contentConfig?.showFooter) {
+        range = {
+          offset: (currentPage.value - 1) * pageSize.value,
+          limit: pageSize.value * currentPage.value
+        }
+      }
+
       store.dispatch('common/pageListDataAction', {
         pageName: props.pageName,
         queryInfo: {
-          offset: (currentPage.value - 1) * pageSize.value,
-          limit: pageSize.value * currentPage.value,
+          ...range,
           ...params
         }
       })
@@ -192,7 +216,13 @@ export default defineComponent({
       dialogType.value = 'new'
       switch (props.pageName) {
         case 'menu':
-          dialogTitle.value = '新建菜单'
+          dialogTitle.value = '新建菜单：'
+          break
+        case 'user':
+          dialogTitle.value = '新建用户：'
+          break
+        case 'role':
+          dialogTitle.value = '新建权限：'
           break
       }
     }
@@ -204,7 +234,13 @@ export default defineComponent({
       editData.value = row
       switch (props.pageName) {
         case 'menu':
-          dialogTitle.value = '编辑菜单'
+          dialogTitle.value = '编辑菜单：'
+          break
+        case 'user':
+          dialogTitle.value = '编辑用户：'
+          break
+        case 'role':
+          dialogTitle.value = '编辑权限：'
           break
       }
     }
@@ -247,16 +283,6 @@ export default defineComponent({
       getPageListData()
     }
 
-    const handleSizeChange = (data: any) => {
-      pageSize.value = data
-      getPageListData()
-    }
-
-    const handleCurrentChange = (data: any) => {
-      currentPage.value = data
-      getPageListData()
-    }
-
     return {
       currentPage,
       pageSize,
@@ -270,9 +296,7 @@ export default defineComponent({
       handleEdit,
       handleDelete,
       handleEnable,
-      handleCreate,
-      handleSizeChange,
-      handleCurrentChange
+      handleCreate
     }
   }
 })

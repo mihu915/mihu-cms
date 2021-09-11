@@ -12,6 +12,7 @@ function accountLoginRequest(account: IAccount): Promise<IDataType<ILoginDataTyp
   return mhRequest.post<IDataType>({
     url: LoginAPI.AccountLogin,
     data: qs.stringify(account),
+    showLoading: true,
     showMessage: true
   })
 }

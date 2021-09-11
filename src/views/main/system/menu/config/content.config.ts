@@ -3,6 +3,7 @@ import { ITableConfig } from '@/base-ui/mh-table'
 const menuContentConfig: ITableConfig = {
   rowKey: 'id',
   border: true,
+  showFooter: false,
   size: 'mini',
   treeProps: {
     rowKey: 'id',

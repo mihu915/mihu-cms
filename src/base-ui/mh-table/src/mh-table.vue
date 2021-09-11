@@ -38,7 +38,7 @@
       </template>
     </el-table>
 
-    <div class="table-footer">
+    <div class="table-footer" v-if="showFooter">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -78,11 +78,22 @@ export default defineComponent({
       type: Number,
       required: true
     },
+    modelValue: {
+      type: Object
+    },
     totalCount: {
       type: Number
+    },
+    showFooter: {
+      type: Boolean,
+      default: true
+    },
+    pageInfo: {
+      type: Object,
+      default: () => ({})
     }
   },
-  emits: ['handleCreate', 'handleCurrentChange', 'handleSizeChange'],
+  emits: ['handleCreate', 'update:pageSize', 'update:currentPage'],
 
   setup(props, { emit }) {
     // 将空数据转换为-符号展示
@@ -100,11 +111,11 @@ export default defineComponent({
     }
 
     const handleCurrentChange = (currentPage: any) => {
-      emit('handleCurrentChange', currentPage)
+      emit('update:currentPage', currentPage)
     }
 
     const handleSizeChange = (pageSize: any) => {
-      emit('handleSizeChange', pageSize)
+      emit('update:pageSize', pageSize)
     }
 
     return {

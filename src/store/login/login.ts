@@ -1,7 +1,7 @@
 import { Module } from 'vuex'
 import { router } from '@/router'
 
-import { localCache, mapMenus } from '@/utils'
+import { localCache, mapMenus, stringToNumberArray, arrayToString } from '@/utils'
 
 import { IRootStore } from '../types'
 import { ILoginStore } from './types'
@@ -18,37 +18,41 @@ const login: Module<ILoginStore, IRootStore> = {
   },
 
   getters: {
-    getAssignMenuName(state) {
-      return function (menusId: string) {
-        const menusTile: any = []
-        const menusIdArray: any[] = menusId.split(',')
+    getFilterParentMenuIdList(state) {
+      return function (menusId: number[]) {
+        if (menusId.length === 0) return []
 
-        menusIdArray.map((item, index, array) => {
-          array[index] = parseInt(item)
+        const allMenuList = [...state.userInfo.all_menu_list]
+
+        menusId.map((id, index, array) => {
+          allMenuList.map((parentMenu: any) => {
+            if (parentMenu.id === id) {
+              array.splice(index, 1)
+            }
+          })
         })
+        return menusId
+      }
+    },
+    getAssignMenuName(state, getters) {
+      return function (strMenusId: string) {
+        let menusTile: any = []
+        const menusIdArray = stringToNumberArray(strMenusId)
+        const childMenusId = getters.getFilterParentMenuIdList(menusIdArray)
 
         const allMenuList = [...state.userInfo.all_menu_list]
 
         allMenuList.map((parent) => {
-          if (menusIdArray.includes(parent.id)) {
-            menusTile.push(parent.title)
-
-            parent.children.map((child: any) => {
-              if (menusIdArray.includes(child.id)) {
-                menusTile.push(child.title)
-              }
-            })
-          }
+          parent.children.map((child: any) => {
+            if (childMenusId.includes(child.id)) {
+              menusTile.push(child.title)
+            }
+          })
         })
-        const menus = menusTile.join(',')
-        return menus
+        menusTile = arrayToString(menusTile)
+        return menusTile
       }
     }
-    // getMenuTreeData(state) {
-    //   const menuTreeData = {}
-
-    //   return menuTreeData
-    // }
   },
 
   mutations: {

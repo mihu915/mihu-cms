@@ -57,7 +57,7 @@ export default defineComponent({
 }
 .fold-btn {
   height: 100%;
-  line-height: 40px;
+  line-height: 60px;
   margin: 0 20px;
   font-size: 24px;
   cursor: pointer;

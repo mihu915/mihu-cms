@@ -1,5 +1,6 @@
 import { RouteRecordRaw } from 'vue-router'
 import { IBreadcrumb } from '@/base-ui/mh-breadcrumb'
+import { store } from '@/store'
 
 let firstMenuPath: any = null
 
@@ -72,4 +73,24 @@ function getParentMenuInfo(menuList: any[], excludeId?: number) {
 
   return parentMenuTitle
 }
-export { mapMenus, firstMenuPath, getCurrentMenu, pathMapBreadcrumb, getParentMenuInfo }
+
+function filterParentMenuId(allMenuList: any[], menusId: number[]) {
+  if (menusId.length === 0) return []
+  menusId.map((id, index, array) => {
+    allMenuList.map((parentMenu) => {
+      if (parentMenu.id === id) {
+        array.splice(index, 1)
+      }
+    })
+  })
+  return menusId
+}
+
+export {
+  mapMenus,
+  firstMenuPath,
+  getCurrentMenu,
+  pathMapBreadcrumb,
+  getParentMenuInfo,
+  filterParentMenuId
+}

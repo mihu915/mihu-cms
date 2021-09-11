@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 import { menuContentConfig } from './config/content.config'
 import { menuDialogConfig } from './config/dialog.config'
 

@@ -46,7 +46,7 @@ export default defineComponent({
   width: 100%;
 }
 .el-aside {
-  transition: width 0.3s linear;
+  transition: all 0.3s linear;
 }
 .el-container {
   height: 100%;
@@ -54,7 +54,7 @@ export default defineComponent({
 }
 .el-header {
   background-color: #fff;
-  height: 40px;
+  height: 60px;
   padding: 0;
   margin: 0;
   box-shadow: 0 -1px 5px #000;

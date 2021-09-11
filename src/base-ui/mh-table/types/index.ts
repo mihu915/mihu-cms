@@ -13,6 +13,7 @@ export interface ITableConfig {
   border?: boolean
   rowKey: string
   size?: 'medium' | 'small' | 'mini'
+  showFooter?: boolean
   treeProps?: {
     children?: string
     rowKey: string

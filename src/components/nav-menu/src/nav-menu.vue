@@ -106,7 +106,6 @@ export default defineComponent({
   background-color: #1b394e;
   padding: 8px 8px 0 8px;
   box-sizing: border-box;
-  transition: all 0.3s linear;
 }
 
 .mh-menu-item:last-child {

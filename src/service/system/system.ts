@@ -3,9 +3,15 @@ import { IDataType } from '../types'
 import qs from 'qs'
 
 // 获取列表数据
-const getListData = (url: string, queryInfo?: any): Promise<IDataType> => {
+const getListData = (url: string, showLoading?: boolean, queryInfo?: any): Promise<IDataType> => {
+  let isShowLoading = true
+  if (showLoading === false) {
+    isShowLoading = showLoading
+  }
+
   return mhRequest.get({
     url,
+    showLoading: isShowLoading,
     params: queryInfo
   })
 }
@@ -14,7 +20,8 @@ const getListData = (url: string, queryInfo?: any): Promise<IDataType> => {
 const deleteListData = (url: string): Promise<IDataType> => {
   return mhRequest.delete({
     url,
-    showMessage: true
+    showMessage: true,
+    showLoading: true
   })
 }
 
@@ -22,6 +29,7 @@ const createData = (url: string, data: any): Promise<IDataType> => {
   return mhRequest.post({
     url,
     data: qs.stringify(data),
+    showLoading: true,
     showMessage: true
   })
 }
@@ -30,7 +38,8 @@ const alterListData = (url: string, data: any): Promise<IDataType> => {
   return mhRequest.patch({
     url,
     data: qs.stringify(data),
-    showMessage: true
+    showMessage: true,
+    showLoading: true
   })
 }
 
@@ -42,7 +51,8 @@ const userEnable = (id: number, enable: number, role_id: number): Promise<IDataT
       enable,
       role_id
     },
-    showMessage: true
+    showMessage: true,
+    showLoading: true
   })
 }
 export { createData, deleteListData, alterListData, getListData, userEnable }
