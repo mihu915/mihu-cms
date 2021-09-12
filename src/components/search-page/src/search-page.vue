@@ -37,9 +37,6 @@ export default defineComponent({
   setup() {
     const formData = ref({})
 
-    // 每次加载组件先清除之前所有的总线事件
-    emitter.all.clear()
-
     // 点击重置按钮
     const handleResetBtn = () => {
       formData.value = {}

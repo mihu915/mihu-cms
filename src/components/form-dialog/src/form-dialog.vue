@@ -1,23 +1,21 @@
 <template>
   <div class="form-dialog">
     <el-dialog
-      :title="title"
+      :title="textConfig.dialogTitle"
       :model-value="modelValue"
       @close="closeBox"
-      @open="openBox"
-      :width="dialogWidth"
+      :width="500"
       destroy-on-close
     >
       <div class="dialog-content">
         <mh-form
           :formConfig="formConfig"
           v-model="formData"
-          ref="mhDialogRef"
-          @handleLeftBtn="closeBox"
-          @handleRightBtn="handleDataBtn"
-          leftBtnText="取消"
-          :rightBtnText="rightBtnText"
+          :leftBtnText="textConfig.dialogLeftBtnText"
+          :rightBtnText="textConfig.dialogRightBtnText"
           @checkChange="checkChange"
+          @handleLeftBtn="closeBox"
+          @handleRightBtn="handleRightBtn"
         ></mh-form>
       </div>
     </el-dialog>
@@ -25,34 +23,20 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watch, PropType } from 'vue'
-import { useStore } from '@/store'
-import {
-  getParentMenuInfo,
-  getConfigItemIndex,
-  handleRoleOptions,
-  stringToNumberArray,
-  arrayToString
-} from '@/utils'
-
 import MhForm, { IFormConfig } from '@/base-ui/mh-form'
+
+import { defineComponent, PropType, ref, watch } from 'vue'
+import { emitter, alterFormConfig, arrayToString } from '@/utils'
+import { useStore } from '@/store'
+
 export default defineComponent({
   components: {
     MhForm
   },
   props: {
-    dialogWidth: {
-      type: Number
-    },
-    type: {
-      type: String as PropType<'new' | 'edit'>,
-      required: true
-    },
-    editData: {
-      type: Object
-    },
-    title: {
-      type: String
+    dialogFormData: {
+      type: Object,
+      default: () => ({})
     },
     modelValue: {
       type: Boolean
@@ -61,202 +45,115 @@ export default defineComponent({
       type: Object as PropType<IFormConfig>
     },
     pageName: {
-      type: String
+      type: String,
+      required: true
     }
   },
 
-  emits: ['update:modelValue', 'listDataUpdate'],
+  emits: ['update:modelValue'],
 
   setup(props, { emit }) {
-    // 判断如果没有传dialogConfig则不执行以下操作
-    if (!props.dialogConfig) return
+    // 定义标题以及按钮文本信息
+    let textConfig = ref({
+      dialogTitle: '提示：',
+      dialogLeftBtnText: '取消',
+      dialogRightBtnText: '确定'
+    })
 
+    // 定义双向绑定的form数据
+    const formData = ref<any>({})
+    const formConfig = ref<any>({ ...props.dialogConfig })
     const store = useStore()
-    const formData: any = ref({})
-    const mhDialogRef = ref<InstanceType<typeof MhForm>>()
-    const formConfig = ref<IFormConfig>(props.dialogConfig)
-    const rightBtnText = ref('')
-    const menusId = ref<any>([])
 
-    const menuList = computed(() => [...store.state.common.menuListData.list])
-    const allRoleList = computed(() => [...store.state.common.roleListData.list])
-
-    let formItemConfigIndex: any
-
-    //  打开box的回调
-    const openBox = () => {
-      switch (props.type) {
-        case 'edit':
-          rightBtnText.value = '保存'
-          formData.value = { ...props.editData }
-          break
-        case 'new':
-          rightBtnText.value = '创建'
-          formData.value = {}
-          break
-      }
-
-      switch (props.pageName) {
-        case 'menu':
-          formItemConfigIndex = getConfigItemIndex(
-            formConfig.value.formItemConfig,
-            'field',
-            'parent_id'
-          )
-
-          // 监听parentId的变化，自动输入url输入框
-          watch(
-            () => formData.value.parent_id,
-            (newValue) => {
-              menuList.value.forEach((parentMenu) => {
-                if (parentMenu.id === newValue) {
-                  formData.value.url = parentMenu.url
-                }
-
-                if (props.type === 'edit' && newValue === props.editData?.parent_id) {
-                  formData.value.url = props.editData?.url
-                }
-              })
-            }
-          )
-          break
-        case 'user':
-          store
-            .dispatch('common/pageListDataAction', { pageName: 'role', isShowLoading: false })
-            .then((res) => {
-              if (res === 200) {
-                const roleOptions = handleRoleOptions(allRoleList.value)
-                formItemConfigIndex = getConfigItemIndex(
-                  formConfig.value.formItemConfig,
-                  'field',
-                  'role_id'
-                )
-                formConfig.value.formItemConfig[formItemConfigIndex].options = roleOptions
-              }
-            })
-
-          formItemConfigIndex = getConfigItemIndex(
-            formConfig.value.formItemConfig,
-            'field',
-            'password'
-          )
-
-          if (props.type === 'edit') {
-            formConfig.value.formItemConfig[formItemConfigIndex].isShow = false
-          } else {
-            formConfig.value.formItemConfig[formItemConfigIndex].isShow = true
-          }
-
-          break
-        case 'role':
-          formItemConfigIndex = getConfigItemIndex(
-            formConfig.value.formItemConfig,
-            'field',
-            'role_menu'
-          )
-          if (props.type === 'edit') {
-            menusId.value = stringToNumberArray(props.editData?.role_menu)
-          } else if (props.type === 'new') {
-            menusId.value = []
-          }
-          menusId.value = store.getters['login/getFilterParentMenuIdList'](menusId.value)
-
-          formConfig.value.formItemConfig[formItemConfigIndex].treeOption!.defaultCheckedKeys =
-            menusId.value
-          formConfig.value.formItemConfig[formItemConfigIndex].treeOption!.defaultExpandedKeys =
-            menusId.value
-          break
-      }
-    }
-
-    // 监听选框变化
-    const checkChange = (data: any) => {
-      console.log(data)
-      formData.value.role_menu = arrayToString(data)
+    // 提供设置文本信息的方法
+    const setDialogTextInfo = (info: any) => {
+      textConfig.value = Object.assign({}, textConfig.value, info)
     }
 
     // 关闭box，同步box状态，初始化formData
     const closeBox = () => {
       emit('update:modelValue', false)
-      formData.value = {}
+    }
+
+    // 监听选框变化，将数据转化为字符串并存储到formData
+    const checkChange = (data: any) => {
+      formData.value.role_menu = arrayToString(data)
+    }
+
+    // 监听父组件的formData的变化，将最新值赋值给formData
+    watch(
+      () => props.dialogFormData,
+      (newValue) => {
+        formData.value = newValue
+      },
+      { deep: true }
+    )
+
+    // 处理右边按钮点击逻辑
+    const handleRightBtn = () => {
+      // 判断父组件有没有传值过来，如果有，则说明是编辑，没有则是新建
+      if (Object.keys(props.dialogFormData).length) {
+        store
+          .dispatch('common/alterListDataAction', {
+            pageName: props.pageName,
+            data: formData.value
+          })
+          .then(() => {
+            emitter.emit('updateBus')
+            closeBox()
+          })
+      } else {
+        store
+          .dispatch('common/createDataAction', { pageName: props.pageName, data: formData.value })
+          .then(() => {
+            emitter.emit('updateBus')
+            closeBox()
+          })
+          .catch((err) => {
+            return err
+          })
+      }
     }
 
     // 监听formData数据变化
-    watch(
-      formData,
-      (newValue: any) => {
-        switch (props.pageName) {
-          case 'menu':
-            if (newValue.type === 2) {
-              const parentMenus = getParentMenuInfo(menuList.value)
-              formConfig.value.formItemConfig[formItemConfigIndex].options = parentMenus
-              formConfig.value.formItemConfig[formItemConfigIndex].isShow = true
-              if (props.type === 'edit' && props.editData?.type === 1) {
-                for (let i = 0; i < parentMenus.length; i++) {
-                  if (parentMenus[i].label === props.editData?.id) {
-                    parentMenus.splice(i, 1)
-                  }
-                }
+    switch (props.pageName) {
+      case 'menu':
+        watch(
+          () => formData.value.type,
+          (newValue) => {
+            if (newValue === 2) {
+              alterFormConfig(formConfig.value, 'parent_id', 'isShow', true)
+            } else {
+              alterFormConfig(formConfig.value, 'parent_id', 'isShow', false)
+            }
+          }
+        )
+
+        watch(
+          () => formData.value.parent_id,
+          (newValue) => {
+            if (props.dialogFormData.parent_id === newValue) {
+              if (props.dialogFormData.url) {
+                formData.value.url = props.dialogFormData.url
               }
             } else {
-              formConfig.value.formItemConfig[formItemConfigIndex].isShow = false
+              store.state.entireMenuData.find((item) => {
+                if (item.id === newValue) formData.value.url = item.url
+              })
             }
-            break
-          case 'user':
-            break
-        }
-      },
-      {
-        deep: true
-      }
-    )
-
-    // 点击右边按钮事件
-    const handleDataBtn = () => {
-      const valid = mhDialogRef.value?.mhFormValid()
-      if (valid) {
-        switch (props.type) {
-          case 'new':
-            store
-              .dispatch('common/createData', {
-                pageName: props.pageName,
-                data: formData.value
-              })
-              .then((res) => {
-                emit('listDataUpdate')
-                if (res === 200) closeBox()
-              })
-              .catch((err) => {
-                return err
-              })
-            break
-          case 'edit':
-            store
-              .dispatch('common/alterListData', {
-                pageName: props.pageName,
-                data: formData.value
-              })
-              .then((res) => {
-                emit('listDataUpdate')
-                if (res === 200) closeBox()
-              })
-              .catch((err) => {
-                return err
-              })
-            break
-        }
-      }
+          }
+        )
+        break
     }
 
     return {
-      openBox,
-      closeBox,
       formData,
-      mhDialogRef,
+      textConfig,
       formConfig,
-      rightBtnText,
-      handleDataBtn,
-      checkChange
+      closeBox,
+      checkChange,
+      handleRightBtn,
+      setDialogTextInfo
     }
   }
 })

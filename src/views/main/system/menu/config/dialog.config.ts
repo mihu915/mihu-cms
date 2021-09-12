@@ -54,6 +54,7 @@ const menuDialogConfig: IFormConfig = {
       field: 'parent_id',
 
       isShow: false,
+
       otherOption: {
         border: true,
         size: 'mini',

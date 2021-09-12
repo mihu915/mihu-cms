@@ -76,19 +76,6 @@
         </template>
       </template>
     </mh-table>
-
-    <div class="dialog" v-if="dialogConfig">
-      <form-dialog
-        :dialogWidth="dialogWidth"
-        v-model="showDialog"
-        :type="dialogType"
-        :pageName="pageName"
-        :dialogConfig="dialogConfig"
-        :title="dialogTitle"
-        :editData="editData"
-        @listDataUpdate="listDataUpdate"
-      ></form-dialog>
-    </div>
   </div>
 </template>
 
@@ -96,48 +83,37 @@
 import { emitter } from '@/utils'
 
 import MhTable from '@/base-ui/mh-table'
-import FormDialog from '@/components/form-dialog'
 
 import { computed, defineComponent, ref, watch } from 'vue'
 import { useStore } from '@/store/index'
 import { ElMessageBox } from 'element-plus'
 export default defineComponent({
   props: {
-    dialogWidth: {
-      type: Number
-    },
     title: {
       type: String,
       default: ''
     },
-
-    dialogConfig: {
-      type: Object
-    },
-
     contentConfig: {
       type: Object
     },
-
     pageName: {
       type: String,
       required: true
     }
   },
   components: {
-    FormDialog,
     MhTable
   },
 
   emits: ['handleEdit', 'handleDelete', 'handleCreate'],
-  setup(props) {
+  setup(props, { emit }) {
     const store = useStore()
-    const showDialog = ref(false)
-    const dialogTitle = ref('')
     const editData = ref({})
     const currentPage = ref(1)
     const pageSize = ref(10)
-    const dialogType = ref<'new' | 'edit'>('new')
+
+    // 每次加载组件先清除之前所有的总线事件
+    emitter.all.clear()
 
     // 请求数据
     getPageListData()
@@ -154,7 +130,7 @@ export default defineComponent({
 
     // 监听总线事件
     emitter.on('updateBus', (data: any) => {
-      if (['user', 'role', 'menu'].includes(props.pageName) && data) {
+      if (['user', 'role', 'menu'].includes(props.pageName) && data && data.created) {
         data.startTime = parseInt(data.created[0]) / 1000
         data.endTime = parseInt(data.created[1]) / 1000
         if (data.created) delete data.created
@@ -162,10 +138,23 @@ export default defineComponent({
       getPageListData(data)
     })
 
+    // 点击新建按钮
+    const handleCreate = () => {
+      emit('handleCreate', props.pageName)
+    }
+
+    // 点击编辑按钮
+    const handleEdit = (row: any) => {
+      emit('handleEdit', row, props.pageName)
+    }
+
     // 定义请求contentPage数据方法
     function getPageListData(params?: any) {
-      // 如果没开table-footer则不传分页相关信息
-      let range = {}
+      // 如果没开table-footer则传默认偏移和总条数
+      let range = {
+        offset: 0,
+        limit: 100
+      }
       if (props.contentConfig?.showFooter === undefined || props.contentConfig?.showFooter) {
         range = {
           offset: (currentPage.value - 1) * pageSize.value,
@@ -210,41 +199,6 @@ export default defineComponent({
       })
     }
 
-    // 打开对话框，新建数据
-    const handleCreate = () => {
-      showDialog.value = true
-      dialogType.value = 'new'
-      switch (props.pageName) {
-        case 'menu':
-          dialogTitle.value = '新建菜单：'
-          break
-        case 'user':
-          dialogTitle.value = '新建用户：'
-          break
-        case 'role':
-          dialogTitle.value = '新建权限：'
-          break
-      }
-    }
-
-    // 编辑按钮
-    const handleEdit = (row: any) => {
-      showDialog.value = true
-      dialogType.value = 'edit'
-      editData.value = row
-      switch (props.pageName) {
-        case 'menu':
-          dialogTitle.value = '编辑菜单：'
-          break
-        case 'user':
-          dialogTitle.value = '编辑用户：'
-          break
-        case 'role':
-          dialogTitle.value = '编辑权限：'
-          break
-      }
-    }
-
     // 点击删除按钮
     const handleDelete = (row: any) => {
       openBox()
@@ -287,17 +241,14 @@ export default defineComponent({
     return {
       currentPage,
       pageSize,
-      dialogType,
       tableData,
-      showDialog,
-      dialogTitle,
       editData,
       otherSlotName,
       listDataUpdate,
-      handleEdit,
       handleDelete,
       handleEnable,
-      handleCreate
+      handleCreate,
+      handleEdit
     }
   }
 })

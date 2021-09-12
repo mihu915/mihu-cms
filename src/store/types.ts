@@ -3,7 +3,8 @@ import { ICommonStore } from './main/common/types'
 
 export interface IRootStore {
   name: string
-  allRoleList: any[]
+  entireRoleData: any[]
+  entireMenuData: any[]
 }
 
 export interface IRootWithModule {

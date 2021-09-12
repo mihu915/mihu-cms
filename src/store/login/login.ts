@@ -1,7 +1,7 @@
 import { Module } from 'vuex'
 import { router } from '@/router'
 
-import { localCache, mapMenus, stringToNumberArray, arrayToString } from '@/utils'
+import { localCache, mapMenus } from '@/utils'
 
 import { IRootStore } from '../types'
 import { ILoginStore } from './types'
@@ -17,43 +17,7 @@ const login: Module<ILoginStore, IRootStore> = {
     }
   },
 
-  getters: {
-    getFilterParentMenuIdList(state) {
-      return function (menusId: number[]) {
-        if (menusId.length === 0) return []
-
-        const allMenuList = [...state.userInfo.all_menu_list]
-
-        menusId.map((id, index, array) => {
-          allMenuList.map((parentMenu: any) => {
-            if (parentMenu.id === id) {
-              array.splice(index, 1)
-            }
-          })
-        })
-        return menusId
-      }
-    },
-    getAssignMenuName(state, getters) {
-      return function (strMenusId: string) {
-        let menusTile: any = []
-        const menusIdArray = stringToNumberArray(strMenusId)
-        const childMenusId = getters.getFilterParentMenuIdList(menusIdArray)
-
-        const allMenuList = [...state.userInfo.all_menu_list]
-
-        allMenuList.map((parent) => {
-          parent.children.map((child: any) => {
-            if (childMenusId.includes(child.id)) {
-              menusTile.push(child.title)
-            }
-          })
-        })
-        menusTile = arrayToString(menusTile)
-        return menusTile
-      }
-    }
-  },
+  getters: {},
 
   mutations: {
     // 存储token
@@ -91,6 +55,7 @@ const login: Module<ILoginStore, IRootStore> = {
 
       await dispatch('updateUserInfo')
       await dispatch('getUserMenus')
+      await dispatch('getInitialDataAction', null, { root: true })
 
       // 跳转至首页
       router.replace('/main')
@@ -100,8 +65,8 @@ const login: Module<ILoginStore, IRootStore> = {
     async updateUserInfo({ commit }) {
       const userInfoResult = await getUserInfoRequest()
 
-      return new Promise((resolve) => {
-        if (userInfoResult.code !== 200) return
+      return new Promise((resolve, reject) => {
+        if (userInfoResult.code !== 200) reject(userInfoResult)
         const userInfo = userInfoResult.data
         localCache.setCache('userInfo', userInfo)
         commit('storageUserInfo', userInfo)
@@ -132,10 +97,14 @@ const login: Module<ILoginStore, IRootStore> = {
 
       // 更新数据
       if (token) {
-        const code = await dispatch('updateUserInfo')
-        if (code === 200) {
-          await dispatch('getUserMenus')
-        }
+        await dispatch('updateUserInfo')
+          .then(async () => {
+            await dispatch('getUserMenus')
+            await dispatch('getInitialDataAction', null, { root: true })
+          })
+          .catch((err) => {
+            console.log(err)
+          })
       }
     }
   },

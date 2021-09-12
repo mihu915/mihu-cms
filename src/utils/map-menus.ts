@@ -1,6 +1,5 @@
 import { RouteRecordRaw } from 'vue-router'
 import { IBreadcrumb } from '@/base-ui/mh-breadcrumb'
-import { store } from '@/store'
 
 let firstMenuPath: any = null
 
@@ -60,8 +59,9 @@ function pathMapBreadcrumb(userMenus: any[], currentPath: string) {
   return menuBreadcrumb
 }
 
-// 获取父级菜单id和title
+// 获取父级菜单id和title,排除指定id
 function getParentMenuInfo(menuList: any[], excludeId?: number) {
+  if (!menuList) return
   const parentMenuTitle: any[] = []
   menuList.forEach((item) => {
     if (item.id === excludeId && excludeId) {
@@ -74,6 +74,7 @@ function getParentMenuInfo(menuList: any[], excludeId?: number) {
   return parentMenuTitle
 }
 
+// 过滤掉父菜单id并返回新的id数组
 function filterParentMenuId(allMenuList: any[], menusId: number[]) {
   if (menusId.length === 0) return []
   menusId.map((id, index, array) => {
