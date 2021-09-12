@@ -272,6 +272,7 @@ export default defineComponent({
         .dispatch('common/switchUserEnable', row)
         .then((res) => {
           row.enable = res
+          getPageListData()
         })
         .catch((err) => {
           return err
