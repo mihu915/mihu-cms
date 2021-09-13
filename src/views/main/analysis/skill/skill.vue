@@ -2,40 +2,63 @@
   <div class="skill">
     <div class="skill-header common-Piece">
       <div class="greeting">
-        <span>{{ timeInfo.timeFrame }}~ </span>
+        <span>晚上好，</span>
         <span>{{ nickname }}</span>
       </div>
     </div>
 
-    <mh-echarts></mh-echarts>
+    <div class="info-card">
+      <el-row :gutter="10">
+        <el-col :span="16">
+          <mh-card>
+            <template #title>
+              <div>最新消息</div>
+            </template>
+            <template #default> 123123123123 </template>
+          </mh-card>
+        </el-col>
+
+        <el-col :span="8">
+          <mh-card>
+            <template #title>
+              <div>全国疫情</div>
+            </template>
+            <template #default>
+              <map-echart-page :mapData="chinaAreaData"></map-echart-page>
+            </template>
+          </mh-card>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { getNowTimeFrameByUnix } from '@/utils'
 import { computed, defineComponent, ref } from 'vue'
+
+import MhCard from '@/base-ui/mh-card/src/mh-card.vue'
+import MapEchartPage from '@/components/echarts-page'
 import { useStore } from '@/store'
 
-import mhEcharts from '@/base-ui/mh-echarts/src/mh-echarts.vue'
-
 export default defineComponent({
-  components: { mhEcharts },
+  components: { MhCard, MapEchartPage },
   setup() {
     const store = useStore()
     const chinaMap = ref()
 
     const timeInfo = ref(getNowTimeFrameByUnix())
     const nickname = computed(() => store.state.login.userInfo.nickname)
+    const chinaAreaData: any = ref([])
+    store.dispatch('skill/getEpidemicDataAction').then(() => {
+      chinaAreaData.value! = store.getters['skill/getChinaAreaData']
+    })
 
-    store.dispatch('skill/getEpidemicDataAction')
-    const chinaEpidemicData = computed(() => store.getters['skill/getChinaTotalExtData'])
-    setTimeout(() => {
-      console.log(chinaEpidemicData.value)
-    }, 1000)
     return {
       timeInfo,
       nickname,
-      chinaMap
+      chinaMap,
+      chinaAreaData
     }
   }
 })
@@ -50,6 +73,9 @@ export default defineComponent({
       font-size: 18px;
       margin-right: 10px;
     }
+  }
+  .info-card {
+    margin-top: 10px;
   }
 }
 </style>
