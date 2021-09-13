@@ -66,7 +66,7 @@ const login: Module<ILoginStore, IRootStore> = {
       const userInfoResult = await getUserInfoRequest()
 
       return new Promise((resolve, reject) => {
-        if (userInfoResult.code !== 200) reject(userInfoResult)
+        if (userInfoResult.code !== 200) return reject(userInfoResult)
         const userInfo = userInfoResult.data
         localCache.setCache('userInfo', userInfo)
         commit('storageUserInfo', userInfo)

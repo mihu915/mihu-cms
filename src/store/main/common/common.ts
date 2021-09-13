@@ -55,10 +55,7 @@ const common: Module<ICommonStore, IRootStore> = {
       const result = await getListData(`/${pageName}/list`, isShowLoading, queryInfo)
 
       return new Promise((resolve, reject) => {
-        if (result.code !== 200) {
-          reject(result)
-          return
-        }
+        if (result.code !== 200) return reject(result)
 
         // 将pageName转成首字母大写
         const newPageName = pageName[0].toUpperCase() + pageName.slice(1)
@@ -80,10 +77,7 @@ const common: Module<ICommonStore, IRootStore> = {
 
       const result = await deleteListData(`/${pageName}/${id}`)
       return new Promise((resolve, reject) => {
-        if (result.code !== 200) {
-          reject(result)
-          return
-        }
+        if (result.code !== 200) return reject(result)
 
         switch (pageName) {
           case 'menu':
@@ -102,10 +96,7 @@ const common: Module<ICommonStore, IRootStore> = {
       const { pageName, data } = payload
       const result = await createData(`/${pageName}`, data)
       return new Promise((resolve, reject) => {
-        if (result.code !== 200) {
-          reject(result)
-          return
-        }
+        if (result.code !== 200) return reject(result)
         switch (pageName) {
           case 'menu':
             // 更新用户菜单数据
@@ -120,15 +111,12 @@ const common: Module<ICommonStore, IRootStore> = {
     },
 
     // 修改数据
-    async alterListDataAction({ dispatch }, payload) {
+    async alterListDataAction({ dispatch, rootState }, payload) {
       const { pageName, data } = payload
       const result = await alterListData(`/${pageName}/${data.id}`, data)
 
       return new Promise((resolve, reject) => {
-        if (result.code !== 200) {
-          reject(result)
-          return
-        }
+        if (result.code !== 200) return reject(result)
 
         switch (pageName) {
           case 'menu':
@@ -136,6 +124,11 @@ const common: Module<ICommonStore, IRootStore> = {
             break
           case 'role':
             dispatch('getEntireRoleData', null, { root: true })
+            break
+          case 'user':
+            if ((rootState as any).login.userInfo.id === data.id) {
+              dispatch('login/updateUserInfo', null, { root: true })
+            }
             break
         }
         resolve(result)
@@ -148,10 +141,7 @@ const common: Module<ICommonStore, IRootStore> = {
       const enable = payload.enable ? 0 : 1
       const result = await userEnable(id, enable, role_id)
       return new Promise((resolve, reject) => {
-        if (result.code !== 200) {
-          reject(result)
-          return
-        }
+        if (result.code !== 200) return reject(result)
         resolve(enable)
       })
     }

@@ -1,5 +1,6 @@
 import type { ILoginStore } from './login/types'
 import { ICommonStore } from './main/common/types'
+import { IEpidemicData } from './main/analysis/types'
 
 export interface IRootStore {
   name: string
@@ -9,8 +10,8 @@ export interface IRootStore {
 
 export interface IRootWithModule {
   common: ICommonStore
-  menu: any
   login: ILoginStore
+  skill: IEpidemicData
 }
 
 export type IStoreType = IRootStore & IRootWithModule

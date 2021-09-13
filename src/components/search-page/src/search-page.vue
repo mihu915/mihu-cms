@@ -61,12 +61,8 @@ export default defineComponent({
 
 <style scoped>
 .search-page {
-  background-color: #fff;
-  padding: 20px;
   box-sizing: border-box;
   margin-bottom: 20px;
-  border-radius: 5px;
-  overflow: hidden;
 }
 
 .search-btn {

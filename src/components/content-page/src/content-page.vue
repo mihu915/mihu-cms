@@ -256,9 +256,5 @@ export default defineComponent({
 
 <style scoped>
 .content-page {
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 5px;
-  overflow: hidden;
 }
 </style>

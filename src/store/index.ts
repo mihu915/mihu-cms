@@ -2,6 +2,7 @@ import { createStore, Store, useStore as useVuexStore } from 'vuex'
 import { IRootStore, IStoreType } from './types'
 import { login } from './login/login'
 import { common } from './main/common/common'
+import { skill } from './main/analysis/skill'
 import { getListData } from '@/service/system/system'
 
 import { stringToNumberArray, arrayToString } from '@/utils'
@@ -68,8 +69,7 @@ const store = createStore<IRootStore>({
       const menuResult = await getListData('/menu/list', false, { offset: 0, limit: 100 })
       return new Promise((resolve, reject) => {
         if (roleResult.code !== 200 || menuResult.code !== 200) {
-          reject(roleResult)
-          return
+          return reject(roleResult)
         }
         commit('storageEntireRoleData', roleResult.data.list)
         commit('storageEntireMenuData', menuResult.data.list)
@@ -82,8 +82,7 @@ const store = createStore<IRootStore>({
       const roleResult = await getListData('/role/list', false, { offset: 0, limit: 100 })
       return new Promise((resolve, reject) => {
         if (roleResult.code !== 200) {
-          reject(roleResult)
-          return
+          return reject(roleResult)
         }
         commit('storageEntireRoleData', roleResult.data.list)
         resolve(roleResult)
@@ -93,7 +92,8 @@ const store = createStore<IRootStore>({
 
   modules: {
     login,
-    common
+    common,
+    skill
   }
 })
 

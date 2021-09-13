@@ -7,4 +7,21 @@ const handleUnixFormat = (unix: number, format?: string) => {
 
   return date
 }
-export { handleUnixFormat }
+
+// 当前时段
+const getNowTimeFrameByUnix = () => {
+  const nowTimeFrame = dayjs.unix(Date.now() / 1000).format('A')
+  let timeFrame
+  if (nowTimeFrame === 'AM') {
+    timeFrame = '上午好'
+  } else if (nowTimeFrame === 'PM') {
+    timeFrame = '下午好'
+  }
+  const nowTime = dayjs.unix(Date.now() / 1000).format('HH时mm分')
+
+  return {
+    timeFrame,
+    nowTime
+  }
+}
+export { handleUnixFormat, getNowTimeFrameByUnix }

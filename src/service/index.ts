@@ -17,7 +17,6 @@ const mhRequest = new MHRequest({
     },
     // 请求失败
     requestInterceptorsCatch: (err) => {
-      console.log(err)
       return err
     },
     // 响应成功拦截
