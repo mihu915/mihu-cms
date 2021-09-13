@@ -67,20 +67,13 @@ const store = createStore<IRootStore>({
       const roleResult = await getListData('/role/list', true, { offset: 0, limit: 100 })
       const menuResult = await getListData('/menu/list', false, { offset: 0, limit: 100 })
       return new Promise((resolve, reject) => {
-        if (roleResult.code !== 200 || menuResult.code !== 200) reject(roleResult)
+        if (roleResult.code !== 200 || menuResult.code !== 200) {
+          reject(roleResult)
+          return
+        }
         commit('storageEntireRoleData', roleResult.data.list)
         commit('storageEntireMenuData', menuResult.data.list)
         resolve(roleResult)
-      })
-    },
-
-    // 获取菜单全部数据
-    async getEntireMenuData({ commit }) {
-      const menuResult = await getListData('/menu/list', false, { offset: 0, limit: 100 })
-      return new Promise((resolve, reject) => {
-        if (menuResult.code !== 200) reject(menuResult)
-        commit('storageEntireMenuData', menuResult.data.list)
-        resolve(menuResult)
       })
     },
 
@@ -88,12 +81,16 @@ const store = createStore<IRootStore>({
     async getEntireRoleData({ commit }) {
       const roleResult = await getListData('/role/list', false, { offset: 0, limit: 100 })
       return new Promise((resolve, reject) => {
-        if (roleResult.code !== 200) reject(roleResult)
+        if (roleResult.code !== 200) {
+          reject(roleResult)
+          return
+        }
         commit('storageEntireRoleData', roleResult.data.list)
         resolve(roleResult)
       })
     }
   },
+
   modules: {
     login,
     common

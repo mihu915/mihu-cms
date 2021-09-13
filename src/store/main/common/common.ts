@@ -64,12 +64,18 @@ const common: Module<ICommonStore, IRootStore> = {
         const newPageName = pageName[0].toUpperCase() + pageName.slice(1)
 
         commit(`storage${newPageName}ListData`, result.data)
+
+        switch (pageName) {
+          case 'menu':
+            commit('storageEntireMenuData', result.data.list, { root: true })
+            break
+        }
         resolve(result.code)
       })
     },
 
     // 删除单条数据
-    async deleteListData({ dispatch, commit, state }, payload) {
+    async deleteListData({ dispatch }, payload) {
       const { id, pageName } = payload
 
       const result = await deleteListData(`/${pageName}/${id}`)
@@ -82,8 +88,6 @@ const common: Module<ICommonStore, IRootStore> = {
         switch (pageName) {
           case 'menu':
             dispatch('login/getUserMenus', null, { root: true })
-            commit('storageEntireMenuData', state.menuListData.list, { root: true })
-
             break
           case 'role':
             dispatch('getEntireRoleData', null, { root: true })
@@ -94,17 +98,18 @@ const common: Module<ICommonStore, IRootStore> = {
     },
 
     // 新建数据
-    async createDataAction({ dispatch, commit, state }, payload) {
+    async createDataAction({ dispatch }, payload) {
       const { pageName, data } = payload
       const result = await createData(`/${pageName}`, data)
       return new Promise((resolve, reject) => {
-        if (result.code !== 200) reject(result)
+        if (result.code !== 200) {
+          reject(result)
+          return
+        }
         switch (pageName) {
           case 'menu':
             // 更新用户菜单数据
             dispatch('login/getUserMenus', null, { root: true })
-            commit('storageEntireMenuData', state.menuListData.list, { root: true })
-
             break
           case 'role':
             dispatch('getEntireRoleData', null, { root: true })
@@ -115,7 +120,7 @@ const common: Module<ICommonStore, IRootStore> = {
     },
 
     // 修改数据
-    async alterListDataAction({ dispatch, commit, state }, payload) {
+    async alterListDataAction({ dispatch }, payload) {
       const { pageName, data } = payload
       const result = await alterListData(`/${pageName}/${data.id}`, data)
 
@@ -128,8 +133,6 @@ const common: Module<ICommonStore, IRootStore> = {
         switch (pageName) {
           case 'menu':
             dispatch('login/getUserMenus', null, { root: true })
-            commit('storageEntireMenuData', state.menuListData.list, { root: true })
-
             break
           case 'role':
             dispatch('getEntireRoleData', null, { root: true })
@@ -142,13 +145,13 @@ const common: Module<ICommonStore, IRootStore> = {
     // 切换用户状态
     async switchUserEnable(context, payload) {
       const { id, role_id } = payload
-
       const enable = payload.enable ? 0 : 1
-
       const result = await userEnable(id, enable, role_id)
-
       return new Promise((resolve, reject) => {
-        if (result.code !== 200) reject(result)
+        if (result.code !== 200) {
+          reject(result)
+          return
+        }
         resolve(enable)
       })
     }

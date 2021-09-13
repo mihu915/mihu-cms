@@ -108,9 +108,9 @@ export default defineComponent({
   emits: ['handleEdit', 'handleDelete', 'handleCreate'],
   setup(props, { emit }) {
     const store = useStore()
-    const editData = ref({})
     const currentPage = ref(1)
     const pageSize = ref(10)
+    const searchCondition = ref({})
 
     // 每次加载组件先清除之前所有的总线事件
     emitter.all.clear()
@@ -120,21 +120,22 @@ export default defineComponent({
 
     // 监听pageSize改变则发送请求
     watch(pageSize, () => {
-      getPageListData()
+      getPageListData(searchCondition.value)
     })
 
     // 监听currentPage改变则发送请求
     watch(currentPage, () => {
-      getPageListData()
+      getPageListData(searchCondition.value)
     })
 
     // 监听总线事件
     emitter.on('updateBus', (data: any) => {
-      if (['user', 'role', 'menu'].includes(props.pageName) && data && data.created) {
-        data.startTime = parseInt(data.created[0]) / 1000
-        data.endTime = parseInt(data.created[1]) / 1000
-        if (data.created) delete data.created
+      if (data) {
+        searchCondition.value = { ...data }
+      } else {
+        searchCondition.value = {}
       }
+
       getPageListData(data)
     })
 
@@ -242,7 +243,6 @@ export default defineComponent({
       currentPage,
       pageSize,
       tableData,
-      editData,
       otherSlotName,
       listDataUpdate,
       handleDelete,

@@ -59,7 +59,7 @@ const menuDialogConfig: IFormConfig = {
         border: true,
         size: 'mini',
         radioStyle: {
-          margin: '0 5px 0 0'
+          margin: '0 5px 5px 0'
         }
       },
       rules: [

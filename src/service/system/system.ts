@@ -9,10 +9,10 @@ const getListData = (url: string, showLoading?: boolean, queryInfo?: any): Promi
     isShowLoading = showLoading
   }
 
-  return mhRequest.get({
+  return mhRequest.post({
     url,
     showLoading: isShowLoading,
-    params: queryInfo
+    data: qs.stringify(queryInfo)
   })
 }
 
