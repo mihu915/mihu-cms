@@ -14,6 +14,7 @@ const userContentConfig: ITableConfig = {
   },
   propList: [
     { prop: 'username', label: '用户名' },
+    { prop: 'avatar', label: '头像', slotName: 'userAvatar' },
     { prop: 'enable', label: '状态', slotName: 'statusBtn', width: 80 },
     { prop: 'role_name', label: '权限' },
     { prop: 'nickname', label: '昵称' },

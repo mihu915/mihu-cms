@@ -35,12 +35,12 @@ const userDialogConfig: IFormConfig = {
     {
       type: 'avatar',
       label: '头像：',
-      field: 'icon',
+      field: 'avatar',
       avatarOption: {
         action: '',
         imageUrl: '',
         limit: 1,
-        name: 'icon'
+        name: 'avatar'
       }
     },
     {

@@ -78,21 +78,34 @@
               <template v-else-if="item.type === 'avatar'">
                 <el-upload
                   class="avatar-uploader"
+                  :class="{ 'avatar-uploader-active': modelValue[`${item.field}`] ? true : false }"
                   :action="item.avatarOption.action"
-                  :limit="item.avatarOption.limit"
-                  :multiple="false"
                   :show-file-list="false"
-                  :name="item.avatarOption.name"
-                  :on-error="uploadError"
                   :on-success="handleAvatarSuccess"
                   :before-upload="beforeAvatarUpload"
+                  :file-list="fileList"
+                  :limit="1"
+                  :disabled="modelValue[`${item.field}`] ? true : false"
+                  :name="item.avatarOption.name"
                 >
+                  <i
+                    v-if="!modelValue[`${item.field}`]"
+                    class="el-icon-plus avatar-uploader-icon"
+                  ></i>
+
                   <img
                     v-if="modelValue[`${item.field}`]"
                     :src="modelValue[`${item.field}`]"
                     class="avatar"
                   />
-                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+
+                  <span
+                    v-if="modelValue[`${item.field}`]"
+                    class="el-upload-list-item-delete upload-delete-active"
+                    @click="handleRemove(item.field)"
+                  >
+                    <i class="el-icon-delete"></i>
+                  </span>
                 </el-upload>
               </template>
             </el-form-item>
@@ -151,7 +164,7 @@ export default defineComponent({
 
   setup(props, { emit }) {
     const formRef = ref<InstanceType<typeof ElForm>>()
-
+    const fileList = ref([])
     const changeUpdate = (value: any, field: string) => {
       emit('update:modelValue', { ...props.modelValue, [field]: value })
     }
@@ -180,15 +193,27 @@ export default defineComponent({
       emit('uploadError')
     }
     // 文件上传成功的钩子
-    const handleAvatarSuccess = (res: any, file: any, fileList: any) => {
-      console.log(fileList)
-      emit('handleAvatarSuccess', res, file, fileList)
+    const handleAvatarSuccess = (res: any) => {
+      if (res.code !== 200) {
+        fileList.value = []
+        return
+      }
+      emit('update:modelValue', { ...props.modelValue, ...res.data })
     }
 
     // 文件上传之前的钩子
     const beforeAvatarUpload = () => {
       emit('beforeAvatarUpload')
     }
+
+    const handleRemove = (field: any) => {
+      fileList.value = []
+
+      setTimeout(() => {
+        emit('update:modelValue', { ...props.modelValue, [field]: null })
+      }, 100)
+    }
+
     let checkId: any = []
 
     // 复选框发生改变则提交事件
@@ -202,6 +227,7 @@ export default defineComponent({
     return {
       formRef,
       treeRef,
+      fileList,
       changeUpdate,
       mhFormValid,
       checkChange,
@@ -209,7 +235,8 @@ export default defineComponent({
       handleRightBtn,
       handleAvatarSuccess,
       beforeAvatarUpload,
-      uploadError
+      uploadError,
+      handleRemove
     }
   }
 })
@@ -235,27 +262,60 @@ export default defineComponent({
 }
 
 .avatar-uploader {
+  width: 100px;
+  height: 100px;
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
+  box-sizing: border-box;
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  vertical-align: top;
+  vertical-align: bottom;
+  transition: all 0.3s linear;
 }
+
 .avatar-uploader:hover {
   border-color: #409eff;
 }
+
+.avatar-uploader-active {
+  border: 0;
+}
+
 .avatar-uploader-icon {
-  font-size: 28px;
+  font-size: 18px;
   color: #8c939d;
-  width: 80px;
-  height: 80px;
-  line-height: 80px;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
   text-align: center;
 }
-.avatar,
-.avatar-uploader {
-  width: 80px;
-  height: 80px;
-  display: block;
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border: 0;
+  vertical-align: top;
+  vertical-align: bottom;
+}
+
+.el-upload-list-item-delete {
+  vertical-align: middle;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 20px;
+  text-align: center;
+  line-height: 100px;
+  transition: all 0.3s linear;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.425);
+  opacity: 0;
+}
+.upload-delete-active:hover {
+  opacity: 1;
 }
 </style>

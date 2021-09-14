@@ -15,6 +15,15 @@
       @handleCreate="handleCreate"
       @handleEdit="handleEdit"
     >
+      <template #userAvatar="{ row }">
+        <el-avatar
+          v-if="row.avatar"
+          shape="square"
+          :size="70"
+          fit="fill"
+          :src="row.avatar"
+        ></el-avatar>
+      </template>
     </content-page>
     <form-dialog
       :dialogConfig="userDialogConfigRef"
@@ -49,19 +58,20 @@ export default defineComponent({
 
   setup() {
     const store = useStore()
-    const uploadIconPath = ref(BASE_URL + '/files/icon')
+    const uploadIconPath = ref(BASE_URL + '/files/avatar')
 
-    console.log(uploadIconPath.value)
     const userDialogConfigRef = computed(() => {
       const roleOptions = handleRoleOptions(store.state.entireRoleData)
       alterFormConfig(userDialogConfig, 'role_id', 'options', roleOptions)
       return userDialogConfig
     })
+
     userDialogConfig.formItemConfig.find((item: any) => {
-      if (item.field === 'icon') {
+      if (item.field === 'avatar') {
         item.avatarOption!.action = uploadIconPath.value
       }
     })
+
     // 创建按钮回调
     const handleCreateConfig = () => {
       alterFormConfig(userDialogConfig, 'password', 'isShow', true)

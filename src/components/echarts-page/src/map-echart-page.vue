@@ -70,7 +70,7 @@ export default defineComponent({
           bottom: 0,
           showLabel: !0,
 
-          text: ['累计确诊-高', '累计确诊-低'],
+          text: ['累计确诊病例'],
           pieces: [
             {
               gt: 10000,
