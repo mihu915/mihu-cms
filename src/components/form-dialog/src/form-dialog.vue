@@ -16,6 +16,7 @@
           @checkChange="checkChange"
           @handleLeftBtn="closeBox"
           @handleRightBtn="handleRightBtn"
+          @handleAvatarSuccess="handleAvatarSuccess"
         ></mh-form>
       </div>
     </el-dialog>
@@ -146,6 +147,9 @@ export default defineComponent({
         break
     }
 
+    const handleAvatarSuccess = (res: any, file: any, fileList: any) => {
+      formData.value = { ...res.data }
+    }
     return {
       formData,
       textConfig,
@@ -153,7 +157,8 @@ export default defineComponent({
       closeBox,
       checkChange,
       handleRightBtn,
-      setDialogTextInfo
+      setDialogTextInfo,
+      handleAvatarSuccess
     }
   }
 })

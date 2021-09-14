@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { userContentConfig } from './config/content.config'
 import { userSearchConfig } from './config/search.config'
 import { userDialogConfig } from './config/dialog.config'
@@ -38,7 +38,7 @@ import FormDialog from '@/components/form-dialog'
 
 import { usePageDialog } from '@/hooks/use-page-dialog'
 import { alterFormConfig, handleRoleOptions } from '@/utils'
-
+import { BASE_URL } from '@/service/request/config'
 import { useStore } from '@/store'
 export default defineComponent({
   components: {
@@ -49,17 +49,25 @@ export default defineComponent({
 
   setup() {
     const store = useStore()
+    const uploadIconPath = ref(BASE_URL + '/files/icon')
 
+    console.log(uploadIconPath.value)
     const userDialogConfigRef = computed(() => {
       const roleOptions = handleRoleOptions(store.state.entireRoleData)
       alterFormConfig(userDialogConfig, 'role_id', 'options', roleOptions)
       return userDialogConfig
     })
-
+    userDialogConfig.formItemConfig.find((item: any) => {
+      if (item.field === 'icon') {
+        item.avatarOption!.action = uploadIconPath.value
+      }
+    })
+    // 创建按钮回调
     const handleCreateConfig = () => {
       alterFormConfig(userDialogConfig, 'password', 'isShow', true)
     }
 
+    // 编辑按钮回调
     const handleEditConfig = () => {
       alterFormConfig(userDialogConfig, 'password', 'isShow', false)
     }

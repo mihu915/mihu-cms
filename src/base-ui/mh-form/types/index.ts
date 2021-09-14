@@ -3,13 +3,21 @@ interface IFormItemConfig {
   field: string
   isShow?: boolean
   rules?: any
-  type: 'input' | 'select' | 'password' | 'datePicker' | 'radioGroup' | 'tree'
+  type: 'input' | 'select' | 'password' | 'datePicker' | 'radioGroup' | 'tree' | 'avatar'
   placeholder?: string
 
   options?: {
     label: string
     value?: any
   }[]
+
+  avatarOption?: {
+    limit: number
+    action: string
+    method?: string
+    imageUrl?: string
+    name: string
+  }
 
   treeOption?: {
     nodeKey: string

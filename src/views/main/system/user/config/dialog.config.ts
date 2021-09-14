@@ -33,6 +33,17 @@ const userDialogConfig: IFormConfig = {
       ]
     },
     {
+      type: 'avatar',
+      label: '头像：',
+      field: 'icon',
+      avatarOption: {
+        action: '',
+        imageUrl: '',
+        limit: 1,
+        name: 'icon'
+      }
+    },
+    {
       type: 'select',
       label: '权限',
       field: 'role_id',

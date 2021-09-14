@@ -18,7 +18,6 @@ const userContentConfig: ITableConfig = {
     { prop: 'role_name', label: '权限' },
     { prop: 'nickname', label: '昵称' },
     { prop: 'qq', label: 'qq' },
-    { prop: 'mobile', label: '电话号码' },
     { prop: 'last_login_ip', label: '最近登录ip' },
     { prop: 'last_login_time', label: '最近登录时间', slotName: 'lastLoginTime', width: 150 },
     { prop: 'operator_ip', label: '最近操作ip' },

@@ -35,7 +35,9 @@ import {
   ElRadioButton,
   ElPagination,
   ElTree,
-  ElCard
+  ElCard,
+  ElPopover,
+  ElUpload
 } from 'element-plus'
 
 import 'element-plus/lib/theme-chalk/index.css'
@@ -76,7 +78,9 @@ const components = [
   ElRadioButton,
   ElPagination,
   ElTree,
-  ElCard
+  ElCard,
+  ElPopover,
+  ElUpload
 ]
 
 export function registerElement(app: App): void {

@@ -14,26 +14,63 @@ export default defineComponent({
     mapData: {
       type: Array,
       default: () => []
+    },
+    updateTime: {
+      type: String,
+      default: ''
+    },
+    chinaProvincesData: {
+      type: Array,
+      default: () => []
     }
   },
   setup(props) {
     const option = computed(() => {
       return {
+        title: {
+          subtext: `数据来源：网易\n \n上次更新时间：${props.updateTime}`
+        },
         tooltip: {
-          triggerOn: 'click',
-          formatter: function (e: any, t: any, n: any) {
-            return 0.5 == e.value
-              ? e.name + '：有疑似病例'
-              : e.seriesName + '<br />' + e.name + '：' + e.value
+          formatter: function (e: any) {
+            const data: any = props.chinaProvincesData.find((item: any) => {
+              if (item.name === e.name) {
+                return item
+              }
+            })
+            return (
+              e.name +
+              '</br>' +
+              e.seriesName +
+              '：' +
+              e.value +
+              '</br>' +
+              '累计死亡：' +
+              data.total.dead +
+              '</br>' +
+              '累计治愈：' +
+              data.total.heal +
+              '</br>' +
+              '<hr>' +
+              '今日新增：' +
+              data.today.confirm +
+              '</br>' +
+              '今日死亡：' +
+              data.today.dead +
+              '</br>' +
+              '今日治愈：' +
+              data.today.heal +
+              '</br>'
+            )
           }
         },
         visualMap: {
           min: 0,
-          max: 60000,
+          max: 70000,
           left: 0,
           bottom: 0,
           showLabel: !0,
-          text: ['高', '低'],
+
+          text: ['累计确诊-高', '累计确诊-低'],
           pieces: [
             {
               gt: 10000,
@@ -71,10 +108,11 @@ export default defineComponent({
           roam: !1,
           scaleLimit: {
             min: 0.6,
-            max: 1.2
+            max: 1
           },
           zoom: 1.23,
-          top: 30,
+          top: 40,
+          left: 40,
           label: {
             show: !0,
             fontSize: '10',
@@ -87,7 +125,7 @@ export default defineComponent({
           },
           emphasis: {
             itemStyle: {
-              areaColor: '#f2d5ad',
+              areaColor: '#ffe4be',
               shadowOffsetX: 0,
               shadowOffsetY: 0,
               borderWidth: 0
@@ -96,9 +134,10 @@ export default defineComponent({
         },
         series: [
           {
-            name: '累计确诊病例',
+            name: '累计确诊',
             type: 'map',
             geoIndex: 0,
+            groupId: 1,
             data: props.mapData
           }
         ]
@@ -112,4 +151,8 @@ export default defineComponent({
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+div {
+  color: #ffe4be;
+}
+</style>

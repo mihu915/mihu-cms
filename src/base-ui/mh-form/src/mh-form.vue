@@ -74,6 +74,27 @@
                 <el-tree v-bind="item.treeOption" @checkChange="checkChange" ref="treeRef">
                 </el-tree>
               </template>
+
+              <template v-else-if="item.type === 'avatar'">
+                <el-upload
+                  class="avatar-uploader"
+                  :action="item.avatarOption.action"
+                  :limit="item.avatarOption.limit"
+                  :multiple="false"
+                  :show-file-list="false"
+                  :name="item.avatarOption.name"
+                  :on-error="uploadError"
+                  :on-success="handleAvatarSuccess"
+                  :before-upload="beforeAvatarUpload"
+                >
+                  <img
+                    v-if="modelValue[`${item.field}`]"
+                    :src="modelValue[`${item.field}`]"
+                    class="avatar"
+                  />
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+              </template>
             </el-form-item>
           </el-col>
         </template>
@@ -118,7 +139,15 @@ export default defineComponent({
       })
     }
   },
-  emits: ['update:modelValue', 'handleLeftBtn', 'handleRightBtn', 'checkChange'],
+  emits: [
+    'update:modelValue',
+    'handleLeftBtn',
+    'handleRightBtn',
+    'checkChange',
+    'handleAvatarSuccess',
+    'beforeAvatarUpload',
+    'uploadError'
+  ],
 
   setup(props, { emit }) {
     const formRef = ref<InstanceType<typeof ElForm>>()
@@ -137,13 +166,29 @@ export default defineComponent({
       return flag
     }
 
+    // 左按钮被点击
     const handleLeftBtn = () => {
       emit('handleLeftBtn')
     }
+    // 右按钮被点击
     const handleRightBtn = () => {
       emit('handleRightBtn')
     }
 
+    // 上传失败调用该方法
+    const uploadError = () => {
+      emit('uploadError')
+    }
+    // 文件上传成功的钩子
+    const handleAvatarSuccess = (res: any, file: any, fileList: any) => {
+      console.log(fileList)
+      emit('handleAvatarSuccess', res, file, fileList)
+    }
+
+    // 文件上传之前的钩子
+    const beforeAvatarUpload = () => {
+      emit('beforeAvatarUpload')
+    }
     let checkId: any = []
 
     // 复选框发生改变则提交事件
@@ -161,7 +206,10 @@ export default defineComponent({
       mhFormValid,
       checkChange,
       handleLeftBtn,
-      handleRightBtn
+      handleRightBtn,
+      handleAvatarSuccess,
+      beforeAvatarUpload,
+      uploadError
     }
   }
 })
@@ -184,5 +232,30 @@ export default defineComponent({
     text-align: right;
     width: 100%;
   }
+}
+
+.avatar-uploader {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+}
+.avatar,
+.avatar-uploader {
+  width: 80px;
+  height: 80px;
+  display: block;
 }
 </style>

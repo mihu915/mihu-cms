@@ -2,31 +2,17 @@
   <div class="skill">
     <div class="skill-header common-Piece">
       <div class="greeting">
-        <span>晚上好，</span>
+        <span>{{ timeInfo.timeFrame }}，</span>
         <span>{{ nickname }}</span>
       </div>
     </div>
 
     <div class="info-card">
       <el-row :gutter="10">
-        <el-col :span="16">
-          <mh-card>
-            <template #title>
-              <div>最新消息</div>
-            </template>
-            <template #default> 123123123123 </template>
-          </mh-card>
-        </el-col>
+        <el-col :span="16"> <operation-log></operation-log> </el-col>
 
         <el-col :span="8">
-          <mh-card>
-            <template #title>
-              <div>全国疫情</div>
-            </template>
-            <template #default>
-              <map-echart-page :mapData="chinaAreaData"></map-echart-page>
-            </template>
-          </mh-card>
+          <china-epidemic></china-epidemic>
         </el-col>
       </el-row>
     </div>
@@ -37,28 +23,21 @@
 import { getNowTimeFrameByUnix } from '@/utils'
 import { computed, defineComponent, ref } from 'vue'
 
-import MhCard from '@/base-ui/mh-card/src/mh-card.vue'
-import MapEchartPage from '@/components/echarts-page'
 import { useStore } from '@/store'
 
+import ChinaEpidemic from './cpns/china-epidemic.vue'
+import OperationLog from './cpns/operation-log.vue'
+
 export default defineComponent({
-  components: { MhCard, MapEchartPage },
+  components: { ChinaEpidemic, OperationLog },
   setup() {
     const store = useStore()
-    const chinaMap = ref()
-
-    const timeInfo = ref(getNowTimeFrameByUnix())
     const nickname = computed(() => store.state.login.userInfo.nickname)
-    const chinaAreaData: any = ref([])
-    store.dispatch('skill/getEpidemicDataAction').then(() => {
-      chinaAreaData.value! = store.getters['skill/getChinaAreaData']
-    })
+    const timeInfo = ref(getNowTimeFrameByUnix())
 
     return {
       timeInfo,
-      nickname,
-      chinaMap,
-      chinaAreaData
+      nickname
     }
   }
 })

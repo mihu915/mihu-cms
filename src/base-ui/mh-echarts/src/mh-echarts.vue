@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, computed, watchEffect, watch } from 'vue'
+import { defineComponent, onMounted, ref, watchEffect } from 'vue'
 import useEchart from '../hooks/useEchart'
 
 export default defineComponent({
@@ -28,13 +28,9 @@ export default defineComponent({
 
     onMounted(() => {
       const { setOptions } = useEchart(echartsRef.value!)
-      watch(
-        () => props.options,
-        () => {
-          setOptions(props.options)
-        },
-        { deep: true }
-      )
+      watchEffect(() => {
+        setOptions(props.options)
+      })
     })
     return {
       echartsRef
