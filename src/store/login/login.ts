@@ -56,7 +56,7 @@ const login: Module<ILoginStore, IRootStore> = {
       await dispatch('updateUserInfo')
       await dispatch('getUserMenus')
       await dispatch('getInitialDataAction', null, { root: true })
-
+      await dispatch('skill/getEpidemicDataAction', null, { root: true })
       // 跳转至首页
       router.replace('/main')
     },

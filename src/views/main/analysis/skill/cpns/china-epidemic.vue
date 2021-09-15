@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { useStore } from '@/store'
 import MapEchartPage from '@/components/echarts-page'
 import MhCard from '@/base-ui/mh-card/src/mh-card.vue'
@@ -42,21 +42,13 @@ export default defineComponent({
     MhCard
   },
   setup() {
-    const chinaAreaData: any = ref([])
-    const chinaTotalData = ref({})
-    const chinaTodayData = ref({})
-    const epidemicUpdateTime = ref('')
-    const chinaProvincesData = ref([])
     const store = useStore()
 
-    store.dispatch('skill/getEpidemicDataAction').then(() => {
-      chinaAreaData.value! = store.getters['skill/getTotalConfirmData']
-      console.log(chinaAreaData.value)
-      epidemicUpdateTime.value = store.state.skill.epidemicData.lastUpdateTime
-      chinaTotalData.value = store.state.skill.epidemicData.total
-      chinaTodayData.value = store.state.skill.epidemicData.today
-      chinaProvincesData.value = store.state.skill.epidemicData.children
-    })
+    const chinaAreaData: any = computed(() => store.getters['skill/getTotalConfirmData'])
+    const chinaTotalData = computed(() => store.state.skill.epidemicData.total)
+    const chinaTodayData = computed(() => store.state.skill.epidemicData.today)
+    const epidemicUpdateTime = computed(() => store.state.skill.epidemicData.lastUpdateTime)
+    const chinaProvincesData = computed(() => store.state.skill.epidemicData.children)
 
     return {
       chinaAreaData,

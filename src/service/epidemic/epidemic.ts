@@ -7,7 +7,8 @@ const epidemicRequest = new MHRequest({
 
 function epidemicApi() {
   return epidemicRequest.post({
-    url: '/epidemic'
+    url: '/epidemic',
+    showLoading: true
   })
 }
 

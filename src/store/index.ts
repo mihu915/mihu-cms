@@ -97,9 +97,10 @@ const store = createStore<IRootStore>({
   }
 })
 
-// 定义派发action方法
+// 加载缓存数据
 function setupStore() {
   store.dispatch('login/storageUserData')
+  store.dispatch('skill/storageEpidemicDataAction')
 }
 
 // 自己封装的useStore,兼容ts

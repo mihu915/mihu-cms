@@ -25,15 +25,18 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const updateTime = computed(() => props.updateTime)
+    const mapData = computed(() => props.mapData)
+    const chinaProvincesData = computed(() => props.chinaProvincesData)
     const option = computed(() => {
       return {
         title: {
-          subtext: `数据来源：网易\n \n上次更新时间：${props.updateTime}`
+          subtext: `数据来源：网易\n \n上次更新时间：${updateTime.value}`
         },
         tooltip: {
           formatter: function (e: any) {
             if (e.name === '南海诸岛') return
-            const data: any = props.chinaProvincesData.find((item: any) => {
+            const data: any = chinaProvincesData.value.find((item: any) => {
               if (item.name === e.name) {
                 return item
               }
@@ -139,7 +142,7 @@ export default defineComponent({
             type: 'map',
             geoIndex: 0,
             groupId: 1,
-            data: props.mapData
+            data: mapData.value
           }
         ]
       }
