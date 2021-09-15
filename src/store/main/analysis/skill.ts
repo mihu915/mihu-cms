@@ -14,7 +14,7 @@ const skill: Module<IEpidemicData, IRootStore> = {
   },
   getters: {
     // 获取中国疫情各区域的总数据
-    getTotalConfirmData(state, getters) {
+    getTotalConfirmData(state) {
       const totalConfirmData = state.epidemicData.children.map((item: any) => {
         return { name: item.name, value: item.total.confirm }
       })

@@ -76,4 +76,7 @@ export default defineComponent({
     color: #666;
   }
 }
+.el-avatar {
+  box-shadow: 0 0 5px rgb(65, 65, 65);
+}
 </style>
