@@ -49,7 +49,6 @@ export default defineComponent({
     const store = useStore()
     const nickname = computed(() => store.state.login.userInfo.nickname)
     const timeInfo = ref(getNowTimeFrameByUnix())
-
     return {
       timeInfo,
       nickname

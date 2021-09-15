@@ -8,30 +8,16 @@ const skill: Module<IEpidemicData, IRootStore> = {
   namespaced: true,
   state() {
     return {
-      epidemicData: {
-        areaTree: [],
-        chinaDayList: [],
-        chinaTotal: {}
-      }
+      epidemicData: {}
     }
   },
   getters: {
     // 获取疫情各区域的总数据
     getTotalConfirmData(state, getters) {
-      const totalConfirmData = getters.getChinaTotalExtData.children.map((item: any) => {
+      const totalConfirmData = state.epidemicData.children.map((item: any) => {
         return { name: item.name, value: item.total.confirm }
       })
-
       return totalConfirmData
-    },
-
-    getChinaTotalExtData(state) {
-      const result = state.epidemicData.areaTree.find((item: any) => {
-        if (item.name === '中国') {
-          return item
-        }
-      })
-      return result
     }
   },
   mutations: {
@@ -43,7 +29,8 @@ const skill: Module<IEpidemicData, IRootStore> = {
     async getEpidemicDataAction({ commit }) {
       const epidemicData: any = await epidemicApi()
       return new Promise((resolve, reject) => {
-        if (epidemicData.code !== 10000) return reject(epidemicData)
+        if (epidemicData.code !== 200) return reject(epidemicData)
+        console.log(epidemicData.data)
         commit('storageEpidemicData', epidemicData.data)
 
         resolve(epidemicData)

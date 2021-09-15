@@ -64,7 +64,7 @@ class MHRequest {
         if (this.showLoading) this.loading?.close()
 
         // 展示提示信息
-        if (res.data.code === 200 || res.data.code === 10000) {
+        if (res.data.code === 200) {
           // 如果开启展示message则弹出提示
 
           if (this.showMessage) {

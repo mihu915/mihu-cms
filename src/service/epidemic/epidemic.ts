@@ -1,12 +1,14 @@
 import MHRequest from '../request'
-import { epidemic_URL, TIME_OUT } from '../request/config'
+import { BASE_URL, TIME_OUT } from '../request/config'
 const epidemicRequest = new MHRequest({
-  baseURL: epidemic_URL,
+  baseURL: BASE_URL,
   timeout: TIME_OUT
 })
 
 function epidemicApi() {
-  return epidemicRequest.get({})
+  return epidemicRequest.post({
+    url: '/epidemic'
+  })
 }
 
 export { epidemicApi }

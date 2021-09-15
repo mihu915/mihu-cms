@@ -49,6 +49,7 @@ import { usePageDialog } from '@/hooks/use-page-dialog'
 import { alterFormConfig, handleRoleOptions } from '@/utils'
 import { BASE_URL } from '@/service/request/config'
 import { useStore } from '@/store'
+
 export default defineComponent({
   components: {
     ContentPage,
@@ -59,7 +60,6 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const uploadIconPath = ref(BASE_URL + '/files/avatar')
-
     const userDialogConfigRef = computed(() => {
       const roleOptions = handleRoleOptions(store.state.entireRoleData)
       alterFormConfig(userDialogConfig, 'role_id', 'options', roleOptions)

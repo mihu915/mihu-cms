@@ -43,27 +43,27 @@ export default defineComponent({
   },
   setup() {
     const chinaAreaData: any = ref([])
-    const chinaProvincesData = ref([])
     const chinaTotalData = ref({})
     const chinaTodayData = ref({})
     const epidemicUpdateTime = ref('')
-
+    const chinaProvincesData = ref([])
     const store = useStore()
 
     store.dispatch('skill/getEpidemicDataAction').then(() => {
       chinaAreaData.value! = store.getters['skill/getTotalConfirmData']
-      chinaProvincesData.value = store.getters['skill/getChinaTotalExtData'].children
+      console.log(chinaAreaData.value)
       epidemicUpdateTime.value = store.state.skill.epidemicData.lastUpdateTime
-      chinaTotalData.value = store.state.skill.epidemicData.chinaTotal.total
-      chinaTodayData.value = store.state.skill.epidemicData.chinaTotal.today
+      chinaTotalData.value = store.state.skill.epidemicData.total
+      chinaTodayData.value = store.state.skill.epidemicData.today
+      chinaProvincesData.value = store.state.skill.epidemicData.children
     })
 
     return {
       chinaAreaData,
-      chinaProvincesData,
       epidemicUpdateTime,
       chinaTodayData,
-      chinaTotalData
+      chinaTotalData,
+      chinaProvincesData
     }
   }
 })
