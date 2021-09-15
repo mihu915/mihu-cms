@@ -37,7 +37,11 @@ import {
   ElTree,
   ElCard,
   ElPopover,
-  ElUpload
+  ElUpload,
+  ElDescriptions,
+  ElDescriptionsItem,
+  ElDivider,
+  ElTag
 } from 'element-plus'
 
 import 'element-plus/lib/theme-chalk/index.css'
@@ -80,7 +84,11 @@ const components = [
   ElTree,
   ElCard,
   ElPopover,
-  ElUpload
+  ElUpload,
+  ElDescriptions,
+  ElDescriptionsItem,
+  ElDivider,
+  ElTag
 ]
 
 export function registerElement(app: App): void {

@@ -85,6 +85,7 @@
                   :before-upload="beforeAvatarUpload"
                   :file-list="fileList"
                   :limit="1"
+                  :headers="uploadHeader"
                   :disabled="modelValue[`${item.field}`] ? true : false"
                   :name="item.avatarOption.name"
                 >
@@ -102,7 +103,7 @@
                   <span
                     v-if="modelValue[`${item.field}`]"
                     class="el-upload-list-item-delete upload-delete-active"
-                    @click="handleRemove(item.field)"
+                    @click.stop="handleRemove(item.field)"
                   >
                     <i class="el-icon-delete"></i>
                   </span>
@@ -127,7 +128,7 @@
 import { defineComponent, PropType, ref } from 'vue'
 import { IFormConfig } from '@/base-ui/mh-form'
 import { ElForm, ElTree } from 'element-plus'
-
+import { ElMessage } from 'element-plus'
 export default defineComponent({
   props: {
     leftBtnText: {
@@ -150,26 +151,22 @@ export default defineComponent({
       default: () => ({
         gutter: 0
       })
+    },
+    uploadHeader: {
+      type: Object,
+      default: () => ({})
     }
   },
-  emits: [
-    'update:modelValue',
-    'handleLeftBtn',
-    'handleRightBtn',
-    'checkChange',
-    'handleAvatarSuccess',
-    'beforeAvatarUpload',
-    'uploadError'
-  ],
+  emits: ['update:modelValue', 'handleLeftBtn', 'handleRightBtn', 'checkChange', 'uploadError'],
 
   setup(props, { emit }) {
     const formRef = ref<InstanceType<typeof ElForm>>()
     const fileList = ref([])
+    const treeRef = ref<InstanceType<typeof ElTree>>()
+
     const changeUpdate = (value: any, field: string) => {
       emit('update:modelValue', { ...props.modelValue, [field]: value })
     }
-
-    const treeRef = ref<InstanceType<typeof ElTree>>()
 
     const mhFormValid = () => {
       let flag: any = false
@@ -190,28 +187,39 @@ export default defineComponent({
 
     // 上传失败调用该方法
     const uploadError = () => {
-      emit('uploadError')
+      console.log('error')
     }
+
     // 文件上传成功的钩子
     const handleAvatarSuccess = (res: any) => {
       if (res.code !== 200) {
+        ElMessage.error(res.message)
         fileList.value = []
         return
+      } else {
+        emit('update:modelValue', { ...props.modelValue, ...res.data })
       }
-      emit('update:modelValue', { ...props.modelValue, ...res.data })
     }
 
     // 文件上传之前的钩子
-    const beforeAvatarUpload = () => {
-      emit('beforeAvatarUpload')
+    const beforeAvatarUpload = (file: any) => {
+      const isJPG = ['image/jpeg', 'image/png', 'img/jpg'].includes(file.type)
+
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        ElMessage.error('上传头像只能是PNG、JPG 格式!')
+      }
+      if (!isLt2M) {
+        ElMessage.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
     }
 
+    // 处理移除图片逻辑
     const handleRemove = (field: any) => {
+      emit('update:modelValue', { ...props.modelValue, [field]: '' })
       fileList.value = []
-
-      setTimeout(() => {
-        emit('update:modelValue', { ...props.modelValue, [field]: null })
-      }, 100)
     }
 
     let checkId: any = []

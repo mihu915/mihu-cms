@@ -32,6 +32,7 @@ export default defineComponent({
         },
         tooltip: {
           formatter: function (e: any) {
+            if (e.name === '南海诸岛') return
             const data: any = props.chinaProvincesData.find((item: any) => {
               if (item.name === e.name) {
                 return item

@@ -14,7 +14,6 @@ const getNowTimeFrameByUnix = () => {
 
   const nowHour = parseInt(dayjs.unix(Date.now() / 1000).format('HH'))
   const nowTime = parseInt(dayjs.unix(Date.now() / 1000).format('YYYY-MM-DD HH:mm:ss'))
-
   if (nowHour > 0 && nowHour <= 6) {
     timeFrame = '凌晨好'
   } else if (nowHour > 6 && nowHour <= 12) {

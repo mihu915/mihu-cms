@@ -3,9 +3,14 @@
     <el-dropdown size="small">
       <div class="user-info-menu">
         <div class="user-icon">
-          <el-avatar :shape="shape" :size="size" icon="el-icon-s-custom"></el-avatar>
+          <el-avatar
+            :shape="shape"
+            :size="size"
+            :icon="userInfo.avatar || 'el-icon-s-custom'"
+            :src="userInfo.avatar"
+          ></el-avatar>
         </div>
-        <div class="username">{{ nickname }}</div>
+        <div class="username">{{ userInfo.nickname }}</div>
       </div>
 
       <template #dropdown>
@@ -30,7 +35,7 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const router = useRouter()
-    const nickname = computed(() => store.state.login.userInfo.nickname)
+    const userInfo = computed(() => store.state.login.userInfo)
 
     // 退出登录操作
     const handleQuitLogin = () => {
@@ -44,7 +49,7 @@ export default defineComponent({
       shape: 'circle'
     })
     return {
-      nickname,
+      userInfo,
       ...state,
       handleQuitLogin
     }

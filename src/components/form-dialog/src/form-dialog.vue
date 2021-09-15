@@ -16,7 +16,7 @@
           @checkChange="checkChange"
           @handleLeftBtn="closeBox"
           @handleRightBtn="handleRightBtn"
-          @handleAvatarSuccess="handleAvatarSuccess"
+          :uploadHeader="uploadHeader"
         ></mh-form>
       </div>
     </el-dialog>
@@ -26,7 +26,7 @@
 <script lang="ts">
 import MhForm, { IFormConfig } from '@/base-ui/mh-form'
 
-import { defineComponent, PropType, ref, watch } from 'vue'
+import { computed, defineComponent, PropType, ref, watch } from 'vue'
 import { emitter, alterFormConfig, arrayToString } from '@/utils'
 import { useStore } from '@/store'
 
@@ -65,6 +65,11 @@ export default defineComponent({
     const formData = ref<any>({})
     const formConfig = ref<any>({ ...props.dialogConfig })
     const store = useStore()
+
+    // 文件上传额外增加请求头，把token加进去
+    const uploadHeader = computed(() => {
+      return { Authorization: 'Bearer ' + store.state.login.token }
+    })
 
     // 提供设置文本信息的方法
     const setDialogTextInfo = (info: any) => {
@@ -147,9 +152,6 @@ export default defineComponent({
         break
     }
 
-    const handleAvatarSuccess = (res: any, file: any, fileList: any) => {
-      formData.value = { ...res.data }
-    }
     return {
       formData,
       textConfig,
@@ -158,7 +160,7 @@ export default defineComponent({
       checkChange,
       handleRightBtn,
       setDialogTextInfo,
-      handleAvatarSuccess
+      uploadHeader
     }
   }
 })

@@ -101,4 +101,11 @@ export default defineComponent({
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.el-avatar {
+  display: flex;
+  position: relative;
+  transform: translateX(-50%);
+  left: 50%;
+}
+</style>
