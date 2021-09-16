@@ -1,4 +1,4 @@
 import MhVditor from './src/mh-vditor.vue'
-import { IVditorOption } from './types/index'
+import { IVditorOptions } from './types/index'
 export default MhVditor
-export { IVditorOption }
+export { IVditorOptions }

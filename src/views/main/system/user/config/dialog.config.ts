@@ -33,7 +33,7 @@ const userDialogConfig: IFormConfig = {
       ]
     },
     {
-      type: 'avatar',
+      type: 'uploadImage',
       label: '头像：',
       field: 'avatar',
       avatarOption: {

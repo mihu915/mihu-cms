@@ -8,13 +8,6 @@ module.exports = {
           '^/api': ''
         },
         changeOrigin: true
-      },
-      '^/epidemic': {
-        target: 'https://c.m.163.com/ug/api/wuhan/app/data/list-total',
-        pathRewrite: {
-          '^/epidemic': ''
-        },
-        changeOrigin: true
       }
     },
     disableHostCheck: true

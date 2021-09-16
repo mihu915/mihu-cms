@@ -25,6 +25,10 @@ const common: Module<ICommonStore, IRootStore> = {
         list: [],
         total_count: 0
       },
+      essayListData: {
+        list: [],
+        total_count: 0
+      },
       username: 'mihu'
     }
   },
@@ -45,6 +49,9 @@ const common: Module<ICommonStore, IRootStore> = {
     },
     storageUserListData(state, data) {
       state.userListData = data
+    },
+    storageEssayListData(state, data) {
+      state.essayListData = data
     }
   },
 

@@ -9,37 +9,62 @@ import { defineComponent, onMounted, PropType, ref } from 'vue'
 
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
-import { IVditorOption } from '../index'
+
+import { IVditorOptions } from '../types'
+
 export default defineComponent({
   props: {
     vditorOptions: {
-      type: Object as PropType<IVditorOption>
+      type: Object
     }
   },
+
   setup(props) {
-    // const { theme } = props.vditorOptions!
     const vditorRef = ref<HTMLElement>()
+    const vditor = ref<Vditor>()
+
     onMounted(() => {
-      const vditor = new Vditor(vditorRef.value!, {
+      vditor.value = new Vditor(vditorRef.value!, {
         cache: {
           id: 'vditor'
         },
+
         theme: 'dark', // 编辑器主题
+        height: 300,
+        width: '100%',
+        // mode: 'ir',
+        tab: '\t',
+        icon: 'ant',
+        value: 'kkkkk',
+        typewriterMode: true,
+        // 是否显示大纲
+        outline: {
+          enable: true,
+          position: 'left'
+        },
+
+        // 预览设置
         preview: {
           theme: {
             current: 'dark' // 内容主题,最好随编辑器主题一起
           },
+
+          markdown: {
+            toc: true
+          },
+
           hljs: {
             enable: true, //代码高亮
-            lineNumber: false, //是否启用行号
+            lineNumber: true, //是否启用行号
             style: 'dracula'
           }
-        },
-        height: 300
+        }
       })
     })
+
     return {
-      vditorRef
+      vditorRef,
+      vditor
     }
   }
 })

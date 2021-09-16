@@ -75,9 +75,10 @@
                 </el-tree>
               </template>
 
-              <template v-else-if="item.type === 'avatar'">
+              <template v-else-if="item.type === 'uploadImage'">
                 <el-upload
                   class="avatar-uploader"
+                  :style="item.avatarOption.style"
                   :class="{ 'avatar-uploader-active': modelValue[`${item.field}`] ? true : false }"
                   :action="item.avatarOption.action"
                   :show-file-list="false"
@@ -92,17 +93,20 @@
                   <i
                     v-if="!modelValue[`${item.field}`]"
                     class="el-icon-plus avatar-uploader-icon"
+                    :style="item.avatarOption.style"
                   ></i>
 
                   <img
                     v-if="modelValue[`${item.field}`]"
                     :src="modelValue[`${item.field}`]"
+                    :style="item.avatarOption.style"
                     class="avatar"
                   />
 
                   <span
                     v-if="modelValue[`${item.field}`]"
                     class="el-upload-list-item-delete upload-delete-active"
+                    :style="item.avatarOption.style"
                     @click.stop="handleRemove(item.field)"
                   >
                     <i class="el-icon-delete"></i>
