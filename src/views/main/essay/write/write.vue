@@ -34,7 +34,7 @@ import { options } from './config/vditor.page.config'
 import { essaySearchConfig } from './config/search.config'
 import { essayContentConfig } from './config/content.config'
 import { essayDialogConfig } from './config/dialog.config'
-
+import { BASE_URL } from '@/service/request/config'
 import SearchPage from '@/components/search-page/src/search-page.vue'
 import ContentPage from '@/components/content-page/src/content-page.vue'
 import FormDialog from '@/components/form-dialog/src/form-dialog.vue'
@@ -48,6 +48,12 @@ export default defineComponent({
     FormDialog
   },
   setup() {
+    const uploadIconPath = BASE_URL + '/files/cover'
+    essayDialogConfig.formItemConfig.find((item: any) => {
+      if (item.field === 'cover') {
+        item.avatarOption!.action = uploadIconPath
+      }
+    })
     // const handlePublish = () => {
     //   const value = vditorRef.value?.vditor?.getValue()
     //   console.log(value)
