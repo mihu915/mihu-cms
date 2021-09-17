@@ -5,12 +5,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
-
-import { IVditorOptions } from '../types'
 
 export default defineComponent({
   props: {
@@ -18,7 +16,7 @@ export default defineComponent({
       type: Object
     }
   },
-  emits: ['clickSave'],
+  emits: ['clickSave', 'input', 'blur', 'afterVditor'],
   setup(props, { emit }) {
     const vditorRef = ref<HTMLElement>()
     const vditor = ref<Vditor>()
@@ -29,7 +27,15 @@ export default defineComponent({
           id: 'vditor',
           enable: false
         },
-
+        after() {
+          emit('afterVditor')
+        },
+        input(value) {
+          emit('input', value)
+        },
+        blur(value) {
+          emit('blur', value)
+        },
         theme: 'dark', // 编辑器主题
         height: '100%',
         width: '100%',
@@ -37,6 +43,7 @@ export default defineComponent({
         tab: '\t',
         icon: 'ant',
         typewriterMode: true,
+
         // 是否显示大纲
         outline: {
           enable: true,

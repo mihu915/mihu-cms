@@ -5,8 +5,9 @@
         v-for="(item, index) of breadcrumbs"
         :key="index"
         :to="{ path: item.path ?? '' }"
-        >{{ item.name }}</el-breadcrumb-item
       >
+        {{ item.name }}
+      </el-breadcrumb-item>
     </el-breadcrumb>
   </div>
 </template>
