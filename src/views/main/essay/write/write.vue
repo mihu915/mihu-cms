@@ -3,22 +3,33 @@
     <search-page
       title="文章查询："
       class="common-Piece"
-      :searchConfig="essaySearchConfig"
-      pageName="essay"
+      :searchConfig="writeSearchConfig"
+      :pageName="pageName"
     ></search-page>
 
     <content-page
       class="common-Piece"
       title="文章列表："
-      :contentConfig="essayContentConfig"
-      pageName="essay"
+      :contentConfig="writeContentConfig"
+      :pageName="pageName"
       @handleCreate="handleCreate"
       @handleEdit="handleEdit"
-    ></content-page>
+    >
+      <template #cover="{ row }">
+        <el-image
+          v-if="row.cover && row.cover.length"
+          :src="row.cover"
+          fit="fill"
+          lazy
+          alt="文章封面"
+          class="essay-cover"
+        ></el-image>
+      </template>
+    </content-page>
 
     <form-dialog
-      pageName="essay"
-      :dialogConfig="essayDialogConfig"
+      :pageName="pageName"
+      :dialogConfig="writeDialogConfig"
       :dialogFormData="dialogFormData"
       v-model="isShowDialog"
       ref="formDialogRef"
@@ -27,13 +38,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import MhVditor from '@/base-ui/mh-vditor'
+import { defineComponent } from 'vue'
 
 import { options } from './config/vditor.page.config'
-import { essaySearchConfig } from './config/search.config'
-import { essayContentConfig } from './config/content.config'
-import { essayDialogConfig } from './config/dialog.config'
+import { writeSearchConfig } from './config/search.config'
+import { writeContentConfig } from './config/content.config'
+import { writeDialogConfig } from './config/dialog.config'
 import { BASE_URL } from '@/service/request/config'
 import SearchPage from '@/components/search-page/src/search-page.vue'
 import ContentPage from '@/components/content-page/src/content-page.vue'
@@ -48,31 +58,34 @@ export default defineComponent({
     FormDialog
   },
   setup() {
+    const pageName = 'write'
     const uploadIconPath = BASE_URL + '/files/cover'
-    essayDialogConfig.formItemConfig.find((item: any) => {
+    writeDialogConfig.formItemConfig.find((item: any) => {
       if (item.field === 'cover') {
         item.avatarOption!.action = uploadIconPath
       }
     })
-    // const handlePublish = () => {
-    //   const value = vditorRef.value?.vditor?.getValue()
-    //   console.log(value)
-    // }
-    // const vditorRef = ref<InstanceType<typeof MhVditor>>()
+
     const [handleCreate, handleEdit, isShowDialog, formDialogRef, dialogFormData] = usePageDialog()
     return {
       options,
-      essaySearchConfig,
-      essayContentConfig,
-      essayDialogConfig,
+      writeSearchConfig,
+      writeContentConfig,
+      writeDialogConfig,
       handleCreate,
       handleEdit,
       isShowDialog,
       formDialogRef,
-      dialogFormData
+      dialogFormData,
+      pageName
     }
   }
 })
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.essay-cover {
+  height: 100px;
+  border-radius: 5px;
+}
+</style>

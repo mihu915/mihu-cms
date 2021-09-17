@@ -2,7 +2,7 @@ interface ICommonStore {
   roleListData: IListData
   menuListData: IListData
   userListData: IListData
-  essayListData: IListData
+  writeListData: IListData
   username: any
 }
 

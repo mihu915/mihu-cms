@@ -1,6 +1,6 @@
 import { IFormConfig } from '@/base-ui/mh-form'
 
-const essaySearchConfig: IFormConfig = {
+const writeSearchConfig: IFormConfig = {
   labelWidth: 100,
   gutter: 80,
   itemLayout: {
@@ -37,4 +37,4 @@ const essaySearchConfig: IFormConfig = {
   ]
 }
 
-export { essaySearchConfig }
+export { writeSearchConfig }

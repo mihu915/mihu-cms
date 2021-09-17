@@ -25,7 +25,7 @@ const common: Module<ICommonStore, IRootStore> = {
         list: [],
         total_count: 0
       },
-      essayListData: {
+      writeListData: {
         list: [],
         total_count: 0
       },
@@ -50,8 +50,8 @@ const common: Module<ICommonStore, IRootStore> = {
     storageUserListData(state, data) {
       state.userListData = data
     },
-    storageEssayListData(state, data) {
-      state.essayListData = data
+    storageWriteListData(state, data) {
+      state.writeListData = data
     }
   },
 

@@ -1,5 +1,5 @@
 import { IFormConfig } from '@/base-ui/mh-form'
-const essayDialogConfig: IFormConfig = {
+const writeDialogConfig: IFormConfig = {
   labelWidth: 100,
   itemLayout: {
     marginBottom: '20px'
@@ -23,4 +23,4 @@ const essayDialogConfig: IFormConfig = {
     { type: 'input', label: '文章描述：', field: 'description' }
   ]
 }
-export { essayDialogConfig }
+export { writeDialogConfig }

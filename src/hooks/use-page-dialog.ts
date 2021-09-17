@@ -15,7 +15,6 @@ const usePageDialog = (createBc?: callBackFn, editBc?: callBackFn) => {
 
   // 处理新建按钮逻辑
   const handleCreate = (pageName: string) => {
-    console.log(pageName)
     isShowDialog.value = true
     textConfig.dialogRightBtnText = '新建'
 
@@ -29,7 +28,7 @@ const usePageDialog = (createBc?: callBackFn, editBc?: callBackFn) => {
       case 'role':
         textConfig.dialogTitle = '新建权限：'
         break
-      case 'essay':
+      case 'write':
         textConfig.dialogTitle = '创建文章：'
         textConfig.dialogRightBtnText = '继续'
 
@@ -53,7 +52,7 @@ const usePageDialog = (createBc?: callBackFn, editBc?: callBackFn) => {
       case 'role':
         textConfig.dialogTitle = '编辑权限：'
         break
-      case 'essay':
+      case 'write':
         textConfig.dialogTitle = '编辑文章：'
         textConfig.dialogRightBtnText = '继续'
 

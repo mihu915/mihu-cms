@@ -41,7 +41,8 @@ import {
   ElDescriptions,
   ElDescriptionsItem,
   ElDivider,
-  ElTag
+  ElTag,
+  ElImage
 } from 'element-plus'
 
 import 'element-plus/lib/theme-chalk/index.css'
@@ -88,7 +89,8 @@ const components = [
   ElDescriptions,
   ElDescriptionsItem,
   ElDivider,
-  ElTag
+  ElTag,
+  ElImage
 ]
 
 export function registerElement(app: App): void {

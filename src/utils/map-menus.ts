@@ -3,6 +3,7 @@ import { IBreadcrumb } from '@/base-ui/mh-breadcrumb'
 
 let firstMenuPath: any = null
 
+// 动态注册路由
 function mapMenus(userMenus: any[]): RouteRecordRaw[] {
   const context = require.context('../router/main', true, /\.ts/)
   const routes: RouteRecordRaw[] = []
@@ -46,7 +47,7 @@ function getCurrentMenu(userMenus: any[], currentPath: string, breadcrumbs?: IBr
         breadcrumbs?.push({ name: currentMenu.title, path: currentMenu.url })
         return currentMenu
       }
-    } else if (menu.type === 2 && menu.url === currentPath) {
+    } else if (menu.type === 2 && currentPath.includes(menu.url)) {
       return menu
     }
   }

@@ -1,17 +1,17 @@
 import { ITableConfig } from '@/base-ui/mh-table/types/index'
 
-const essayContentConfig: ITableConfig = {
+const writeContentConfig: ITableConfig = {
   rowKey: 'id',
   border: true,
   size: 'mini',
 
   showOtherTableContent: {
-    showIndexColumn: true,
     showSelectColumn: true
   },
+
   propList: [
     { prop: 'title', label: '标题' },
-    { prop: 'cover', label: '封面' },
+    { prop: 'cover', label: '封面', slotName: 'cover' },
     { prop: 'description', label: '描述' },
     { prop: 'created', label: '创建时间', slotName: 'created' },
     {
@@ -21,4 +21,4 @@ const essayContentConfig: ITableConfig = {
     }
   ]
 }
-export { essayContentConfig }
+export { writeContentConfig }
