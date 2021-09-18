@@ -1,8 +1,11 @@
 <template>
   <div class="markdown">
-    <div class="markdown-header">正在编辑：{{ writeData.title }}</div>
+    <div class="markdown-header">
+      <mh-breadcrumb :breadcrumbs="breadcrumbs" :style="breadcrumbStyle"></mh-breadcrumb>
+    </div>
     <mh-vditor
       ref="MhVditorRef"
+      :uploadUrl="uploadUrl"
       @clickSave="handleClickSave"
       @input="handleInput"
       @blur="handleBlur"
@@ -12,27 +15,43 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from 'vue'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import { useStore } from '@/store'
 import { ElMessageBox } from 'element-plus'
 import { localCache } from '@/utils'
+import { BASE_URL } from '@/service/request/config'
 import MhVditor from '@/base-ui/mh-vditor'
+import MhBreadcrumb from '@/base-ui/mh-breadcrumb'
 
 export default defineComponent({
   components: {
-    MhVditor
+    MhVditor,
+    MhBreadcrumb
   },
   setup() {
     const route = useRoute()
     const router = useRouter()
     const store = useStore()
     const writeData = ref()
+    const uploadUrl = ref(BASE_URL + '/files/screenshot')
 
     const isContentChange = ref(false)
     const isSave = ref(false)
     const mdContent = ref('')
     const MhVditorRef = ref<InstanceType<typeof MhVditor>>()
+    // 设置面包屑内容及地址
+    const breadcrumbs = computed(() => {
+      return [
+        {
+          name: '文章管理',
+          path: '/main/blog/write'
+        },
+        {
+          name: writeData.value.title
+        }
+      ]
+    })
 
     // 判断是否通过正常途径进入该页面，如果不是，则直接跳转至notFound页面
     writeData.value = route.params
@@ -46,6 +65,12 @@ export default defineComponent({
         })
       }
     }
+
+    // 设置面包屑样式
+    const breadcrumbStyle = ref({
+      lineHeight: '50px',
+      color: 'rgb(192, 192, 192)'
+    })
 
     // 处理刷新提示
     window.onbeforeunload = () => {
@@ -61,15 +86,11 @@ export default defineComponent({
     }
 
     const openBox = () => {
-      return ElMessageBox.confirm(
-        '当前内容未保存，继续退出将导致已修改的内容丢失，是否继续？',
-        '提示',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
+      return ElMessageBox.confirm('当前内容未保存，是否保存当前内容并退出？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
     }
 
     // 监听失去焦点
@@ -104,6 +125,7 @@ export default defineComponent({
         } else {
           flag = await openBox()
             .then(() => {
+              handleClickSave()
               localCache.deleteCache('writeData')
               return true
             })
@@ -125,6 +147,9 @@ export default defineComponent({
     return {
       writeData,
       MhVditorRef,
+      breadcrumbs,
+      breadcrumbStyle,
+      uploadUrl,
       afterVditor,
       handleClickSave,
       handleInput,
@@ -145,8 +170,5 @@ export default defineComponent({
 }
 
 .markdown-header {
-  font-size: 16px;
-  line-height: 50px;
-  color: rgb(192, 192, 192);
 }
 </style>

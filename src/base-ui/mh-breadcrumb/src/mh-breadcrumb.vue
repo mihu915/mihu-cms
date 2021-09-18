@@ -2,11 +2,14 @@
   <div class="mh-breadcrumb">
     <el-breadcrumb separator="/">
       <el-breadcrumb-item
+        :style="style"
         v-for="(item, index) of breadcrumbs"
         :key="index"
         :to="{ path: item.path ?? '' }"
       >
-        {{ item.name }}
+        <span :style="style">
+          {{ item.name }}
+        </span>
       </el-breadcrumb-item>
     </el-breadcrumb>
   </div>
@@ -21,6 +24,9 @@ export default defineComponent({
     breadcrumbs: {
       type: Array as PropType<IBreadcrumb[]>,
       default: () => []
+    },
+    style: {
+      type: Object
     }
   },
   setup() {

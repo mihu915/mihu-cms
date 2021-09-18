@@ -25,6 +25,9 @@
           class="essay-cover"
         ></el-image>
       </template>
+      <template #preview="{ row }">
+        <el-button type="primary" plain @click="handlePreview(row.content)">预览</el-button>
+      </template>
     </content-page>
 
     <form-dialog
@@ -34,32 +37,49 @@
       v-model="isShowDialog"
       ref="formDialogRef"
     ></form-dialog>
+
+    <el-dialog v-model="isShowPreview" title="预览文章：">
+      <div class="preview">
+        <mh-vditor-preview :markdown="markdown"></mh-vditor-preview>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 import { options } from './config/vditor.page.config'
 import { writeSearchConfig } from './config/search.config'
 import { writeContentConfig } from './config/content.config'
 import { writeDialogConfig } from './config/dialog.config'
+
 import { BASE_URL } from '@/service/request/config'
 import SearchPage from '@/components/search-page/src/search-page.vue'
 import ContentPage from '@/components/content-page/src/content-page.vue'
 import FormDialog from '@/components/form-dialog/src/form-dialog.vue'
-
+import MhVditorPreview from '@/base-ui/mh-vditor/src/mh-vditor-preview.vue'
 import { usePageDialog } from '@/hooks/use-page-dialog'
 
 export default defineComponent({
   components: {
     SearchPage,
     ContentPage,
-    FormDialog
+    FormDialog,
+    MhVditorPreview
   },
   setup() {
     const pageName = 'write'
     const uploadIconPath = BASE_URL + '/files/cover'
+    const isShowPreview = ref(false)
+    const markdown = ref('')
+
+    const handlePreview = (content: string) => {
+      isShowPreview.value = true
+      markdown.value = content
+      console.log(content)
+    }
+
     writeDialogConfig.formItemConfig.find((item: any) => {
       if (item.field === 'cover') {
         item.avatarOption!.action = uploadIconPath
@@ -77,7 +97,10 @@ export default defineComponent({
       isShowDialog,
       formDialogRef,
       dialogFormData,
-      pageName
+      pageName,
+      isShowPreview,
+      markdown,
+      handlePreview
     }
   }
 })
@@ -87,5 +110,16 @@ export default defineComponent({
 .essay-cover {
   height: 100px;
   border-radius: 5px;
+}
+.preview {
+  border-radius: 5px;
+  background-color: #2f363d;
+  padding: 10px;
+  box-sizing: border-box;
+  height: 500px;
+  overflow-y: scroll;
+}
+::-webkit-scrollbar {
+  display: none; /* Chrome Safari */
 }
 </style>

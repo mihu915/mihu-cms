@@ -6,6 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
+import { useStore } from '@/store'
 
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
@@ -14,13 +15,16 @@ export default defineComponent({
   props: {
     vditorOptions: {
       type: Object
+    },
+    uploadUrl: {
+      type: String
     }
   },
   emits: ['clickSave', 'input', 'blur', 'afterVditor'],
   setup(props, { emit }) {
     const vditorRef = ref<HTMLElement>()
     const vditor = ref<Vditor>()
-
+    const store = useStore()
     onMounted(() => {
       vditor.value = new Vditor(vditorRef.value!, {
         cache: {
@@ -43,7 +47,27 @@ export default defineComponent({
         tab: '\t',
         icon: 'ant',
         typewriterMode: true,
-
+        upload: {
+          url: props.uploadUrl,
+          headers: {
+            Authorization: 'Bearer ' + store.state.login.token
+          },
+          fieldName: 'screenshot',
+          format(file, res) {
+            console.log(file)
+            const response = JSON.parse(res)
+            return JSON.stringify({
+              msg: response.message,
+              code: response.code,
+              data: {
+                errFiles: [],
+                succMap: {
+                  'screenshot.jpg': response.data.screenshot
+                }
+              }
+            })
+          }
+        },
         // 是否显示大纲
         outline: {
           enable: true,
@@ -79,7 +103,10 @@ export default defineComponent({
           'insert-before',
           'insert-after',
           '|',
-          'upload',
+          {
+            name: 'upload',
+            tip: '上传图片'
+          },
           'record',
           'table',
           '|',

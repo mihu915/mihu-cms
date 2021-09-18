@@ -13,6 +13,8 @@ const writeContentConfig: ITableConfig = {
     { prop: 'title', label: '标题' },
     { prop: 'cover', label: '封面', slotName: 'cover' },
     { prop: 'description', label: '描述' },
+    { prop: 'content', label: '预览', slotName: 'preview' },
+    { prop: 'updated', label: '更新时间', slotName: 'updated' },
     { prop: 'created', label: '创建时间', slotName: 'created' },
     {
       minWidth: 150,
