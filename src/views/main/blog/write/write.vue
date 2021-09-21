@@ -49,16 +49,17 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 
+import { BASE_URL } from '@/service/request/config'
 import { options } from './config/vditor.page.config'
 import { writeSearchConfig } from './config/search.config'
 import { writeContentConfig } from './config/content.config'
 import { writeDialogConfig } from './config/dialog.config'
-
-import { BASE_URL } from '@/service/request/config'
+import { useRouter } from 'vue-router'
 import SearchPage from '@/components/search-page/src/search-page.vue'
 import ContentPage from '@/components/content-page/src/content-page.vue'
 import FormDialog from '@/components/form-dialog/src/form-dialog.vue'
 import MhVditorPreview from '@/base-ui/mh-vditor/src/mh-vditor-preview.vue'
+
 import { usePageDialog } from '@/hooks/use-page-dialog'
 
 export default defineComponent({
@@ -73,11 +74,15 @@ export default defineComponent({
     const uploadIconPath = BASE_URL + '/files/cover'
     const isShowPreview = ref(false)
     const markdown = ref('')
-
+    const router = useRouter()
     const handlePreview = (content: string) => {
-      isShowPreview.value = true
-      markdown.value = content
-      console.log(content)
+      router.replace({
+        path: '/test',
+        name: 'test',
+        params: {
+          content
+        }
+      })
     }
 
     writeDialogConfig.formItemConfig.find((item: any) => {
@@ -115,11 +120,9 @@ export default defineComponent({
   border-radius: 5px;
   background-color: #2f363d;
   padding: 10px;
-  box-sizing: border-box;
-  height: 500px;
+  height: 400px;
   overflow-y: scroll;
-}
-::-webkit-scrollbar {
-  display: none; /* Chrome Safari */
+  box-sizing: border-box;
+  z-index: 999;
 }
 </style>

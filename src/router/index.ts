@@ -19,9 +19,14 @@ const routes: RouteRecordRaw[] = [
     children: []
   },
   {
-    path: '/markdown',
-    name: 'markdown',
-    component: () => import('@/views/markdown/markdown.vue')
+    path: '/editor',
+    name: 'editor',
+    component: () => import('@/views/editor/editor.vue')
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: () => import('@/views/test-editor/test.vue')
   },
   {
     path: '/:pathMatch(.*)*',
@@ -35,28 +40,7 @@ const router = createRouter({
   history: createWebHistory()
 })
 
-// 打开确认对话框方法
-const openBox = () => {
-  return ElMessageBox.confirm('即将退出该页面，是否确认？', '提示', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    type: 'warning'
-  })
-}
-
 router.beforeEach((to, from) => {
-  // if (from.path === '/main/essay/write/markdown') {
-  //   console.log(from.path)
-  //   console.log(to.path)
-  //   openBox()
-  //     .then(() => {
-  //       router.replace(to.path)
-  //       return true
-  //     })
-  //     .catch(() => {
-  //       return false
-  //     })
-  // }
   if (to.path !== '/login') {
     const token = localCache.getCache('token')
     if (!token) {

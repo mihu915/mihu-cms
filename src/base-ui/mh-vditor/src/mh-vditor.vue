@@ -73,6 +73,7 @@ export default defineComponent({
           enable: true,
           position: 'left'
         },
+
         toolbar: [
           {
             name: 'save',
@@ -141,7 +142,7 @@ export default defineComponent({
           },
 
           markdown: {
-            toc: true
+            toc: true // 插入目录
           },
 
           hljs: {

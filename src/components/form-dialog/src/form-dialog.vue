@@ -122,8 +122,8 @@ export default defineComponent({
 
       if (props.pageName === 'write') {
         router.push({
-          path: '/markdown',
-          name: 'markdown',
+          path: '/editor',
+          name: 'editor',
           params: { ...formData.value }
         })
       }

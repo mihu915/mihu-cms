@@ -1,5 +1,5 @@
 <template>
-  <div class="markdown">
+  <div class="editor">
     <div class="markdown-header">
       <mh-breadcrumb :breadcrumbs="breadcrumbs" :style="breadcrumbStyle"></mh-breadcrumb>
     </div>
@@ -160,15 +160,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.markdown {
+.editor {
   width: 100vw;
   height: 100vh;
   background-color: #1d2125;
   padding: 0 100px;
   box-sizing: border-box;
   overflow-y: scroll;
-}
-
-.markdown-header {
 }
 </style>
