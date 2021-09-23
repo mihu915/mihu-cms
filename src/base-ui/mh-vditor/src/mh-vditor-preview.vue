@@ -1,14 +1,20 @@
 <template>
   <div class="mh-vditor-preview">
-    <div class="outline">
+    <div
+      class="outline"
+      v-if="isShowOutline"
+      :style="{ width: outlineWidth + 'px' }"
+      ref="outlineRef"
+    >
       <div
         v-for="(anchor, index) in titles"
+        :id="anchor.lineIndex"
         :style="{ paddingLeft: `${anchor.indent * 20}px` }"
         :key="index"
         @click="handleAnchorClick(anchor)"
         class="outline-item"
       >
-        <a :class="handleOutlineClassName(anchor.tagName)" class="outline-any">
+        <a :class="handleOutlineClassName(anchor)" class="outline-any">
           {{ anchor.title }}
         </a>
       </div>
@@ -19,30 +25,58 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, nextTick, onMounted, ref } from 'vue'
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
-import { number } from 'echarts'
+
 export default defineComponent({
   props: {
     markdownText: {
       type: String,
       default: ''
+    },
+    isShowOutline: {
+      type: Boolean,
+      default: true
+    },
+    outlineWidth: {
+      type: Number,
+      default: 200
     }
   },
-  setup() {
+  setup(props) {
     const previewRef = ref<HTMLDivElement>()
-
     const markdown = ref('')
     const titles = ref<any[]>([])
     const anchors = ref()
+    const outlineRef = ref<HTMLElement>()
+
+    onMounted(async () => {
+      Vditor.preview(previewRef.value!, props.markdownText, {
+        mode: 'dark',
+        theme: {
+          current: 'dark'
+        },
+        hljs: {
+          style: 'solarized-dark'
+        },
+        after() {
+          handlePreview()
+          scrollToTop()
+        }
+      })
+    })
 
     // 处理点击大纲
     const handleAnchorClick = (anchor: any) => {
       const { lineIndex } = anchor
       const heading = previewRef.value!.querySelector(`[id="${lineIndex}"]`)
       if (heading) {
-        heading.scrollIntoView(true)
+        heading.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+          inline: 'nearest'
+        })
       }
     }
 
@@ -54,31 +88,40 @@ export default defineComponent({
         titles.value = []
         return
       }
-      console.log(titleArray)
 
       const hTags = Array.from(new Set(titleArray.map((title: any) => title.tagName))).sort()
-      console.log(hTags)
-      titles.value = titleArray.map((el: any, index: number) => {
-        const titles = {
+      titles.value = titleArray.map((el: any, index: number, nodeArray: any) => {
+        const result = {
           title: el.innerText,
           lineIndex: el.getAttribute('id'),
           indent: hTags.indexOf(el.tagName),
-          tagName: el.tagName
+          tagName: el.tagName,
+          parentLineIndex: ''
         }
 
-        return titles
+        if (el.tagName !== 'H1') {
+          for (let i = 0; i < index; i++) {
+            let nextIndex = index - i - 1
+            if (nodeArray[nextIndex].tagName === 'H1') {
+              result.parentLineIndex = nodeArray[nextIndex].id
+              break
+            }
+          }
+        }
+        return result
       })
     }
 
     // 监听预览页面的滚动
-    const handleScroll = (e: any) => {
-      const currentNode = scrollToTop()
+    const handleScroll = () => {
+      if (!props.isShowOutline) return
+      scrollToTop()
     }
 
-    // 获取锚点class属性
-    const handleOutlineClassName = (tagName: string) => {
+    // 根据标记设置锚点class属性
+    const handleOutlineClassName = (anchor: any) => {
       let className = ''
-      switch (tagName) {
+      switch (anchor.tagName) {
         case 'H1':
           className = 'outline-h1'
           break
@@ -86,6 +129,13 @@ export default defineComponent({
           className = 'outline-h2'
           break
       }
+      if (anchor.current) {
+        className += ' current-outline'
+      }
+      if (anchor.currentParent) {
+        className += ' current-outline-parent'
+      }
+
       return className
     }
 
@@ -94,156 +144,43 @@ export default defineComponent({
       const currentScrollTop = previewRef.value?.scrollTop
       const currentNode = Array.from<HTMLElement>(anchors.value).find(
         (item: HTMLElement, index: number, array) => {
-          let nextIndex: number = index + 1
-          if (nextIndex >= array.length) {
-            nextIndex = array.length
-          }
-          if (currentScrollTop! < array[nextIndex].offsetTop) {
-            return item
+          if (array.length <= 1) {
+            return array[0]
+          } else {
+            let nextIndex: number = index + 1
+            if (nextIndex >= array.length - 1) {
+              nextIndex = array.length - 1
+            }
+            if (currentScrollTop! < array[nextIndex].offsetTop) {
+              return item
+            }
           }
         }
       )
 
-      console.log(currentNode)
-      return currentNode
-    }
-
-    onMounted(async () => {
-      markdown.value = `# 教程
-
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-# 语法指导
-
-## 普通内容
-
-这段内容展示了在内容里面一些排版格式
-
-## 提及用户
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-@Vanessa 通过 @User 可以在内容中提及用户，被提及的用户将会收到系统通知。
-
-## 表情符号 Emoji
-
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-支持大部分标准的表情符号，可使用输入法直接输入，也可手动输入字符格式。
-
-### 一些表情例子
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-# test
-123123
-123
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-123123
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-123123
-
-# 语法指导
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-adasdasd
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-# 语法指导456
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-asdhiasdh
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-# werwerwer
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-
-# 语法指导
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-这是一篇讲解如何正确使用 **Markdown** 的排版示例
-`
-
-      Vditor.preview(previewRef.value!, markdown.value!, {
-        mode: 'dark',
-        theme: {
-          current: 'dark'
-        },
-        after() {
-          handlePreview()
-          scrollToTop()
+      // 标记锚点
+      titles.value.forEach((item) => {
+        item.current = false
+        item.currentParent = false
+        if (currentNode!.id === item.lineIndex) {
+          item.current = true
+          if (item.tagName === 'H1') {
+            item.currentParent = true
+          } else {
+            titles.value.forEach((content) => {
+              if (content.lineIndex === item.parentLineIndex) {
+                content.currentParent = true
+              }
+            })
+          }
         }
       })
-    })
+    }
+
     return {
       markdown,
       previewRef,
+      outlineRef,
       titles,
       handleScroll,
       handleAnchorClick,
@@ -259,6 +196,7 @@ asdhiasdh
   width: 100%;
   height: 100%;
   position: relative;
+  overflow: hidden;
 }
 
 .preview {
@@ -266,8 +204,14 @@ asdhiasdh
   width: 100%;
   padding: 20px;
   box-sizing: border-box;
+  border-radius: 5px;
 }
 .current-outline {
+  color: #3eaf7c;
+}
+
+.current-outline-parent {
+  border-left: 3px #3eaf7c solid;
   color: #3eaf7c;
 }
 .mh-vditor-preview::-webkit-scrollbar {
@@ -283,26 +227,31 @@ asdhiasdh
   flex-shrink: 0;
   height: 100%;
   display: block;
-  overflow-y: scroll;
   box-sizing: border-box;
   cursor: pointer;
-  padding: 10px;
   position: sticky;
+  overflow-y: scroll;
+  background-color: rgb(231, 231, 231);
+  border-radius: 5px;
   top: 0;
+  padding: 10px;
 }
 .outline-any {
   line-height: 30px;
+  padding-left: 10px;
+  box-sizing: border-box;
   display: inline-block;
   width: 100%;
 }
 .outline-any:hover {
   color: #3eaf7c;
 }
+
 .outline-h1 {
   font-weight: bold;
   font-size: 18px;
 }
 .outline-h2 {
-  font-size: 16px;
+  font-size: 15px;
 }
 </style>

@@ -3,14 +3,16 @@
     <div class="markdown-header">
       <mh-breadcrumb :breadcrumbs="breadcrumbs" :style="breadcrumbStyle"></mh-breadcrumb>
     </div>
-    <mh-vditor
-      ref="MhVditorRef"
-      :uploadUrl="uploadUrl"
-      @clickSave="handleClickSave"
-      @input="handleInput"
-      @blur="handleBlur"
-      @afterVditor="afterVditor"
-    ></mh-vditor>
+    <div class="editor-content">
+      <mh-vditor
+        ref="MhVditorRef"
+        :uploadUrl="uploadUrl"
+        @clickSave="handleClickSave"
+        @input="handleInput"
+        @blur="handleBlur"
+        @afterVditor="afterVditor"
+      ></mh-vditor>
+    </div>
   </div>
 </template>
 
@@ -164,8 +166,20 @@ export default defineComponent({
   width: 100vw;
   height: 100vh;
   background-color: #1d2125;
-  padding: 0 100px;
   box-sizing: border-box;
   overflow-y: scroll;
+}
+.markdown-header {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  line-height: 30px;
+  background-color: #1d2125;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+.editor-content {
+  position: relative;
+  padding: 0 100px;
 }
 </style>

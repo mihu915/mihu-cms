@@ -38,9 +38,9 @@
       ref="formDialogRef"
     ></form-dialog>
 
-    <el-dialog v-model="isShowPreview" title="预览文章：">
-      <div class="preview">
-        <mh-vditor-preview :markdown="markdown"></mh-vditor-preview>
+    <el-dialog v-model="isShowPreview" title="预览文章：" destroy-on-close>
+      <div class="preview-content">
+        <mh-vditor-preview :markdownText="markdown" :outlineWidth="300"></mh-vditor-preview>
       </div>
     </el-dialog>
   </div>
@@ -76,13 +76,12 @@ export default defineComponent({
     const markdown = ref('')
     const router = useRouter()
     const handlePreview = (content: string) => {
-      router.replace({
-        path: '/test',
-        name: 'test',
-        params: {
-          content
-        }
-      })
+      if (content === 'null' || !content) {
+        markdown.value = '暂无内容'
+      } else {
+        markdown.value = content
+      }
+      isShowPreview.value = true
     }
 
     writeDialogConfig.formItemConfig.find((item: any) => {
@@ -116,12 +115,10 @@ export default defineComponent({
   height: 100px;
   border-radius: 5px;
 }
-.preview {
+.preview-content {
   border-radius: 5px;
-  background-color: #2f363d;
-  padding: 10px;
-  height: 400px;
-  overflow-y: scroll;
+  height: 500px;
+  overflow: hidden;
   box-sizing: border-box;
   z-index: 999;
 }

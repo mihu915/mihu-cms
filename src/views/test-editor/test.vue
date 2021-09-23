@@ -1,25 +1,32 @@
 <template>
   <div class="test">
-    <mh-vditor-preview></mh-vditor-preview>
+    <mh-vditor-preview :markdownText="markdownText"></mh-vditor-preview>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import MhVditorPreview from '@/base-ui/mh-vditor/src/mh-vditor-preview.vue'
+
+import { useRoute } from 'vue-router'
 export default defineComponent({
   components: {
     MhVditorPreview
   },
   setup() {
-    return {}
+    const route = useRoute()
+    const markdownText = ref()
+    console.log(route.params)
+    markdownText.value = route.params.content
+    return {
+      markdownText
+    }
   }
 })
 </script>
 
 <style scoped>
 .test {
-  padding-top: 10px;
   height: 100%;
   width: 100%;
 }

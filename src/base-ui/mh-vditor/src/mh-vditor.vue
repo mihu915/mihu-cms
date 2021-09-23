@@ -162,12 +162,12 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style>
 .mh-vditor {
   width: 100%;
   height: 100%;
 }
-.test {
-  color: aliceblue;
+.vditor-toolbar--pin {
+  top: 50px;
 }
 </style>
