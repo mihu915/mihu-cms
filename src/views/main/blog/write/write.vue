@@ -74,7 +74,7 @@ export default defineComponent({
     const uploadIconPath = BASE_URL + '/files/cover'
     const isShowPreview = ref(false)
     const markdown = ref('')
-    const router = useRouter()
+
     const handlePreview = (content: string) => {
       if (content === 'null' || !content) {
         markdown.value = '暂无内容'
