@@ -54,7 +54,6 @@ export default defineComponent({
           },
           fieldName: 'screenshot',
           format(file, res) {
-            console.log(file)
             const response = JSON.parse(res)
             return JSON.stringify({
               msg: response.message,

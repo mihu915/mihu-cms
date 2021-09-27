@@ -54,7 +54,7 @@ import { options } from './config/vditor.page.config'
 import { writeSearchConfig } from './config/search.config'
 import { writeContentConfig } from './config/content.config'
 import { writeDialogConfig } from './config/dialog.config'
-import { useRouter } from 'vue-router'
+
 import SearchPage from '@/components/search-page/src/search-page.vue'
 import ContentPage from '@/components/content-page/src/content-page.vue'
 import FormDialog from '@/components/form-dialog/src/form-dialog.vue'
