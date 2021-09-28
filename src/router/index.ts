@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { localCache, firstMenuPath } from '@/utils'
-import { ElMessageBox } from 'element-plus'
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',

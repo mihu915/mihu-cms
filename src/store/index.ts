@@ -3,6 +3,8 @@ import { IRootStore, IStoreType } from './types'
 import { login } from './login/login'
 import { common } from './main/common/common'
 import { skill } from './main/analysis/skill'
+import { blog } from './main/blog/blog'
+
 import { getListData } from '@/service/system/system'
 
 import { stringToNumberArray, arrayToString } from '@/utils'
@@ -93,7 +95,8 @@ const store = createStore<IRootStore>({
   modules: {
     login,
     common,
-    skill
+    skill,
+    blog
   }
 })
 

@@ -1,12 +1,7 @@
-import MHRequest from '../request'
-import { BASE_URL, TIME_OUT } from '../request/config'
-const epidemicRequest = new MHRequest({
-  baseURL: BASE_URL,
-  timeout: TIME_OUT
-})
+import { mhRequest } from '../index'
 
 function epidemicApi() {
-  return epidemicRequest.get({
+  return mhRequest.get({
     url: '/epidemic',
     showLoading: true
   })

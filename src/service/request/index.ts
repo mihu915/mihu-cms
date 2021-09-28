@@ -60,8 +60,8 @@ class MHRequest {
 
     this.instance.interceptors.response.use(
       (res) => {
-        // 如果showLoading为true则拦截到响应后要关闭loading动画
-        if (this.showLoading) this.loading?.close()
+        // 响应后要关闭loading动画
+        this.loading?.close()
 
         // 展示提示信息
         if (res.data.code === 200) {

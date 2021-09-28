@@ -2,18 +2,18 @@
   <div class="write">
     <search-page
       title="文章查询："
-      class="common-Piece"
+      class="common-piece"
       :searchConfig="writeSearchConfig"
       :pageName="pageName"
     ></search-page>
 
     <content-page
-      class="common-Piece"
+      class="common-piece"
       title="文章列表："
       :contentConfig="writeContentConfig"
       :pageName="pageName"
-      @handleCreate="handleCreate"
-      @handleEdit="handleEdit"
+      @handleCreate:any="handleCreate"
+      @handleEdit:any="handleEdit"
     >
       <template #cover="{ row }">
         <el-image
@@ -34,7 +34,7 @@
       :pageName="pageName"
       :dialogConfig="writeDialogConfig"
       :dialogFormData="dialogFormData"
-      v-model="isShowDialog"
+      v-model:any="isShowDialog"
       ref="formDialogRef"
     ></form-dialog>
 

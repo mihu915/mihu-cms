@@ -1,6 +1,6 @@
 <template>
   <div class="skill">
-    <div class="skill-header common-Piece">
+    <div class="skill-header common-piece">
       <div class="greeting">
         <span>{{ timeInfo.timeFrame }}，</span>
         <span>{{ nickname }}</span>

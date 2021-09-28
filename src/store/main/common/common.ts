@@ -29,7 +29,10 @@ const common: Module<ICommonStore, IRootStore> = {
         list: [],
         total_count: 0
       },
-      username: 'mihu'
+      blogStyleListData: {
+        list: [],
+        total_count: 0
+      }
     }
   },
   getters: {
