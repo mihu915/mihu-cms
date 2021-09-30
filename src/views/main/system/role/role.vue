@@ -1,14 +1,14 @@
 <template>
   <div class="role">
     <search-page
-      class="common-Piece"
+      class="common-piece"
       :searchConfig="roleSearchConfig"
       title="查询角色："
       pageName="role"
     ></search-page>
 
     <content-page
-      class="common-Piece"
+      class="common-piece"
       :contentConfig="roleContentConfig"
       pageName="role"
       title="角色信息："

@@ -1,14 +1,14 @@
 <template>
   <div class="user">
     <search-page
-      class="common-Piece"
+      class="common-piece"
       :searchConfig="userSearchConfig"
       title="查询用户："
       pageName="user"
     >
     </search-page>
     <content-page
-      class="common-Piece"
+      class="common-piece"
       :contentConfig="userContentConfig"
       pageName="user"
       title="用户列表："

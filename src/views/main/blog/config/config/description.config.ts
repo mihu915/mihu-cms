@@ -9,7 +9,8 @@ const descriptionConfig = {
     },
     {
       label: '博客主头像',
-      field: 'blogger_avatar'
+      field: 'blogger_avatar',
+      slotName: 'blogger_avatar'
     },
     {
       label: '博客标题',

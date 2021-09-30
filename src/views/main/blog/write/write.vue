@@ -12,8 +12,8 @@
       title="文章列表："
       :contentConfig="writeContentConfig"
       :pageName="pageName"
-      @handleCreate:any="handleCreate"
-      @handleEdit:any="handleEdit"
+      @handleCreate="handleCreate"
+      @handleEdit="handleEdit"
     >
       <template #cover="{ row }">
         <el-image
@@ -34,7 +34,7 @@
       :pageName="pageName"
       :dialogConfig="writeDialogConfig"
       :dialogFormData="dialogFormData"
-      v-model:any="isShowDialog"
+      v-model="isShowDialog"
       ref="formDialogRef"
     ></form-dialog>
 

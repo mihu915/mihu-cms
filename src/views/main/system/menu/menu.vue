@@ -1,7 +1,7 @@
 <template>
   <div class="system-menu">
     <content-page
-      class="common-Piece"
+      class="common-piece"
       :contentConfig="menuContentConfig"
       @handleCreate="handleCreate"
       @handleEdit="handleEdit"

@@ -13,7 +13,7 @@ interface IFormItemConfig {
 
   avatarOption?: {
     limit: number
-    action: string
+    action?: string
     method?: string
     imageUrl?: string
     name: string

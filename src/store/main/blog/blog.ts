@@ -2,7 +2,7 @@ import { Module } from 'vuex'
 import { IBlogStore } from './types'
 import { IRootStore } from '../../types'
 
-import { getBlogConfigInfo } from '@/service/blog/blog'
+import { getBlogConfigInfo, editorBlogConfig } from '@/service/blog/blog'
 const blog: Module<IBlogStore, IRootStore> = {
   namespaced: true,
   state() {
@@ -25,6 +25,16 @@ const blog: Module<IBlogStore, IRootStore> = {
         }
         commit('storageBlogConfig', result.data)
         resolve(result)
+      })
+    },
+    async editorBlogConfigAction(store, config) {
+      const result = await editorBlogConfig(config)
+      return new Promise((resolve, reject) => {
+        if (result.code !== 200) {
+          return reject(result)
+        }
+        store.dispatch('blogConfigInfoAction')
+        return resolve(result)
       })
     }
   },
