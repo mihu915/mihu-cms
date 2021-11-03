@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import mhDescription from '@/base-ui/mh-description'
-import EditorConfigDialog from './cpns/editor-config-dialog.vue'
+import EditorConfigDialog from './cpns/editor-infos-dialog.vue'
 
 import { computed, defineComponent, ref } from 'vue'
 import { useStore } from '@/store'

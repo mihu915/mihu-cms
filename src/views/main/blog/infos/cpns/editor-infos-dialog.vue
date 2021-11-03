@@ -1,6 +1,6 @@
 <template>
   <div class="editor-config-dialog">
-    <el-dialog v-model="isShowDialog" title="编辑博客配置信息：" @close="closeDialog">
+    <el-dialog v-model="isShowDialog" title="编辑博客信息：" @close="closeDialog">
       <mh-form
         :formConfig="cfFormConfig"
         v-model="formData"
@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import { cfFormConfig } from './config/form.config'
 import { useStore } from '@/store'
 import MhForm from '@/base-ui/mh-form'

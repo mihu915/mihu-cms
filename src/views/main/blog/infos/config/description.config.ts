@@ -1,5 +1,5 @@
 const descriptionConfig = {
-  title: '配置管理：',
+  title: '博客信息：',
   showExtra: true,
   operationBtnText: '编辑',
   desItems: [
