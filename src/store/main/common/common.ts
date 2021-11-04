@@ -61,7 +61,9 @@ const common: Module<ICommonStore, IRootStore> = {
   actions: {
     // 获取列表数据
     async pageListDataAction({ commit }, payload) {
-      const { pageName, isShowLoading, queryInfo } = payload
+      const { isShowLoading, queryInfo } = payload
+      const { pageName } = payload
+
       const result = await getListData(`/${pageName}/list`, isShowLoading, queryInfo)
 
       return new Promise((resolve, reject) => {

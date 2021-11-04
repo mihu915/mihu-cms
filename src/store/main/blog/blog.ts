@@ -2,7 +2,7 @@ import { Module } from 'vuex'
 import { IBlogStore } from './types'
 import { IRootStore } from '../../types'
 
-import { getBlogConfigInfo, editorBlogConfig } from '@/service/blog/blog'
+import { getBlogInfos, editorBlogInfos } from '@/service/blog/blog'
 const blog: Module<IBlogStore, IRootStore> = {
   namespaced: true,
   state() {
@@ -18,7 +18,7 @@ const blog: Module<IBlogStore, IRootStore> = {
   },
   actions: {
     async blogConfigInfoAction({ commit }) {
-      const result = await getBlogConfigInfo()
+      const result = await getBlogInfos()
       return new Promise((resolve, reject) => {
         if (result.code !== 200) {
           return reject(result)
@@ -28,7 +28,7 @@ const blog: Module<IBlogStore, IRootStore> = {
       })
     },
     async editorBlogConfigAction(store, config) {
-      const result = await editorBlogConfig(config)
+      const result = await editorBlogInfos(config)
       return new Promise((resolve, reject) => {
         if (result.code !== 200) {
           return reject(result)

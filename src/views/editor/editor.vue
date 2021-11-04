@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import { useStore } from '@/store'
 import { ElMessageBox } from 'element-plus'
@@ -141,7 +141,7 @@ export default defineComponent({
       return flag
     }
 
-    onBeforeRouteLeave(async (to, from) => {
+    onBeforeRouteLeave(async () => {
       const result = await handleChangeSave()
       return result
     })
