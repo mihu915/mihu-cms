@@ -29,7 +29,7 @@ const common: Module<ICommonStore, IRootStore> = {
         list: [],
         total_count: 0
       },
-      blogStyleListData: {
+      blogMenuListData: {
         list: [],
         total_count: 0
       }
@@ -55,24 +55,27 @@ const common: Module<ICommonStore, IRootStore> = {
     },
     storageWriteListData(state, data) {
       state.writeListData = data
+    },
+    storageBlogMenuListData(state, data) {
+      state.blogMenuListData = data
     }
   },
 
   actions: {
     // 获取列表数据
     async pageListDataAction({ commit }, payload) {
-      const { isShowLoading, queryInfo } = payload
-      const { pageName } = payload
+      const { isShowLoading, queryInfo, pageName, prefix } = payload
 
-      const result = await getListData(`/${pageName}/list`, isShowLoading, queryInfo)
+      const result = await getListData(`${prefix}/${pageName}/list`, isShowLoading, queryInfo)
 
       return new Promise((resolve, reject) => {
         if (result.code !== 200) return reject(result)
 
-        // 将pageName转成首字母大写
+        // 将pageName和prefix转成首字母大写
         const newPageName = pageName[0].toUpperCase() + pageName.slice(1)
+        const newPrefix = prefix[0].toUpperCase() + prefix.slice(1)
 
-        commit(`storage${newPageName}ListData`, result.data)
+        commit(`storage${newPrefix}${newPageName}ListData`, result.data)
 
         switch (pageName) {
           case 'menu':

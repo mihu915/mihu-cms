@@ -99,6 +99,10 @@ export default defineComponent({
     pageName: {
       type: String,
       required: true
+    },
+    prefix: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -165,6 +169,7 @@ export default defineComponent({
 
       store.dispatch('common/pageListDataAction', {
         pageName: props.pageName,
+        prefix: props.prefix,
         queryInfo: {
           ...range,
           ...params

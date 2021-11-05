@@ -3,7 +3,7 @@ interface ICommonStore {
   menuListData: IListData
   userListData: IListData
   writeListData: IListData
-  blogStyleListData: IListData
+  blogMenuListData: IListData
 }
 
 interface IListData {

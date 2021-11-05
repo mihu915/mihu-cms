@@ -19,12 +19,12 @@
 </template>
 
 <script lang="ts">
+import ContentPage from '@/components/content-page/src/content-page.vue'
+import FormDialog from '@/components/form-dialog/src/form-dialog.vue'
+
 import { computed, defineComponent } from 'vue'
 import { menuContentConfig } from './config/content.config'
 import { menuDialogConfig } from './config/dialog.config'
-
-import ContentPage from '@/components/content-page/src/content-page.vue'
-import FormDialog from '@/components/form-dialog/src/form-dialog.vue'
 
 import { usePageDialog } from '@/hooks/use-page-dialog'
 
