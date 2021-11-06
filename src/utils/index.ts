@@ -5,6 +5,7 @@ import { handleRoleOptions } from './map-role'
 import { handleUnixFormat, getNowTimeFrameByUnix } from './handle-time-format'
 import { emitter } from './event-bus'
 import { stringToNumberArray, arrayToString } from './handle-array'
+import { jointString } from './joint-string'
 
 import {
   mapMenus,
@@ -31,5 +32,6 @@ export {
   getNowTimeFrameByUnix,
   stringToNumberArray,
   arrayToString,
-  filterParentMenuId
+  filterParentMenuId,
+  jointString
 }

@@ -6,6 +6,8 @@
       pageName="menu"
       prefix="blog"
       title="博客菜单："
+      @handleCreate="handleCreate"
+      @handleEdit="handleEdit"
     ></content-page>
 
     <form-dialog
@@ -14,6 +16,7 @@
       v-model="isShowDialog"
       ref="formDialogRef"
       pageName="menu"
+      prefix="blog"
     ></form-dialog>
   </div>
 </template>
@@ -35,7 +38,12 @@ export default defineComponent({
     const [handleCreate, handleEdit, isShowDialog, formDialogRef, dialogFormData] = usePageDialog()
     return {
       menuContentConfig,
-      menuDialogConfig
+      menuDialogConfig,
+      isShowDialog,
+      handleCreate,
+      handleEdit,
+      formDialogRef,
+      dialogFormData
     }
   }
 })

@@ -109,7 +109,7 @@ export default defineComponent({
     MhTable
   },
 
-  emits: ['handleEdit', 'handleDelete', 'handleCreate'],
+  emits: ['handleEdit', 'handleCreate'],
   setup(props, { emit }) {
     const store = useStore()
     const currentPage = ref(1)
@@ -178,7 +178,9 @@ export default defineComponent({
     }
 
     // 拿到响应式数据
-    const tableData = computed(() => store.getters['common/getPageListData'](props.pageName))
+    const tableData = computed(() =>
+      store.getters['common/getPageListData'](props.pageName, props.prefix)
+    )
 
     // 加载排除在外的其他slot（插槽）
     const otherSlotName = props.contentConfig?.propList.filter((item: any) => {
@@ -212,6 +214,7 @@ export default defineComponent({
           store
             .dispatch('common/deleteListData', {
               id: row.id,
+              prefix: props.prefix,
               pageName: props.pageName
             })
             .then(() => {
@@ -259,7 +262,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-.content-page {
-}
-</style>
+<style scoped></style>

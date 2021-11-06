@@ -48,6 +48,10 @@ export default defineComponent({
     pageName: {
       type: String,
       required: true
+    },
+    prefix: {
+      type: String,
+      default: ''
     }
   },
 
@@ -102,6 +106,7 @@ export default defineComponent({
         store
           .dispatch('common/alterListDataAction', {
             pageName: props.pageName,
+            prefix: props.prefix,
             data: formData.value
           })
           .then(() => {
@@ -110,7 +115,11 @@ export default defineComponent({
           })
       } else {
         store
-          .dispatch('common/createDataAction', { pageName: props.pageName, data: formData.value })
+          .dispatch('common/createDataAction', {
+            pageName: props.pageName,
+            prefix: props.prefix,
+            data: formData.value
+          })
           .then(() => {
             emitter.emit('updateBus')
             closeBox()

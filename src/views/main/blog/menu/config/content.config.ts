@@ -7,9 +7,9 @@ const menuContentConfig: ITableConfig = {
   size: 'small',
 
   propList: [
+    { prop: 'sort', label: '排序' },
     { prop: 'menu_name', label: '菜单名' },
     { prop: 'menu_icon', label: '图标' },
-    { prop: 'sort', label: '排序' },
     { prop: 'url', label: 'url' },
     { prop: 'enable', label: '状态' },
     { prop: 'created', label: '创建时间', slotName: 'created' },

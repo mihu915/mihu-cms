@@ -1,6 +1,7 @@
 import { Module } from 'vuex'
 import { IRootStore } from '@/store/types'
 import { ICommonStore } from './types'
+import { jointString } from '@/utils'
 import {
   createData,
   deleteListData,
@@ -37,8 +38,12 @@ const common: Module<ICommonStore, IRootStore> = {
   },
   getters: {
     getPageListData(state) {
-      return (pageName: any) => {
-        return (state as any)[`${pageName}ListData`]
+      return (pageName: string, prefix: string) => {
+        if (prefix.length) {
+          return (state as any)[`${jointString(prefix, pageName)}ListData`]
+        } else {
+          return (state as any)[`${pageName}ListData`]
+        }
       }
     }
   },
@@ -65,15 +70,18 @@ const common: Module<ICommonStore, IRootStore> = {
     // 获取列表数据
     async pageListDataAction({ commit }, payload) {
       const { isShowLoading, queryInfo, pageName, prefix } = payload
-
+      let newPageName: string
+      let newPrefix = ''
       const result = await getListData(`${prefix}/${pageName}/list`, isShowLoading, queryInfo)
 
       return new Promise((resolve, reject) => {
         if (result.code !== 200) return reject(result)
 
         // 将pageName和prefix转成首字母大写
-        const newPageName = pageName[0].toUpperCase() + pageName.slice(1)
-        const newPrefix = prefix[0].toUpperCase() + prefix.slice(1)
+        newPageName = pageName[0].toUpperCase() + pageName.slice(1)
+        if (prefix.length) {
+          newPrefix = prefix[0].toUpperCase() + prefix.slice(1)
+        }
 
         commit(`storage${newPrefix}${newPageName}ListData`, result.data)
 
@@ -88,13 +96,13 @@ const common: Module<ICommonStore, IRootStore> = {
 
     // 删除单条数据
     async deleteListData({ dispatch }, payload) {
-      const { id, pageName } = payload
-
-      const result = await deleteListData(`/${pageName}/${id}`)
+      const { id, prefix, pageName } = payload
+      const entirePath = jointString(prefix, pageName)
+      const result = await deleteListData(`${prefix}/${pageName}/${id}`)
       return new Promise((resolve, reject) => {
         if (result.code !== 200) return reject(result)
 
-        switch (pageName) {
+        switch (entirePath) {
           case 'menu':
             dispatch('login/getUserMenus', null, { root: true })
             break
@@ -108,11 +116,16 @@ const common: Module<ICommonStore, IRootStore> = {
 
     // 新建数据
     async createDataAction({ dispatch }, payload) {
-      const { pageName, data } = payload
-      const result = await createData(`/${pageName}`, data)
+      const { pageName, prefix, data } = payload
+
+      // 获取prefix和pageName的拼串结果
+      const entirePath = jointString(prefix, pageName)
+
+      const result = await createData(`${prefix}/${pageName}`, data)
+
       return new Promise((resolve, reject) => {
         if (result.code !== 200) return reject(result)
-        switch (pageName) {
+        switch (entirePath) {
           case 'menu':
             // 更新用户菜单数据
             dispatch('login/getUserMenus', null, { root: true })
@@ -127,13 +140,14 @@ const common: Module<ICommonStore, IRootStore> = {
 
     // 修改数据
     async alterListDataAction({ dispatch, rootState }, payload) {
-      const { pageName, data } = payload
-      const result = await alterListData(`/${pageName}/${data.id}`, data)
+      const { pageName, prefix, data } = payload
+      const newPageName = jointString(prefix, pageName)
+      const result = await alterListData(`${prefix}/${pageName}/${data.id}`, data)
 
       return new Promise((resolve, reject) => {
         if (result.code !== 200) return reject(result)
 
-        switch (pageName) {
+        switch (newPageName) {
           case 'menu':
             dispatch('login/getUserMenus', null, { root: true })
             break
