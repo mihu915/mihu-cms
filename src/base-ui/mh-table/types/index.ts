@@ -7,6 +7,8 @@ interface IPropList {
   resizable?: boolean
   slotName?: string
   showOverflowTooltip?: boolean
+  isShowQuestionFilled?: boolean
+  questionFilledText?: string
 }
 
 export interface ITableConfig {

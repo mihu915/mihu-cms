@@ -44,9 +44,10 @@ const alterListData = (url: string, data: any): Promise<IDataType> => {
 }
 
 // 切换用户状态
-const userEnable = (id: number, enable: number, role_id: number): Promise<IDataType> => {
+const switchEnable = (url: string, enable: number, role_id: number): Promise<IDataType> => {
+  console.log(url)
   return mhRequest.get({
-    url: `/user/enable/${id}`,
+    url,
     params: {
       enable,
       role_id
@@ -55,4 +56,4 @@ const userEnable = (id: number, enable: number, role_id: number): Promise<IDataT
     showLoading: true
   })
 }
-export { createData, deleteListData, alterListData, getListData, userEnable }
+export { createData, deleteListData, alterListData, getListData, switchEnable }

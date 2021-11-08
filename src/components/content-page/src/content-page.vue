@@ -20,7 +20,6 @@
           ><i class="el-icon-delete"></i> 删除</el-button
         >
       </template>
-
       <template #statusBtn="scope">
         <el-button
           @click="handleEnable(scope.row)"
@@ -28,7 +27,7 @@
           plain
           size="mini"
         >
-          {{ scope.row.enable ? '开启' : '禁用' }}
+          {{ scope.row.enable ? '启用' : '禁用' }}
         </el-button>
       </template>
 
@@ -229,10 +228,14 @@ export default defineComponent({
         })
     }
 
-    // 切换用户状态
+    // 处理启用/禁用
     const handleEnable = (row: any) => {
       store
-        .dispatch('common/switchUserEnable', row)
+        .dispatch('common/switchEnable', {
+          ...row,
+          prefix: props.prefix,
+          pageName: props.pageName
+        })
         .then((res) => {
           row.enable = res
           getPageListData()

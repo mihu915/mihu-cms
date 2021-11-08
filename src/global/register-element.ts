@@ -42,11 +42,12 @@ import {
   ElDescriptionsItem,
   ElDivider,
   ElTag,
-  ElImage
+  ElImage,
+  ElIcon,
+  ElTooltip
 } from 'element-plus'
 
 import 'element-plus/lib/theme-chalk/index.css'
-
 const components = [
   ElButton,
   ElTabs,
@@ -90,9 +91,10 @@ const components = [
   ElDescriptionsItem,
   ElDivider,
   ElTag,
-  ElImage
+  ElImage,
+  ElIcon,
+  ElTooltip
 ]
-
 export function registerElement(app: App): void {
   components.forEach((el) => {
     app.component(el.name, el)

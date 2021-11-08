@@ -10,6 +10,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@element-plus/icons": "0.0.11",
     "@kangc/v-md-editor": "^2.3.10",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",

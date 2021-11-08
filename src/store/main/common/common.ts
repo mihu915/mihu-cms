@@ -7,7 +7,7 @@ import {
   deleteListData,
   getListData,
   alterListData,
-  userEnable
+  switchEnable
 } from '@/service/system/system'
 
 const common: Module<ICommonStore, IRootStore> = {
@@ -164,14 +164,15 @@ const common: Module<ICommonStore, IRootStore> = {
       })
     },
 
-    // 切换用户状态
-    async switchUserEnable(context, payload) {
-      const { id, role_id } = payload
+    // 切换状态
+    async switchEnable(context, payload) {
+      const { id, role_id, prefix, pageName } = payload
       const enable = payload.enable ? 0 : 1
-      const result = await userEnable(id, enable, role_id)
+      const path = `${prefix}/${pageName}/enable/${id}`
+      const result = await switchEnable(path, enable, role_id)
       return new Promise((resolve, reject) => {
         if (result.code !== 200) return reject(result)
-        resolve(enable)
+        return resolve(enable)
       })
     }
   }

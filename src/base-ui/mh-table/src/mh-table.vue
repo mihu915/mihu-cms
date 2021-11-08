@@ -29,6 +29,21 @@
           :align="item.align || 'center'"
           :resizable="item.resizable || false"
         >
+          <template #header>
+            <div class="table-content-header">
+              <span>{{ item.label }}</span>
+              &nbsp;
+              <el-icon v-if="item.isShowQuestionFilled">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="item.questionFilledText"
+                  placement="top"
+                >
+                  <question-filled /> </el-tooltip
+              ></el-icon>
+            </div>
+          </template>
           <template #default="scope">
             <slot :name="item.slotName" :row="scope.row">
               {{ handleNullData(scope.row[item.prop]) }}
@@ -142,5 +157,11 @@ export default defineComponent({
   margin-top: 20px;
   width: 100%;
   text-align: right;
+}
+.table-content-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
