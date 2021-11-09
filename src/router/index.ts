@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { localCache, firstMenuPath } from '@/utils'
-import { store } from '@/store'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -23,11 +22,6 @@ const routes: RouteRecordRaw[] = [
     path: '/editor',
     name: 'editor',
     component: () => import('@/views/editor/editor.vue')
-  },
-  {
-    path: '/test',
-    name: 'test',
-    component: () => import('@/views/test-editor/test.vue')
   },
   {
     path: '/:pathMatch(.*)*',
