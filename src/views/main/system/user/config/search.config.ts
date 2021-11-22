@@ -32,7 +32,7 @@ const userSearchConfig: IFormConfig = {
     {
       type: 'input',
       label: '昵称：',
-      field: 'realname'
+      field: 'nickname'
     },
     {
       type: 'datePicker',
