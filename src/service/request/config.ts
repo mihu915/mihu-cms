@@ -11,7 +11,7 @@ switch (process.env.NODE_ENV) {
     break
   case 'production':
     // 生产环境
-    BASE_URL = 'http://47.111.81.205:1118'
+    BASE_URL = 'http://cms-api.tj520.top'
     break
   default:
     break
