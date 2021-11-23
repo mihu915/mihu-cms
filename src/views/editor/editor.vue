@@ -108,10 +108,14 @@ export default defineComponent({
 
     // 处理保存按钮的点击
     const handleClickSave = () => {
-      console.log('save')
       writeData.value.content = mdContent.value
+      console.log(mdContent.value)
       store
-        .dispatch('common/alterListDataAction', { pageName: 'write', data: writeData.value })
+        .dispatch('common/alterListDataAction', {
+          pageName: 'write',
+          prefix: '',
+          data: writeData.value
+        })
         .then((res) => {
           if (res.code === 200) isSave.value = true
         })
