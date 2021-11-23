@@ -109,7 +109,6 @@ export default defineComponent({
     // 处理保存按钮的点击
     const handleClickSave = () => {
       writeData.value.content = mdContent.value
-      console.log(mdContent.value)
       store
         .dispatch('common/alterListDataAction', {
           pageName: 'write',
