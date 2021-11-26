@@ -43,6 +43,7 @@ router.beforeEach(async (to) => {
     }
   }
   if (to.path === '/main') {
+    console.log(firstMenuPath)
     return firstMenuPath
   }
 })
