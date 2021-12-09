@@ -10,7 +10,7 @@ const userDialogConfig: IFormConfig = {
       type: 'input',
       label: '用户名：',
       field: 'username',
-      placeholder: '请输入菜单名',
+      placeholder: '请输入用户名',
       rules: [
         {
           required: true,
