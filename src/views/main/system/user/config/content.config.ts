@@ -21,8 +21,6 @@ const userContentConfig: ITableConfig = {
     { prop: 'qq', label: 'qq' },
     { prop: 'last_login_ip', label: '最近登录ip' },
     { prop: 'last_login_time', label: '最近登录时间', slotName: 'lastLoginTime', width: 150 },
-    { prop: 'operator_ip', label: '最近操作ip' },
-    { prop: 'operator_time', label: '最近操作时间', slotName: 'operatorTime', width: 150 },
     { prop: 'created', label: '创建时间', slotName: 'created', width: 150 },
     { label: '操作', width: 150, slotName: 'actionBtn' }
   ]
