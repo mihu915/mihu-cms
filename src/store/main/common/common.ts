@@ -8,7 +8,7 @@ import {
   getListData,
   alterListData,
   switchEnable
-} from '@/service/system/system'
+} from '@/service/common/common'
 
 const common: Module<ICommonStore, IRootStore> = {
   namespaced: true,

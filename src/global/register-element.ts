@@ -33,7 +33,6 @@ import {
   ElRadio,
   ElRadioGroup,
   ElRadioButton,
-  ElPagination,
   ElTree,
   ElCard,
   ElPopover,
@@ -44,11 +43,13 @@ import {
   ElTag,
   ElImage,
   ElIcon,
-  ElTooltip
+  ElTooltip,
+  ElPagination
 } from 'element-plus'
 
 import 'element-plus/lib/theme-chalk/index.css'
 const components = [
+  ElPagination,
   ElButton,
   ElTabs,
   ElTabPane,
@@ -82,7 +83,6 @@ const components = [
   ElRadio,
   ElRadioGroup,
   ElRadioButton,
-  ElPagination,
   ElTree,
   ElCard,
   ElPopover,

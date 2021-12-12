@@ -17,4 +17,8 @@ const editorBlogInfos = (config: any): Promise<IDataType> => {
   })
 }
 
+// const getWriteTag = () => {
+
+// }
+
 export { getBlogInfos, editorBlogInfos }

@@ -5,7 +5,7 @@ import { common } from './main/common/common'
 import { skill } from './main/analysis/skill'
 import { blog } from './main/blog/blog'
 
-import { getListData } from '@/service/system/system'
+import { getListData } from '@/service/common/common'
 
 import { stringToNumberArray, arrayToString } from '@/utils'
 

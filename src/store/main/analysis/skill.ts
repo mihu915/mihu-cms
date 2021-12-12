@@ -5,11 +5,13 @@ import { IRootStore } from '@/store/types'
 
 import { epidemicApi } from '@/service/epidemic/epidemic'
 import { localCache } from '@/utils'
+import { getOperatorLog } from '@/service/log/operator-log'
 const skill: Module<IEpidemicData, IRootStore> = {
   namespaced: true,
   state() {
     return {
-      epidemicData: {}
+      epidemicData: {},
+      operatorLog: []
     }
   },
   getters: {
@@ -25,6 +27,9 @@ const skill: Module<IEpidemicData, IRootStore> = {
     storageEpidemicData(state, data) {
       state.epidemicData = data
       localCache.setCache('epidemicData', data)
+    },
+    storageOperatorLogData(state, data) {
+      state.operatorLog = data
     }
   },
   actions: {
@@ -37,6 +42,17 @@ const skill: Module<IEpidemicData, IRootStore> = {
         resolve(epidemicData)
       })
     },
+
+    // 请求操作日志数据
+    async operatorLogAction({ commit }, option) {
+      const operatorLogData: any = await getOperatorLog(option)
+      return new Promise((resolve, reject) => {
+        if (operatorLogData.code !== 200) return reject(operatorLogData)
+        commit('storageOperatorLogData', operatorLogData.data)
+        resolve(operatorLogData)
+      })
+    },
+
     async storageEpidemicDataAction({ commit, dispatch }) {
       const epidemicData = localCache.getCache('epidemicData')
       if (epidemicData) {

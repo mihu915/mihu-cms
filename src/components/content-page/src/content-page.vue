@@ -93,7 +93,8 @@ export default defineComponent({
       default: ''
     },
     contentConfig: {
-      type: Object
+      type: Object,
+      default: () => ({})
     },
     pageName: {
       type: String,
