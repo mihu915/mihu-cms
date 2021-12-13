@@ -24,7 +24,6 @@ function mapMenus(userMenus: any[]): RouteRecordRaw[] {
         })
         if (route) {
           if (!firstMenuPath) {
-            console.log(route.path)
             firstMenuPath = route.path
           }
           routes.push(route)

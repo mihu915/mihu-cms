@@ -201,7 +201,6 @@ export default defineComponent({
         fileList.value = []
         return
       } else {
-        console.log('cg')
         emit('update:modelValue', { ...props.modelValue, ...res.data })
       }
     }

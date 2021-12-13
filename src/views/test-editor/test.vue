@@ -16,7 +16,6 @@ export default defineComponent({
   setup() {
     const route = useRoute()
     const markdownText = ref()
-    console.log(route.params)
     markdownText.value = route.params.content
     return {
       markdownText

@@ -45,7 +45,6 @@ const alterListData = (url: string, data: any): Promise<IDataType> => {
 
 // 切换用户状态
 const switchEnable = (url: string, enable: number, role_id: number): Promise<IDataType> => {
-  console.log(url)
   return mhRequest.get({
     url,
     params: {
