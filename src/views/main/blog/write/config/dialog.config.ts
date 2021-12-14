@@ -23,6 +23,9 @@ const writeDialogConfig: IFormConfig = {
     {
       type: 'select',
       field: 'write_tag',
+      selectOption: {
+        multiple: true
+      },
       label: '选择标签'
     },
     { type: 'textarea', label: '文章描述：', field: 'description' }

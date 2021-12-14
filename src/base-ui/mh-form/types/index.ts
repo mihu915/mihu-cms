@@ -21,6 +21,10 @@ interface IFormItemConfig {
     value?: any
   }[]
 
+  selectOption?: {
+    multiple?: boolean
+  }
+
   avatarOption?: {
     limit: number
     action?: string

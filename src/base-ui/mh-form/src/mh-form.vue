@@ -37,6 +37,7 @@
                 <el-select
                   clearable
                   :style="{ width: item.width || '200px' }"
+                  v-bind="item.selectOption"
                   :placeholder="item.placeholder"
                   :model-value="modelValue[`${item.field}`]"
                   @update:modelValue="changeUpdate($event, item.field)"
