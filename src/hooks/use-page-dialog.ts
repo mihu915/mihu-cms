@@ -31,11 +31,11 @@ const usePageDialog = (createBc?: callBackFn, editBc?: callBackFn) => {
       case 'write':
         textConfig.dialogTitle = '创建文章：'
         textConfig.dialogRightBtnText = '继续'
-
         break
     }
     dialogFormData.value = {}
     formDialogRef.value?.setDialogTextInfo(textConfig)
+    // 创建按钮回调
     createBc && createBc()
   }
 
@@ -62,6 +62,7 @@ const usePageDialog = (createBc?: callBackFn, editBc?: callBackFn) => {
     dialogFormData.value = { ...row }
     formDialogRef.value?.setDialogTextInfo(textConfig)
 
+    // 编辑按钮回调
     editBc && editBc(row)
   }
 

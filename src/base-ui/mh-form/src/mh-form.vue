@@ -21,19 +21,22 @@
               :prop="item.field"
               v-if="item.isShow === undefined || item.isShow === true"
             >
-              <template v-if="item.type === 'input' || item.type === 'password'">
+              <template
+                v-if="item.type === 'input' || item.type === 'password' || item.type === 'textarea'"
+              >
                 <el-input
-                  :type="item.type === 'input' ? 'text' : 'password'"
+                  :type="item.type"
                   :placeholder="item.placeholder"
                   :model-value="modelValue[`${item.field}`]"
                   @update:modelValue="changeUpdate($event, item.field)"
+                  :style="{ width: item.width || '200px' }"
                 ></el-input>
               </template>
 
               <template v-else-if="item.type === 'select'">
                 <el-select
                   clearable
-                  style="width: 100%"
+                  :style="{ width: item.width || '200px' }"
                   :placeholder="item.placeholder"
                   :model-value="modelValue[`${item.field}`]"
                   @update:modelValue="changeUpdate($event, item.field)"
@@ -112,6 +115,11 @@
                     <i class="el-icon-delete"></i>
                   </span>
                 </el-upload>
+              </template>
+
+              <!-- 穿梭框 -->
+              <template v-else-if="item.type === 'transfer'">
+                <el-transfer v-model="item.transferData" v-bind="item.transferOption"></el-transfer>
               </template>
             </el-form-item>
           </el-col>

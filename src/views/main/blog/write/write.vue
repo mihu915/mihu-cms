@@ -13,7 +13,6 @@
       :contentConfig="writeContentConfig"
       :pageName="pageName"
       @handleCreate="handleCreate"
-      @handleEdit="handleEdit"
     >
       <template #cover="{ row }">
         <el-image
@@ -25,8 +24,30 @@
           class="essay-cover"
         ></el-image>
       </template>
-      <template #preview="{ row }">
+
+      <template #status="{ row }">
+        <el-button :type="row.reading_count ? 'success' : 'info'">
+          {{ row.reading_count ? '已发布' : '未发布' }}
+        </el-button>
+      </template>
+
+      <!-- <template #preview="{ row }">
         <el-button type="primary" plain @click="handlePreview(row.content)">预览</el-button>
+      </template> -->
+
+      <template #writeActionBtn="{ row }">
+        <el-button type="text" @click="handleAlterWrite(row)">
+          <i class="el-icon-edit"></i>
+          修改信息
+        </el-button>
+        <el-button type="text" @click="handleEditWrite(row)">
+          <i class="el-icon-edit-outline"></i>
+          编辑文章
+        </el-button>
+        <el-button type="text" @click="handleDeleteWrite(row)">
+          <i class="el-icon-delete"></i>
+          删除文章
+        </el-button>
       </template>
     </content-page>
 
@@ -38,11 +59,11 @@
       ref="formDialogRef"
     ></form-dialog>
 
-    <el-dialog v-model="isShowPreview" title="预览文章：" destroy-on-close>
+    <!-- <el-dialog v-model="isShowPreview" title="预览文章：" destroy-on-close>
       <div class="preview-content">
         <mh-vditor-preview :markdownText="markdown" :outlineWidth="300"></mh-vditor-preview>
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -58,7 +79,7 @@ import { writeDialogConfig } from './config/dialog.config'
 import SearchPage from '@/components/search-page/src/search-page.vue'
 import ContentPage from '@/components/content-page/src/content-page.vue'
 import FormDialog from '@/components/form-dialog/src/form-dialog.vue'
-import MhVditorPreview from '@/base-ui/mh-vditor/src/mh-vditor-preview.vue'
+// import MhVditorPreview from '@/base-ui/mh-vditor/src/mh-vditor-preview.vue'
 
 import { usePageDialog } from '@/hooks/use-page-dialog'
 
@@ -66,8 +87,7 @@ export default defineComponent({
   components: {
     SearchPage,
     ContentPage,
-    FormDialog,
-    MhVditorPreview
+    FormDialog
   },
   setup() {
     const pageName = 'write'
@@ -91,6 +111,7 @@ export default defineComponent({
     })
 
     const [handleCreate, handleEdit, isShowDialog, formDialogRef, dialogFormData] = usePageDialog()
+
     return {
       options,
       writeSearchConfig,

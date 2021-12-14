@@ -1,11 +1,12 @@
 <template>
   <div class="write-tag common-piece">
     <div class="tag-content">
-      <div class="page-header">标签管理：</div>
+      <div class="page-header">文章标签：</div>
       <div class="tag">
         <el-tag
           :key="item.id"
           v-for="item in tagData.list"
+          effect="dark"
           closable
           :disable-transitions="false"
           @close="handleClose(item)"

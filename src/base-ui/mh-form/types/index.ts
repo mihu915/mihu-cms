@@ -3,7 +3,17 @@ interface IFormItemConfig {
   field: string
   isShow?: boolean
   rules?: any
-  type: 'input' | 'select' | 'password' | 'datePicker' | 'radioGroup' | 'tree' | 'uploadImage'
+  width?: string
+  type:
+    | 'input'
+    | 'select'
+    | 'password'
+    | 'datePicker'
+    | 'radioGroup'
+    | 'tree'
+    | 'uploadImage'
+    | 'textarea'
+    | 'transfer'
   placeholder?: string
 
   options?: {

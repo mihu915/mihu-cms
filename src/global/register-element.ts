@@ -44,7 +44,8 @@ import {
   ElImage,
   ElIcon,
   ElTooltip,
-  ElPagination
+  ElPagination,
+  ElTransfer
 } from 'element-plus'
 
 import 'element-plus/lib/theme-chalk/index.css'
@@ -93,7 +94,8 @@ const components = [
   ElTag,
   ElImage,
   ElIcon,
-  ElTooltip
+  ElTooltip,
+  ElTransfer
 ]
 export function registerElement(app: App): void {
   components.forEach((el) => {

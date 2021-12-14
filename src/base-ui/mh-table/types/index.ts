@@ -14,6 +14,7 @@ interface IPropList {
 export interface ITableConfig {
   border?: boolean
   rowKey: string
+  stripe?: boolean
   size?: 'medium' | 'small' | 'mini'
   showFooter?: boolean
   treeProps?: {
