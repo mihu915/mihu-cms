@@ -167,7 +167,7 @@ export default defineComponent({
   height: 100%;
 }
 .vditor-toolbar--pin {
-  top: 50px;
+  top: 70px;
   z-index: 999;
 }
 </style>

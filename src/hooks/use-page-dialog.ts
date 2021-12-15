@@ -6,6 +6,7 @@ type callBackFn = (item?: any) => void
 
 const usePageDialog = (createBc?: callBackFn, editBc?: callBackFn) => {
   const formDialogRef = ref<InstanceType<typeof FormDialog>>()
+
   const isShowDialog = ref(false)
 
   const textConfig: any = {}
@@ -30,7 +31,6 @@ const usePageDialog = (createBc?: callBackFn, editBc?: callBackFn) => {
         break
       case 'write':
         textConfig.dialogTitle = '创建文章：'
-        textConfig.dialogRightBtnText = '继续'
         break
     }
     dialogFormData.value = {}
@@ -42,6 +42,7 @@ const usePageDialog = (createBc?: callBackFn, editBc?: callBackFn) => {
   // 处理编辑按钮逻辑
   const handleEdit = (row: any, pageName: string) => {
     textConfig.dialogRightBtnText = '保存'
+
     switch (pageName) {
       case 'user':
         textConfig.dialogTitle = '编辑用户：'
@@ -54,8 +55,6 @@ const usePageDialog = (createBc?: callBackFn, editBc?: callBackFn) => {
         break
       case 'write':
         textConfig.dialogTitle = '编辑文章：'
-        textConfig.dialogRightBtnText = '继续'
-
         break
     }
     isShowDialog.value = true

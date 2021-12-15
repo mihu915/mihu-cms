@@ -98,7 +98,7 @@ const common: Module<ICommonStore, IRootStore> = {
     async deleteListData({ dispatch }, payload) {
       const { id, prefix, pageName } = payload
       const entirePath = jointString(prefix, pageName)
-      const result = await deleteListData(`${prefix}/${pageName}/${id}`)
+      const result = await deleteListData(`${prefix || ''}/${pageName}/${id}`)
       return new Promise((resolve, reject) => {
         if (result.code !== 200) return reject(result)
 

@@ -7,26 +7,57 @@ import {
   editorBlogInfos,
   getWriteTag,
   addWriteTag,
-  deleteWriteTag
+  deleteWriteTag,
+  getWriteDataById
 } from '@/service/blog/blog'
 const blog: Module<IBlogStore, IRootStore> = {
   namespaced: true,
   state() {
     return {
       blogConfig: {},
-      writeTagData: []
+      writeData: {},
+      writeTagData: {
+        list: [],
+        total_count: 0
+      }
     }
   },
-  getters: {},
+  getters: {
+    getTagName(state) {
+      let tagName: any
+      return function (id: number) {
+        state.writeTagData.list.forEach((item: any) => {
+          if (item.id === id) tagName = item.tag_name
+        })
+        return tagName
+      }
+    }
+  },
   mutations: {
     storageBlogConfig(state, data) {
       state.blogConfig = data
     },
-    storageWriteData(state, data) {
+
+    storageWriteTagData(state, data) {
       state.writeTagData = data
+    },
+    storageWriteData(state, data) {
+      state.writeData = data
     }
   },
   actions: {
+    // 获取单个文章数据
+    async writeDataAction({ commit }, id) {
+      const result = await getWriteDataById(id)
+      return new Promise((resolve, reject) => {
+        if (result.code !== 200) reject(result)
+        else {
+          commit('storageWriteData', result.data)
+          resolve(result)
+        }
+      })
+    },
+
     // 请求标签数据
     async writeTagDataAction({ commit }) {
       const result = await getWriteTag()
@@ -34,12 +65,13 @@ const blog: Module<IBlogStore, IRootStore> = {
         if (result.code !== 200) {
           reject(result)
         } else {
-          commit('storageWriteData', result.data)
+          commit('storageWriteTagData', result.data)
           resolve(result)
         }
       })
     },
 
+    // 创建标签
     async addWriteTagAction({ dispatch }, data) {
       const result = await addWriteTag(data)
       return new Promise((resolve, reject) => {

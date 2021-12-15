@@ -2,6 +2,7 @@
   <div class="editor">
     <div class="markdown-header">
       <mh-breadcrumb :breadcrumbs="breadcrumbs" :style="breadcrumbStyle"></mh-breadcrumb>
+      <el-button size="mini" :style="{ height: '35px' }" type="primary">发布文章</el-button>
     </div>
     <div class="editor-content">
       <mh-vditor
@@ -18,7 +19,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
-import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
+import { onBeforeRouteLeave, useRoute } from 'vue-router'
 import { useStore } from '@/store'
 import { ElMessageBox } from 'element-plus'
 import { localCache } from '@/utils'
@@ -33,15 +34,24 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute()
-    const router = useRouter()
     const store = useStore()
-    const writeData = ref()
+
     const uploadUrl = ref(BASE_URL + '/files/screenshot')
 
+    // 内容是否发生变化
     const isContentChange = ref(false)
+
+    // 内容是否保存
     const isSave = ref(false)
+
     const mdContent = ref('')
+
     const MhVditorRef = ref<InstanceType<typeof MhVditor>>()
+
+    store.dispatch('blog/writeDataAction', route.params.id)
+
+    const writeData = computed(() => store.state.blog.writeData)
+
     // 设置面包屑内容及地址
     const breadcrumbs = computed(() => {
       return [
@@ -54,19 +64,6 @@ export default defineComponent({
         }
       ]
     })
-
-    // 判断是否通过正常途径进入该页面，如果不是，则直接跳转至notFound页面
-    writeData.value = route.params
-    if (Object.keys(writeData.value).length) {
-      localCache.setCache('writeData', route.params)
-    } else {
-      writeData.value = localCache.getCache('writeData')
-      if (!writeData.value) {
-        router.replace({
-          name: 'not-found'
-        })
-      }
-    }
 
     // 设置面包屑样式
     const breadcrumbStyle = ref({
@@ -82,8 +79,10 @@ export default defineComponent({
     // 编辑器渲染完成后的回调函数
     const afterVditor = () => {
       if (writeData.value.content && writeData.value.content !== 'null') {
+        // 判断是否有内容，并将内容渲染出来
         MhVditorRef.value!.vditor?.setValue(writeData.value.content)
       }
+      // 自动光标
       MhVditorRef.value?.vditor?.focus()
     }
 
@@ -151,6 +150,7 @@ export default defineComponent({
 
     return {
       writeData,
+      mdContent,
       MhVditorRef,
       breadcrumbs,
       breadcrumbStyle,
@@ -176,10 +176,12 @@ export default defineComponent({
   position: sticky;
   top: 0;
   z-index: 999;
-  line-height: 30px;
   background-color: #1d2125;
-  padding: 0 20px;
   box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 100px;
+  align-items: center;
 }
 .editor-content {
   position: relative;

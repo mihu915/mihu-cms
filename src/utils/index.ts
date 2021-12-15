@@ -1,7 +1,7 @@
 import localCache from './cache'
 import encrypt from './encrypt'
 import { getConfigItemIndex, alterFormConfig } from './handleConfig'
-import { handleRoleOptions } from './map-role'
+import { handleSelectOptions } from './handle-select-option'
 import { handleUnixFormat, getNowTimeFrameByUnix } from './handle-time-format'
 import { emitter } from './event-bus'
 import { stringToNumberArray, arrayToString } from './handle-array'
@@ -27,7 +27,7 @@ export {
   getParentMenuInfo,
   getConfigItemIndex,
   alterFormConfig,
-  handleRoleOptions,
+  handleSelectOptions,
   handleUnixFormat,
   getNowTimeFrameByUnix,
   stringToNumberArray,

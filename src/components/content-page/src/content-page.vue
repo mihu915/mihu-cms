@@ -13,12 +13,30 @@
       @handleCreate="handleCreate"
     >
       <template #actionBtn="scope">
-        <el-button @click="handleEdit(scope.row)" type="text"
-          ><i class="el-icon-edit"></i> 编辑</el-button
-        >
-        <el-button @click="handleDelete(scope.row)" type="text"
-          ><i class="el-icon-delete"></i> 删除</el-button
-        >
+        <template v-if="pageName === 'write'">
+          <el-button type="text" @click="handleEdit(scope.row)">
+            <i class="el-icon-edit"></i>
+            修改信息
+          </el-button>
+
+          <el-button type="text" @click="handleEditWrite(scope.row)">
+            <i class="el-icon-edit-outline"></i>
+            编辑文章
+          </el-button>
+
+          <el-button type="text" @click="handleDelete(scope.row)">
+            <i class="el-icon-delete"></i>
+            删除文章
+          </el-button>
+        </template>
+        <template v-else>
+          <el-button @click="handleEdit(scope.row)" type="text"
+            ><i class="el-icon-edit"></i> 编辑</el-button
+          >
+          <el-button @click="handleDelete(scope.row)" type="text"
+            ><i class="el-icon-delete"></i> 删除</el-button
+          >
+        </template>
       </template>
       <template #statusBtn="scope">
         <el-button
@@ -109,7 +127,7 @@ export default defineComponent({
     MhTable
   },
 
-  emits: ['handleEdit', 'handleCreate'],
+  emits: ['handleEdit', 'handleCreate', 'handleEditWrite'],
   setup(props, { emit }) {
     const store = useStore()
     const currentPage = ref(1)
@@ -151,6 +169,11 @@ export default defineComponent({
     // 点击编辑按钮
     const handleEdit = (row: any) => {
       emit('handleEdit', row, props.pageName)
+    }
+
+    // 编辑文章
+    const handleEditWrite = (row: any) => {
+      emit('handleEditWrite', row)
     }
 
     // 定义请求contentPage数据方法
@@ -260,7 +283,8 @@ export default defineComponent({
       handleDelete,
       handleEnable,
       handleCreate,
-      handleEdit
+      handleEdit,
+      handleEditWrite
     }
   }
 })

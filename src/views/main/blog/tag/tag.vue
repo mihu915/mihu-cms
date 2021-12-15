@@ -6,7 +6,6 @@
         <el-tag
           :key="item.id"
           v-for="item in tagData.list"
-          effect="dark"
           closable
           :disable-transitions="false"
           @close="handleClose(item)"
@@ -50,8 +49,9 @@ export default defineComponent({
     // 请求标签数据
     store.dispatch('blog/writeTagDataAction')
 
+    // 定义提示框方法
     const openBox = (id: number) => {
-      ElMessageBox.confirm('此操作将永久删除该标签, 是否继续?', '提示', {
+      ElMessageBox.confirm('此操作将永久删除该标签，并取消该标签与文章的关联，是否继续？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

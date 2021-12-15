@@ -29,7 +29,7 @@ import MhForm, { IFormConfig } from '@/base-ui/mh-form'
 import { computed, defineComponent, PropType, ref, watch } from 'vue'
 import { emitter, alterFormConfig, arrayToString } from '@/utils'
 import { useStore } from '@/store'
-import { useRouter } from 'vue-router'
+
 export default defineComponent({
   components: {
     MhForm
@@ -39,16 +39,20 @@ export default defineComponent({
       type: Object,
       default: () => ({})
     },
+
     modelValue: {
       type: Boolean
     },
+
     dialogConfig: {
       type: Object as PropType<IFormConfig>
     },
+
     pageName: {
       type: String,
       required: true
     },
+
     prefix: {
       type: String,
       default: ''
@@ -69,7 +73,7 @@ export default defineComponent({
     const formData = ref<any>({})
     const formConfig = ref<any>({ ...props.dialogConfig })
     const store = useStore()
-    const router = useRouter()
+
     // 文件上传额外增加请求头，把token加进去
     const uploadHeader = computed(() => {
       return { Authorization: 'Bearer ' + store.state.login.token }
@@ -127,14 +131,6 @@ export default defineComponent({
           .catch((err) => {
             return err
           })
-      }
-
-      if (props.pageName === 'write') {
-        router.push({
-          path: '/editor',
-          name: 'editor',
-          params: { ...formData.value }
-        })
       }
     }
 

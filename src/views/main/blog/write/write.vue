@@ -13,6 +13,8 @@
       :contentConfig="writeContentConfig"
       :pageName="pageName"
       @handleCreate="handleCreate"
+      @handleEditWrite="handleEditWrite"
+      @handleEdit="handleEdit"
     >
       <template #cover="{ row }">
         <el-image
@@ -25,28 +27,21 @@
         ></el-image>
       </template>
 
+      <template #write_tag="{ row }">
+        <div v-if="row.write_tag.length">
+          <template v-for="item of row.write_tag" :key="item">
+            <el-tag size="mini" :style="{ marginLeft: '5px' }">{{
+              $store.getters['blog/getTagName'](item)
+            }}</el-tag>
+          </template>
+        </div>
+
+        <div v-else>—</div>
+      </template>
+
       <template #status="{ row }">
         <el-button :type="row.reading_count ? 'success' : 'info'">
           {{ row.reading_count ? '已发布' : '未发布' }}
-        </el-button>
-      </template>
-
-      <!-- <template #preview="{ row }">
-        <el-button type="primary" plain @click="handlePreview(row.content)">预览</el-button>
-      </template> -->
-
-      <template #writeActionBtn="{ row }">
-        <el-button type="text" @click="handleAlterWrite(row)">
-          <i class="el-icon-edit"></i>
-          修改信息
-        </el-button>
-        <el-button type="text" @click="handleEditWrite(row)">
-          <i class="el-icon-edit-outline"></i>
-          编辑文章
-        </el-button>
-        <el-button type="text" @click="handleDeleteWrite(row)">
-          <i class="el-icon-delete"></i>
-          删除文章
         </el-button>
       </template>
     </content-page>
@@ -58,12 +53,6 @@
       v-model="isShowDialog"
       ref="formDialogRef"
     ></form-dialog>
-
-    <!-- <el-dialog v-model="isShowPreview" title="预览文章：" destroy-on-close>
-      <div class="preview-content">
-        <mh-vditor-preview :markdownText="markdown" :outlineWidth="300"></mh-vditor-preview>
-      </div>
-    </el-dialog> -->
   </div>
 </template>
 
@@ -71,15 +60,16 @@
 import { defineComponent, ref } from 'vue'
 
 import { BASE_URL } from '@/service/request/config'
-import { options } from './config/vditor.page.config'
 import { writeSearchConfig } from './config/search.config'
 import { writeContentConfig } from './config/content.config'
 import { writeDialogConfig } from './config/dialog.config'
+import { useStore } from '@/store'
+import { useRouter } from 'vue-router'
+import { alterFormConfig, handleSelectOptions } from '@/utils'
 
 import SearchPage from '@/components/search-page/src/search-page.vue'
 import ContentPage from '@/components/content-page/src/content-page.vue'
 import FormDialog from '@/components/form-dialog/src/form-dialog.vue'
-// import MhVditorPreview from '@/base-ui/mh-vditor/src/mh-vditor-preview.vue'
 
 import { usePageDialog } from '@/hooks/use-page-dialog'
 
@@ -93,17 +83,24 @@ export default defineComponent({
     const pageName = 'write'
     const uploadIconPath = BASE_URL + '/files/cover'
     const isShowPreview = ref(false)
-    const markdown = ref('')
+    const store = useStore()
+    const selectOptions = ref()
+    const router = useRouter()
 
-    const handlePreview = (content: string) => {
-      if (content === 'null' || !content) {
-        markdown.value = '暂无内容'
-      } else {
-        markdown.value = content
-      }
-      isShowPreview.value = true
+    const handleEditWrite = (row: any) => {
+      console.log(row)
+      router.push({
+        path: `/editor/${row.id}`
+      })
     }
 
+    // 请求标签数据，修改配置参数
+    store.dispatch('blog/writeTagDataAction').then((res) => {
+      selectOptions.value = handleSelectOptions(res.data.list, 'writeTag')
+      alterFormConfig(writeDialogConfig, 'write_tag', 'options', selectOptions.value)
+    })
+
+    // 修改图片上传相关参数
     writeDialogConfig.formItemConfig.find((item: any) => {
       if (item.field === 'cover') {
         item.avatarOption!.action = uploadIconPath
@@ -113,7 +110,6 @@ export default defineComponent({
     const [handleCreate, handleEdit, isShowDialog, formDialogRef, dialogFormData] = usePageDialog()
 
     return {
-      options,
       writeSearchConfig,
       writeContentConfig,
       writeDialogConfig,
@@ -124,8 +120,8 @@ export default defineComponent({
       dialogFormData,
       pageName,
       isShowPreview,
-      markdown,
-      handlePreview
+      selectOptions,
+      handleEditWrite
     }
   }
 })
