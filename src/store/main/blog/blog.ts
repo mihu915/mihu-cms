@@ -151,6 +151,7 @@ const blog: Module<IBlogStore, IRootStore> = {
         if (result.code !== 200) {
           reject(result)
         } else {
+          dispatch('writeDataAction', id)
           resolve(result)
         }
       })
