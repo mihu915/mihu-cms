@@ -8,6 +8,7 @@
     ></search-page>
 
     <content-page
+      ref="contentPageRef"
       class="common-piece"
       title="文章列表："
       :contentConfig="writeContentConfig"
@@ -41,8 +42,8 @@
       </template>
 
       <template #status="{ row }">
-        <el-button :type="row.reading_count ? 'success' : 'info'">
-          {{ row.reading_count ? '已发布' : '未发布' }}
+        <el-button :type="row.status ? 'success' : 'info'" @click="handleSwitchStatus(row)">
+          {{ row.status ? '已发布' : '未发布' }}
         </el-button>
       </template>
     </content-page>
@@ -66,6 +67,7 @@ import { writeContentConfig } from './config/content.config'
 import { writeDialogConfig } from './config/dialog.config'
 import { useStore } from '@/store'
 import { useRouter } from 'vue-router'
+
 import { alterFormConfig, handleSelectOptions } from '@/utils'
 
 import SearchPage from '@/components/search-page/src/search-page.vue'
@@ -87,6 +89,7 @@ export default defineComponent({
     const store = useStore()
     const selectOptions = ref()
     const router = useRouter()
+    const contentPageRef = ref<InstanceType<typeof ContentPage>>()
 
     const jumpRouter = (path: any, id: any) => {
       router.push({
@@ -103,6 +106,14 @@ export default defineComponent({
       console.log(row)
     }
 
+    // 切换发表状态
+    const handleSwitchStatus = (row: any) => {
+      store
+        .dispatch('blog/switchPublishWriteAction', { id: row.id, status: row.status ? 0 : 1 })
+        .then(() => {
+          contentPageRef.value?.getPageListData()
+        })
+    }
     // 请求标签数据，修改配置参数
     store.dispatch('blog/writeTagDataAction').then((res) => {
       selectOptions.value = handleSelectOptions(res.data.list, 'writeTag')
@@ -130,8 +141,10 @@ export default defineComponent({
       pageName,
       isShowPreview,
       selectOptions,
+      contentPageRef,
       handleEditWrite,
-      handlePreview
+      handlePreview,
+      handleSwitchStatus
     }
   }
 })

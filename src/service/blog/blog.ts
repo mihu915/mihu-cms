@@ -42,7 +42,7 @@ const addWriteTag = (data: any): Promise<IDataType> => {
   })
 }
 
-// 更新文章内容
+// 更新文章信息
 const updateWriteContent = (id: any, data: any): Promise<IDataType> => {
   return mhRequest.patch({
     url: `${WriteAPI.Write}/${id}`,

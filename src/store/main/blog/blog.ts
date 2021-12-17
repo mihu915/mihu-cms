@@ -52,6 +52,7 @@ const blog: Module<IBlogStore, IRootStore> = {
       state.writeData = data
     }
   },
+
   actions: {
     // 获取单个文章数据
     async writeDataAction({ commit }, id) {
@@ -130,13 +131,26 @@ const blog: Module<IBlogStore, IRootStore> = {
 
     // 更新文章内容
     async updateWriteContentAction({ dispatch }, payload) {
-      const { id, info } = payload
-      const result = await updateWriteContent(id, info)
+      const { id, content } = payload
+      const result = await updateWriteContent(id, { content })
       return new Promise((resolve, reject) => {
         if (result.code !== 200) {
           reject(result)
         } else {
           dispatch('writeDataAction', id)
+          resolve(result)
+        }
+      })
+    },
+
+    // 切换文章发表状态
+    async switchPublishWriteAction({ dispatch }, payload) {
+      const { id, status } = payload
+      const result = await updateWriteContent(id, { status })
+      return new Promise((resolve, reject) => {
+        if (result.code !== 200) {
+          reject(result)
+        } else {
           resolve(result)
         }
       })

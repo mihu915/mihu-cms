@@ -68,9 +68,7 @@ export default defineComponent({
         store
           .dispatch('blog/updateWriteContentAction', {
             id: route.params.id,
-            info: {
-              content: mdContent.value
-            }
+            content: mdContent.value
           })
           .then(() => {
             isSave.value = true

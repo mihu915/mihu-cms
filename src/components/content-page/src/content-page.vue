@@ -299,7 +299,8 @@ export default defineComponent({
       handleCreate,
       handleEdit,
       handleEditWrite,
-      handlePreview
+      handlePreview,
+      getPageListData
     }
   }
 })
