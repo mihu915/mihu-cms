@@ -42,6 +42,15 @@ const addWriteTag = (data: any): Promise<IDataType> => {
   })
 }
 
+// 更新文章内容
+const updateWriteContent = (id: any, data: any): Promise<IDataType> => {
+  return mhRequest.patch({
+    url: `${WriteAPI.Write}/${id}`,
+    data: qs.stringify(data),
+    showMessage: true
+  })
+}
+
 const deleteWriteTag = (id: number): Promise<IDataType> => {
   return mhRequest.delete({
     url: `${WriteAPI.WriteTag}/` + id,
@@ -55,4 +64,12 @@ const getWriteDataById = (id: any): Promise<IDataType> => {
   })
 }
 
-export { getBlogInfos, editorBlogInfos, getWriteTag, addWriteTag, deleteWriteTag, getWriteDataById }
+export {
+  getBlogInfos,
+  editorBlogInfos,
+  getWriteTag,
+  addWriteTag,
+  deleteWriteTag,
+  getWriteDataById,
+  updateWriteContent
+}

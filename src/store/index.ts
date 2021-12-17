@@ -39,9 +39,7 @@ const store = createStore<IRootStore>({
         let menusTile: any = []
         const menusIdArray = stringToNumberArray(strMenusId)
         const childMenusId = getters.getFilterParentMenuIdList(menusIdArray)
-
         const allMenuList = [...state.entireMenuData]
-
         allMenuList.map((parent) => {
           parent.children.map((child: any) => {
             if (childMenusId.includes(child.id)) {

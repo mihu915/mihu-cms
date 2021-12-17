@@ -21,9 +21,8 @@
 import { computed, defineComponent, ref } from 'vue'
 import { onBeforeRouteLeave, useRoute } from 'vue-router'
 import { useStore } from '@/store'
-import { ElMessageBox } from 'element-plus'
-import { localCache } from '@/utils'
 import { BASE_URL } from '@/service/request/config'
+
 import MhVditor from '@/base-ui/mh-vditor'
 import MhBreadcrumb from '@/base-ui/mh-breadcrumb'
 
@@ -32,25 +31,24 @@ export default defineComponent({
     MhVditor,
     MhBreadcrumb
   },
+
   setup() {
     const route = useRoute()
+
     const store = useStore()
 
     const uploadUrl = ref(BASE_URL + '/files/screenshot')
 
-    // 内容是否发生变化
-    const isContentChange = ref(false)
-
-    // 内容是否保存
-    const isSave = ref(false)
-
-    const mdContent = ref('')
-
     const MhVditorRef = ref<InstanceType<typeof MhVditor>>()
 
-    store.dispatch('blog/writeDataAction', route.params.id)
+    // 文章内容
+    const mdContent = ref('')
 
-    const writeData = computed(() => store.state.blog.writeData)
+    // 文章标题
+    const writeTitle = ref('')
+
+    // 内容是否保存
+    const isSave = ref(true)
 
     // 设置面包屑内容及地址
     const breadcrumbs = computed(() => {
@@ -60,10 +58,29 @@ export default defineComponent({
           path: '/main/blog/write'
         },
         {
-          name: writeData.value.title
+          name: writeTitle.value
         }
       ]
     })
+
+    const saveWriteContent = (): Promise<boolean> => {
+      return new Promise((resolve, reject) => {
+        store
+          .dispatch('blog/updateWriteContentAction', {
+            id: route.params.id,
+            info: {
+              content: mdContent.value
+            }
+          })
+          .then(() => {
+            isSave.value = true
+            resolve(true)
+          })
+          .catch(() => {
+            reject(false)
+          })
+      })
+    }
 
     // 设置面包屑样式
     const breadcrumbStyle = ref({
@@ -72,84 +89,53 @@ export default defineComponent({
     })
 
     // 处理刷新提示
-    window.onbeforeunload = () => {
-      return 'result'
-    }
+    // window.onbeforeunload = async () => {
+    //   return 'result'
+    // }
 
     // 编辑器渲染完成后的回调函数
     const afterVditor = () => {
-      if (writeData.value.content && writeData.value.content !== 'null') {
-        // 判断是否有内容，并将内容渲染出来
-        MhVditorRef.value!.vditor?.setValue(writeData.value.content)
-      }
-      // 自动光标
-      MhVditorRef.value?.vditor?.focus()
-    }
-
-    const openBox = () => {
-      return ElMessageBox.confirm('当前内容未保存，是否保存当前内容并退出？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      store.dispatch('blog/writeDataAction', route.params.id).then((res) => {
+        if (res.data.content && res.data.content !== 'null') {
+          // 判断是否有内容，并将内容渲染出来
+          MhVditorRef.value!.vditor?.setValue(res.data.content)
+          mdContent.value = res.data.content
+          writeTitle.value = res.data.title
+        }
+        // 自动光标
+        MhVditorRef.value?.vditor?.focus()
       })
     }
 
     // 监听失去焦点
     const handleBlur = (value: string) => {
       mdContent.value = value
-    }
-
-    // 监听输入
-    const handleInput = (value: string) => {
-      if (!isContentChange.value) isContentChange.value = true
-      mdContent.value = value
+      if (!isSave.value) {
+        saveWriteContent()
+      }
     }
 
     // 处理保存按钮的点击
     const handleClickSave = () => {
-      writeData.value.content = mdContent.value
-      store
-        .dispatch('common/alterListDataAction', {
-          pageName: 'write',
-          prefix: '',
-          data: writeData.value
-        })
-        .then((res) => {
-          if (res.code === 200) isSave.value = true
-        })
+      saveWriteContent()
     }
 
-    // 处理变化和保存的状态，根据状态判断是否提示
-    const handleChangeSave = async () => {
-      let flag = true
-      // 判断内容是否有变化，如果有变化，则判断是否保存，如果没保存则弹出提示，其他情况则可直接离开当前页面
-      if (isContentChange.value) {
-        if (isSave.value) {
-          flag = true
-        } else {
-          flag = await openBox()
-            .then(() => {
-              handleClickSave()
-              localCache.deleteCache('writeData')
-              return true
-            })
-            .catch(() => {
-              return false
-            })
-        }
-      } else {
-        flag = true
-      }
-      return flag
+    // 监听输入
+    const handleInput = (value: string) => {
+      // 状态改为已修改
+      mdContent.value = value
+      isSave.value = false
     }
 
+    // 跳转路由之前的钩子
     onBeforeRouteLeave(async () => {
-      const result = await handleChangeSave()
-      return result
+      if (isSave.value) return true
+      else {
+        return await saveWriteContent()
+      }
     })
 
     return {
-      writeData,
       mdContent,
       MhVditorRef,
       breadcrumbs,

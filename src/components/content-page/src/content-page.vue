@@ -14,20 +14,28 @@
     >
       <template #actionBtn="scope">
         <template v-if="pageName === 'write'">
-          <el-button type="text" @click="handleEdit(scope.row)">
-            <i class="el-icon-edit"></i>
-            修改信息
-          </el-button>
+          <div>
+            <el-button type="text" @click="handleEdit(scope.row)">
+              <i class="el-icon-edit"></i>
+              修改信息
+            </el-button>
 
-          <el-button type="text" @click="handleEditWrite(scope.row)">
-            <i class="el-icon-edit-outline"></i>
-            编辑文章
-          </el-button>
+            <el-button type="text" @click="handleEditWrite(scope.row)">
+              <i class="el-icon-edit-outline"></i>
+              编辑文章
+            </el-button>
+          </div>
+          <div>
+            <el-button type="text" @click="handlePreview(scope.row)">
+              <i class="el-icon-reading"></i>
+              预览文章
+            </el-button>
 
-          <el-button type="text" @click="handleDelete(scope.row)">
-            <i class="el-icon-delete"></i>
-            删除文章
-          </el-button>
+            <el-button type="text" @click="handleDelete(scope.row)">
+              <i class="el-icon-delete"></i>
+              删除文章
+            </el-button>
+          </div>
         </template>
         <template v-else>
           <el-button @click="handleEdit(scope.row)" type="text"
@@ -104,6 +112,7 @@ import MhTable from '@/base-ui/mh-table'
 import { computed, defineComponent, ref, watch } from 'vue'
 import { useStore } from '@/store/index'
 import { ElMessageBox } from 'element-plus'
+
 export default defineComponent({
   props: {
     title: {
@@ -127,7 +136,7 @@ export default defineComponent({
     MhTable
   },
 
-  emits: ['handleEdit', 'handleCreate', 'handleEditWrite'],
+  emits: ['handleEdit', 'handleCreate', 'handleEditWrite', 'handlePreview'],
   setup(props, { emit }) {
     const store = useStore()
     const currentPage = ref(1)
@@ -174,6 +183,11 @@ export default defineComponent({
     // 编辑文章
     const handleEditWrite = (row: any) => {
       emit('handleEditWrite', row)
+    }
+
+    // 处理预览
+    const handlePreview = (row: any) => {
+      emit('handlePreview', row)
     }
 
     // 定义请求contentPage数据方法
@@ -284,7 +298,8 @@ export default defineComponent({
       handleEnable,
       handleCreate,
       handleEdit,
-      handleEditWrite
+      handleEditWrite,
+      handlePreview
     }
   }
 })

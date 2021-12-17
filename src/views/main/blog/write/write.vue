@@ -15,6 +15,7 @@
       @handleCreate="handleCreate"
       @handleEditWrite="handleEditWrite"
       @handleEdit="handleEdit"
+      @handlePreview="handlePreview"
     >
       <template #cover="{ row }">
         <el-image
@@ -87,11 +88,19 @@ export default defineComponent({
     const selectOptions = ref()
     const router = useRouter()
 
-    const handleEditWrite = (row: any) => {
-      console.log(row)
+    const jumpRouter = (path: any, id: any) => {
       router.push({
-        path: `/editor/${row.id}`
+        path: `/${path}/${id}`
       })
+    }
+    // 处理编辑文章内容按钮
+    const handleEditWrite = (row: any) => {
+      jumpRouter('editor', row.id)
+    }
+
+    // 处理预览按钮
+    const handlePreview = (row: any) => {
+      console.log(row)
     }
 
     // 请求标签数据，修改配置参数
@@ -121,7 +130,8 @@ export default defineComponent({
       pageName,
       isShowPreview,
       selectOptions,
-      handleEditWrite
+      handleEditWrite,
+      handlePreview
     }
   }
 })

@@ -8,10 +8,13 @@ import {
   getWriteTag,
   addWriteTag,
   deleteWriteTag,
-  getWriteDataById
+  getWriteDataById,
+  updateWriteContent
 } from '@/service/blog/blog'
+
 const blog: Module<IBlogStore, IRootStore> = {
   namespaced: true,
+
   state() {
     return {
       blogConfig: {},
@@ -22,7 +25,9 @@ const blog: Module<IBlogStore, IRootStore> = {
       }
     }
   },
+
   getters: {
+    // 获取标签名称
     getTagName(state) {
       let tagName: any
       return function (id: number) {
@@ -33,6 +38,7 @@ const blog: Module<IBlogStore, IRootStore> = {
       }
     }
   },
+
   mutations: {
     storageBlogConfig(state, data) {
       state.blogConfig = data
@@ -41,6 +47,7 @@ const blog: Module<IBlogStore, IRootStore> = {
     storageWriteTagData(state, data) {
       state.writeTagData = data
     },
+
     storageWriteData(state, data) {
       state.writeData = data
     }
@@ -118,6 +125,20 @@ const blog: Module<IBlogStore, IRootStore> = {
         }
         dispatch('blogConfigInfoAction')
         return resolve(result)
+      })
+    },
+
+    // 更新文章内容
+    async updateWriteContentAction({ dispatch }, payload) {
+      const { id, info } = payload
+      const result = await updateWriteContent(id, info)
+      return new Promise((resolve, reject) => {
+        if (result.code !== 200) {
+          reject(result)
+        } else {
+          dispatch('writeDataAction', id)
+          resolve(result)
+        }
       })
     }
   },

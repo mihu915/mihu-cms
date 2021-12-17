@@ -24,6 +24,12 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/editor/editor.vue')
   },
   {
+    path: '/preview/:id',
+    name: 'preview',
+    component: () => import('@/views/preview/preview.vue')
+  },
+
+  {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('@/views/not-found/not-found.vue')
