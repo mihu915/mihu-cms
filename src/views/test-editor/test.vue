@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import MhVditorPreview from '@/base-ui/mh-vditor/src/mh-vditor-preview.vue'
+import MhVditorPreview from '@/base-ui/mh-vditor-preview/src/mh-vditor-preview.vue'
 
 import { useRoute } from 'vue-router'
 export default defineComponent({

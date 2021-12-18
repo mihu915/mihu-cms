@@ -59,6 +59,10 @@
 </template>
 
 <script lang="ts">
+import SearchPage from '@/components/search-page/src/search-page.vue'
+import ContentPage from '@/components/content-page/src/content-page.vue'
+import FormDialog from '@/components/form-dialog/src/form-dialog.vue'
+
 import { defineComponent, ref } from 'vue'
 
 import { BASE_URL } from '@/service/request/config'
@@ -69,10 +73,6 @@ import { useStore } from '@/store'
 import { useRouter } from 'vue-router'
 
 import { alterFormConfig, handleSelectOptions } from '@/utils'
-
-import SearchPage from '@/components/search-page/src/search-page.vue'
-import ContentPage from '@/components/content-page/src/content-page.vue'
-import FormDialog from '@/components/form-dialog/src/form-dialog.vue'
 
 import { usePageDialog } from '@/hooks/use-page-dialog'
 
@@ -91,11 +91,13 @@ export default defineComponent({
     const router = useRouter()
     const contentPageRef = ref<InstanceType<typeof ContentPage>>()
 
+    // 定义路由跳转方法
     const jumpRouter = (path: any, id: any) => {
       router.push({
         path: `/${path}/${id}`
       })
     }
+
     // 处理编辑文章内容按钮
     const handleEditWrite = (row: any) => {
       jumpRouter('editor', row.id)
@@ -103,7 +105,7 @@ export default defineComponent({
 
     // 处理预览按钮
     const handlePreview = (row: any) => {
-      console.log(row)
+      jumpRouter('preview', row.id)
     }
 
     // 切换发表状态
@@ -114,6 +116,7 @@ export default defineComponent({
           contentPageRef.value?.getPageListData()
         })
     }
+
     // 请求标签数据，修改配置参数
     store.dispatch('blog/writeTagDataAction').then((res) => {
       selectOptions.value = handleSelectOptions(res.data.list, 'writeTag')

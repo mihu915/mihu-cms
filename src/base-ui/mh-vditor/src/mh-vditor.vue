@@ -151,6 +151,7 @@ export default defineComponent({
           }
         }
       })
+      // vditor.value.getHTML()
     })
 
     return {

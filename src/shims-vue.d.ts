@@ -6,7 +6,6 @@ declare module '*.vue' {
 }
 
 declare module 'prismjs'
-declare module '@kangc/v-md-editor'
 declare let $store: any
 declare module '*.json'
 declare module '*.js'
