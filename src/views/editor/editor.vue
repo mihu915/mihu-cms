@@ -65,6 +65,7 @@ export default defineComponent({
 
     const saveWriteContent = (): Promise<boolean> => {
       return new Promise((resolve, reject) => {
+        console.log(MhVditorRef.value?.vditor?.getValue())
         store
           .dispatch('blog/updateWriteContentAction', {
             id: route.params.id,
@@ -106,8 +107,7 @@ export default defineComponent({
     }
 
     // 监听失去焦点
-    const handleBlur = (value: string) => {
-      mdContent.value = value
+    const handleBlur = () => {
       if (!isSave.value) {
         saveWriteContent()
       }
@@ -115,7 +115,7 @@ export default defineComponent({
 
     // 处理保存按钮的点击
     const handleClickSave = () => {
-      saveWriteContent()
+      handleBlur()
     }
 
     // 监听输入

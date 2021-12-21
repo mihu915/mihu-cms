@@ -27,8 +27,7 @@ const writeDialogConfig: IFormConfig = {
         multiple: true
       },
       label: '选择标签'
-    },
-    { type: 'textarea', label: '文章描述：', field: 'description' }
+    }
   ]
 }
 export { writeDialogConfig }

@@ -1,29 +1,51 @@
 # Mihu-Cms
 
-## Project setup
+## 一、项目介绍：
+
+mihu 博客内容管理系统，本项目基于 vue3+ts 而开发，其主要功能基于王红元老师的 vue3+ts 课程中所教授的 cms 管理系统上做了进一步的扩展。 并自己开发了本项目所有的后端服务代码。
+
+启动项目前，必需先搭建该项目的后端服务环境：
+如何搭建后端环境，请参考：[mihu-cms-koa](https://github.com/mihu915/mihu-cms-koa.git)
+
+系统功能：
+
+- 系统管理：
+  1. 用户管理
+  2. 菜单管理
+  3. 权限管理
+- 博客管理：
+  1. 信息管理
+  2. 文章管理
+  3. 菜单管理
+  4. 标签管理
+- 技术总览：
+  1. 中国新冠疫情概览图
+  2. 日志管理
+  3. 技术栈
+  4. 目录结构
+
+## 二、本地环境搭建：
+
+1. 安装依赖：
 
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+2. 本地启动服务
 
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+3. 项目打包
 
 ```
 npm run build
 ```
 
-### Lints and fixes files
+## 三、开始使用
 
-```
-npm run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+启动本地服务后，访问地址：http://localhost:8080  
+登录账号：admin123  
+登录密码：admin123

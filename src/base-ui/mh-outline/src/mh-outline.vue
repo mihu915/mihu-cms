@@ -1,9 +1,10 @@
 <template>
-  <div class="outline" ref="outlineRef">
+  <div class="outline" ref="outlineRef" :style="outlineStyle">
+    <div class="outline-contents"><i class="iconfont mihu-unorderedlist"></i> 目录：</div>
     <div
-      v-for="(anchor, index) in titles"
+      v-for="anchor in titles"
       :id="anchor.lineIndex"
-      :key="index"
+      :key="anchor.lineIndex"
       @click="handleAnchorClick(anchor)"
       class="outline-item"
     >
@@ -15,10 +16,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 
 export default defineComponent({
   props: {
+    height: {
+      type: Number,
+      default: 500
+    },
     previewElement: {
       type: Element
     }
@@ -27,12 +32,14 @@ export default defineComponent({
     const titles = ref<any[]>([])
     const anchors = ref()
     const currentNode = ref()
-    const currentNodeIndex = ref(0)
+    const PreviewHtml = ref<HTMLElement>()
+    const outlineStyle = {
+      height: props.height + 'px'
+    }
     // 处理点击大纲
     const handleAnchorClick = (anchor: any) => {
       const { lineIndex } = anchor
-      const heading = props.previewElement!.querySelector(`[id="${lineIndex}"]`)
-
+      const heading = PreviewHtml.value!.querySelector(`[id="${lineIndex}"]`)
       if (heading) {
         heading.scrollIntoView({
           behavior: 'smooth',
@@ -44,7 +51,7 @@ export default defineComponent({
 
     // 扫描页面节点，获取锚点
     const handlePreview = () => {
-      anchors.value = props.previewElement!.querySelectorAll('h2,h3')
+      anchors.value = PreviewHtml.value!.querySelectorAll('h2,h3')
       const titleArray = Array.from(anchors.value).filter((title: any) => !!title.innerText.trim())
       if (!titleArray.length) {
         titles.value = []
@@ -96,41 +103,21 @@ export default defineComponent({
 
     // 根据页面滚动改变当前大纲索引
     const scrollToTop = () => {
+      if (!anchors.value) return
+
       // 获取视口高度
-      const viewportHeight = document.documentElement.clientHeight || document.body.clientHeight
-      // console.log(viewportHeight)
+      // const viewportHeight = document.documentElement.clientHeight || document.body.clientHeight
 
       // 获取网页滚动的高度
       const windowScrollTop = document.documentElement.scrollTop
 
-      if (windowScrollTop)
-        if (windowScrollTop >= anchors.value[currentNodeIndex.value + 1].offsetTop) {
-          // console.log(windowScrollTop)
-
-          currentNodeIndex.value++
-
-          // console.log(currentNodeIndex.value)
+      Array.from<HTMLElement>(anchors.value).forEach((item) => {
+        if (windowScrollTop >= item.offsetTop - 5) {
+          currentNode.value = item
+        } else if (windowScrollTop <= 0) {
+          currentNode.value = anchors.value[0]
         }
-      console.log(currentNodeIndex.value)
-      console.log(viewportHeight - anchors.value[currentNodeIndex.value].offsetTop)
-      currentNode.value = anchors.value[currentNodeIndex.value]
-      // console.log(anchors.value[0].offsetTop)
-      const currentScrollTop = document.documentElement.clientHeight || document.body.clientHeight
-      // currentNode.value = Array.from<HTMLElement>(anchors.value).find(
-      //   (item: HTMLElement, index: number, array) => {
-      //     if (array.length <= 1) {
-      //       return array[0]
-      //     } else {
-      //       let nextIndex: number = index + 1
-      //       if (nextIndex >= array.length - 1) {
-      //         nextIndex = array.length - 1
-      //       }
-      //       if (currentScrollTop! < array[nextIndex].offsetTop) {
-      //         return item
-      //       }
-      //     }
-      //   }
-      // )
+      })
 
       // 标记锚点
       titles.value.forEach((item) => {
@@ -153,9 +140,18 @@ export default defineComponent({
 
     watch(
       () => props.previewElement,
-      () => {
-        handlePreview()
-        scrollToTop()
+      async (newVal: any) => {
+        window.removeEventListener('scroll', () => {
+          scrollToTop()
+        })
+
+        PreviewHtml.value = newVal
+
+        await setTimeout(() => {
+          handlePreview()
+          scrollToTop()
+        }, 0)
+
         window.addEventListener('scroll', () => {
           scrollToTop()
         })
@@ -166,37 +162,90 @@ export default defineComponent({
       handleAnchorClick,
       handleOutlineClassName,
       scrollToTop,
+      outlineStyle,
+      PreviewHtml,
+      currentNode,
       titles
     }
   }
 })
 </script>
 
-<style scoped>
-.current-outline {
-  color: #3eaf7c;
+<style scoped lang="less">
+// 滚动条外边框样式
+::-webkit-scrollbar {
+  // display: none; /* Chrome Safari */
+  width: 10px;
+  height: 1px;
+}
+::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  background-color: skyblue;
+  background-image: -webkit-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+}
+::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: #ededed;
+  border-radius: 10px;
 }
 
-.current-outline-parent {
-  border-left: 3px #3eaf7c solid;
-  color: #3eaf7c;
+.outline-contents {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #444;
 }
 
 .outline {
-  width: 200px;
-  height: 100%;
+  color: #666;
   display: block;
   box-sizing: border-box;
   overflow-y: scroll;
-  background-color: rgb(231, 231, 231);
-  border-radius: 5px;
-  position: fixed;
-  top: 0;
-  padding: 10px;
+  padding: 30px;
+
+  // 滚动条外边框样式
+  ::-webkit-scrollbar {
+    // display: none; /* Chrome Safari */
+    width: 10px;
+    height: 1px;
+  }
+  ::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 10px;
+    background-color: skyblue;
+    background-image: -webkit-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.2) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0.2) 75%,
+      transparent 75%,
+      transparent
+    );
+  }
+  ::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #ededed;
+    border-radius: 10px;
+  }
 }
 
 .outline-any {
   line-height: 30px;
+  margin-bottom: 10px;
   padding-left: 10px;
   box-sizing: border-box;
   display: inline-block;
@@ -208,11 +257,24 @@ export default defineComponent({
 }
 
 .outline-h2 {
+  border-left: solid 3px rgba(0, 0, 0, 0);
   font-weight: bold;
-  font-size: 18px;
+  font-size: 17px;
 }
 
 .outline-h3 {
+  padding-left: 30px;
+  box-sizing: border-box;
   font-size: 15px;
+}
+
+.current-outline {
+  color: #3eaf7c;
+}
+
+.current-outline-parent {
+  border-left: 3px #3eaf7c solid;
+  color: #3eaf7c;
+  box-sizing: border-box;
 }
 </style>

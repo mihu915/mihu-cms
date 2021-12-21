@@ -32,7 +32,7 @@
       <template #write_tag="{ row }">
         <div v-if="row.write_tag.length">
           <template v-for="item of row.write_tag" :key="item">
-            <el-tag size="mini" :style="{ marginLeft: '5px' }">{{
+            <el-tag size="mini" :style="{ marginLeft: '5px', marginBottom: '3px' }">{{
               $store.getters['blog/getTagName'](item)
             }}</el-tag>
           </template>

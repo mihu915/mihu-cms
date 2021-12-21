@@ -20,7 +20,7 @@
           v-if="row.avatar"
           shape="square"
           :size="70"
-          fit="fill"
+          fit="contain"
           :src="row.avatar"
         ></el-avatar>
       </template>

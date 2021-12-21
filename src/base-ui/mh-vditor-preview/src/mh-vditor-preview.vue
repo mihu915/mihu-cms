@@ -27,7 +27,6 @@ export default defineComponent({
   emits: ['previewAfter'],
   setup(props, { emit }) {
     const previewRef = ref<HTMLDivElement>()
-
     const outlineRef = ref<HTMLElement>()
     const markdown = computed(() => props.markdownText)
 
