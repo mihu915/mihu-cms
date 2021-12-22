@@ -65,7 +65,6 @@ export default defineComponent({
 
     const saveWriteContent = (): Promise<boolean> => {
       return new Promise((resolve, reject) => {
-        console.log(MhVditorRef.value?.vditor?.getValue())
         store
           .dispatch('blog/updateWriteContentAction', {
             id: route.params.id,

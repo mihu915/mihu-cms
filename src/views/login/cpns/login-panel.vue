@@ -6,7 +6,7 @@
         <template #label :stretch="true">
           <span><i class="el-icon-user-solid"></i> 账号登录</span>
         </template>
-        <login-account ref="loginAccountRef"></login-account>
+        <login-account ref="loginAccountRef" @enterDown="changeLoginClick"></login-account>
       </el-tab-pane>
 
       <el-tab-pane>

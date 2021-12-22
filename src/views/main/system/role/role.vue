@@ -92,7 +92,8 @@ export default defineComponent({
       formDialogRef,
       dialogFormData,
       handleCreate,
-      handleEdit
+      handleEdit,
+      entireMenuData
     }
   }
 })

@@ -5,7 +5,7 @@
         <el-input type="username" autocomplete="off" v-model="account.username"></el-input>
         <div class="login-btn"></div>
       </el-form-item>
-      <el-form-item label="密码:" prop="password">
+      <el-form-item label="密码:" prop="password" @keydown="handleKeyDown">
         <el-input type="password" autocomplete="off" v-model="account.password"></el-input>
       </el-form-item>
     </el-form>
@@ -21,13 +21,19 @@ import { localCache } from '@/utils'
 import { encrypt } from '@/utils'
 
 export default defineComponent({
-  setup() {
+  emits: ['enterDown'],
+  setup(props, { emit }) {
     // 读取local storage中的密文
     let cipher = localCache.getCache('password')
 
     let password: string
 
     const store = useStore()
+
+    // 监听enter键按下
+    const handleKeyDown = (e: any) => {
+      if (e.code === 'Enter') emit('enterDown')
+    }
 
     // 判断密文有没有值，若有值则解密，没有则初始化
     if (cipher) {
@@ -79,7 +85,8 @@ export default defineComponent({
       account,
       rules,
       formRef,
-      userLogin
+      userLogin,
+      handleKeyDown
     }
   }
 })
