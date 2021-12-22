@@ -8,7 +8,15 @@ mihu 博客内容管理系统，本项目基于 vue3+ts 而开发，其主要功
 
 如何搭建后端环境，请参考：[mihu-cms-koa](https://github.com/mihu915/mihu-cms-koa.git)
 
-线上展示：http://t-cms.tj520.top
+## 二、项目预览：
+
+测试环境预览：
+http://t-cms.tj520.top
+
+## 三、开始使用
+
+登录账号：admin123  
+登录密码：admin123
 
 系统功能：
 
@@ -27,7 +35,7 @@ mihu 博客内容管理系统，本项目基于 vue3+ts 而开发，其主要功
   3. 技术栈
   4. 目录结构
 
-## 二、本地环境搭建：
+## 四、本地环境搭建：
 
 1. 安装依赖：
 
@@ -41,14 +49,10 @@ npm install
 npm run serve
 ```
 
+启动本地服务后，访问地址：http://localhost:8080
+
 3. 项目打包
 
 ```
 npm run build
 ```
-
-## 三、开始使用
-
-启动本地服务后，访问地址：http://localhost:8080  
-登录账号：admin123  
-登录密码：admin123
