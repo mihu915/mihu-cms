@@ -1,4 +1,5 @@
 const stringToNumberArray = (str: string) => {
+  if (!str) return []
   const stringArray = str.split(',')
   const numberArray: number[] = []
   stringArray.map((item) => {
@@ -11,6 +12,7 @@ const stringToNumberArray = (str: string) => {
 }
 
 const arrayToString = (array: number[]) => {
+  if (!array.length) return
   const str = array.join(',')
   return str
 }
