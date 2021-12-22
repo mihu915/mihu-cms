@@ -8,7 +8,7 @@ mihu 博客内容管理系统，本项目基于 vue3+ts 而开发，其主要功
 
 如何搭建后端环境，请参考：[mihu-cms-koa](https://github.com/mihu915/mihu-cms-koa.git)
 
-线上展示：
+线上展示：http://
 
 系统功能：
 
