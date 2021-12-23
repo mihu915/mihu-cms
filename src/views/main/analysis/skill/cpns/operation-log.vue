@@ -99,7 +99,6 @@ export default defineComponent({
 
 <style lang="less">
 .log-content {
-  /* height: 400px; */
   width: 100%;
 }
 .log-pagination {

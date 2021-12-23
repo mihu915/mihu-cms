@@ -30,6 +30,8 @@ export default defineComponent({
 
 <style scoped>
 .fileTree {
+  height: 700px;
+  overflow-y: scroll;
   padding: 0;
   margin: 0;
   color: #555;
