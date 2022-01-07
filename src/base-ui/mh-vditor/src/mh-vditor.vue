@@ -31,6 +31,7 @@ export default defineComponent({
           id: 'vditor',
           enable: false
         },
+        cdn: 'http://resources.tj520.top/vditor',
         after() {
           emit('afterVditor')
         },
