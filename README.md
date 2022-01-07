@@ -2,7 +2,7 @@
 
 ## 一、项目介绍：
 
-mihu 博客内容管理系统，本项目基于 vue3+ts 而开发，其主要功能基于王红元老师的 vue3+ts 课程中所教授的 cms 管理系统上做了进一步的扩展。 并自己开发了本项目所有的后端服务代码。
+MHCMS 是基于 Vue3、Vuex、VueRouter、WebPack、ElementPlus、TypeScript、Echart5 等技术的后台系统解决方案。
 
 启动项目前，必需先搭建该项目的后端服务环境：
 
@@ -13,10 +13,10 @@ mihu 博客内容管理系统，本项目基于 vue3+ts 而开发，其主要功
 测试环境预览：
 http://t-cms.tj520.top
 
-## 三、开始使用
-
 登录账号：admin123  
 登录密码：admin123
+
+## 三、开始使用
 
 系统功能：
 
@@ -50,6 +50,10 @@ npm run serve
 ```
 
 启动本地服务后，访问地址：http://localhost:8080
+
+默认登录账号密码：  
+登录账号：admin123  
+登录密码：admin123
 
 3. 项目打包
 
