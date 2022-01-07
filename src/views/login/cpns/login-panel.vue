@@ -38,6 +38,7 @@ export default defineComponent({
   },
   setup() {
     const isKeepPassword = ref(false)
+
     const loginAccountRef = ref<InstanceType<typeof LoginAccount>>()
 
     if (localCache.getCache('password')) {
